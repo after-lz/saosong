@@ -1,6 +1,6 @@
 <template>
   <div class="user">
-    <div class="header">
+    <div class="header" @click='clickFn'>
       <div class="avatar">
         <img :src="$axios.defaults.baseURL + user.head_img" alt="">
       </div>
@@ -25,8 +25,11 @@
     <news-nav>我的收藏
         <template #content>文章/视频</template>
     </news-nav>
-    <news-nav>设置
+    <news-nav to="/edit">设置
     </news-nav>
+    <div class="button" @click='logout'>
+      <van-button type="danger" block>退出登录</van-button>
+    </div>
   </div>
 </template>
 
@@ -38,23 +41,30 @@ export default {
     }
   },
   async created () {
-    const token = localStorage.getItem('token')
     const userid = localStorage.getItem('userid')
-    const res = await this.$axios.get(`/user/${userid}`, {
-      headers: {
-        Authorization: token
-      }
-    })
-    // console.log(res)
+    const res = await this.$axios.get(`/user/${userid}`)
     const { statusCode, data } = res.data
     if (statusCode === 200) {
       this.user = data
-      // console.log(this.user)
-    } else if (statusCode === 401) {
-      this.$toast('用户验证失败')
+    }
+  },
+  methods: {
+    async logout () {
+      try {
+        await this.$dialog.confirm({
+          title: '温馨提示',
+          message: '确定退出登录吗?'
+        })
+      } catch {
+        return this.$toast('取消退出')
+      }
       this.$router.push('/login')
       localStorage.removeItem('token')
       localStorage.removeItem('userid')
+      this.$toast('退出成功')
+    },
+    clickFn () {
+      this.$router.push('/edit')
     }
   }
 }
@@ -98,6 +108,9 @@ export default {
                 color: pink;
             }
         }
+    }
+    .button {
+      padding: 20px;
     }
 }
 </style>

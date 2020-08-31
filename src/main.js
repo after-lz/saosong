@@ -6,7 +6,7 @@ import './styles/base.less'
 import './styles/iconfont.css'
 import newsheader from './components/newsheader.vue'
 import newslogo from './components/newslogo.vue'
-import Vant from 'vant'
+import Vant, { Toast } from 'vant'
 import 'vant/lib/index.css'
 import newsnav from './components/newsnav.vue'
 import moment from 'moment'
@@ -22,6 +22,29 @@ Vue.use(Vant)
 Vue.filter('time', input => {
   return moment(input).format('YYYY-MM-DD')
 })
+
+// 给axios配置拦截器
+axios.interceptors.request.use(function (config) {
+  // config指的是请求的配置信息
+  // console.log('拦截到了请求', config)
+  const token = localStorage.getItem('token')
+  if (token) {
+    config.headers.Authorization = token
+  }
+  return config
+})
+// 添加响应拦截器
+axios.interceptors.response.use(function (response) {
+  const { statusCode, message } = response.data
+  if (statusCode === 401 && message === '用户信息验证失败') {
+    Toast.fail('用户验证失败')
+    router.push('/login')
+    localStorage.removeItem('token')
+    localStorage.removeItem('userid')
+  }
+  return response
+})
+
 // 控制台提示消息
 Vue.config.productionTip = false
 
