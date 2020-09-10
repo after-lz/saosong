@@ -62,9 +62,13 @@ export default {
       // console.log(data)
       if (statusCode === 200) {
         this.$toast.success(message)
-        this.$router.push('/user')
         localStorage.setItem('token', data.token)
         localStorage.setItem('userid', data.user.id)
+        if (this.$route.query.back) {
+          this.$router.back()
+        } else {
+          this.$router.push('/')
+        }
       } else {
         this.$toast.fail(message)
       }

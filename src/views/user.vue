@@ -16,13 +16,13 @@
           <span class="iconfont iconjiantou1"></span>
       </div>
     </div>
-    <news-nav to="/follow">我的关注
+    <news-nav to="/attention">我的关注
         <template #content>关注的内容</template>
     </news-nav>
-    <news-nav>我的跟帖
+    <news-nav to="/comment">我的跟帖
         <template #content>跟帖/内容</template>
     </news-nav>
-    <news-nav>我的收藏
+    <news-nav to="/collect">我的收藏
         <template #content>文章/视频</template>
     </news-nav>
     <news-nav to="/edit">设置
