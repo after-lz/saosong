@@ -1,0 +1,1 @@
+<view class="gt_content"><view class="con_webView"><web-view src="{{url}}"></web-view></view></view>

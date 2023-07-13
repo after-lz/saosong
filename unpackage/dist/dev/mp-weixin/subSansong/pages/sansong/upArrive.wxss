@@ -1,0 +1,470 @@
+@charset "UTF-8";
+/**
+ * 这里是uni-app内置的常用样式变量
+ *
+ * uni-app 官方扩展插件及插件市场（https://ext.dcloud.net.cn）上很多三方插件均使用了这些样式变量
+ * 如果你是插件开发者，建议你使用scss预处理，并在插件代码中直接使用这些变量（无需 import 这个文件），方便用户通过搭积木的方式开发整体风格一致的App
+ *
+ */
+/**
+ * 如果你是App开发者（插件使用者），你可以通过修改这些变量来定制自己的插件主题，实现自定义主题功能
+ *
+ * 如果你的项目同样使用了scss预处理，你也可以直接在你的 scss 代码中使用如下变量，同时无需 import 这个文件
+ */
+page {
+  width: 750rpx;
+  margin: 0;
+  padding: 0;
+  padding-bottom: constant(safe-area-inset-bottom);
+  /*兼容 IOS<11.2*/
+  padding-bottom: env(safe-area-inset-bottom);
+  /*兼容 IOS>11.2*/
+}
+.gt_content {
+  width: 750rpx;
+  margin: 0;
+  padding: 0;
+}
+.con_empty {
+  text-align: center;
+}
+image {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+text {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+/* 颜色变量 */
+page {
+  background: #f7f7f7;
+}
+page .gt_content .con_searchScreen {
+  display: flex;
+  justify-content: space-between;
+  background: #fff;
+}
+page .gt_content .con_searchScreen .con_screen {
+  width: 88rpx;
+  font-size: 28rpx;
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;
+  color: #000000;
+  line-height: 88rpx;
+}
+page .gt_content .con_swiper swiper {
+  height: calc(100vh - 176rpx);
+}
+page .gt_content .con_swiper .swiper_item .con_empty {
+  width: 750rpx;
+  text-align: center;
+}
+page .gt_content .con_swiper .swiper_item .con_list .scroll_view {
+  height: calc(100vh - 176rpx);
+}
+page .gt_content .con_swiper .swiper_item .con_list .scroll_view .con_item {
+  width: 718rpx;
+  background: #FFFFFF;
+  border-radius: 20rpx;
+  padding: 20rpx 24rpx;
+  margin: 20rpx 16rpx;
+}
+page .gt_content .con_swiper .swiper_item .con_list .scroll_view .con_item .con_plateStatus {
+  display: flex;
+  justify-content: space-between;
+}
+page .gt_content .con_swiper .swiper_item .con_list .scroll_view .con_item .con_plateStatus .con_plate {
+  font-size: 28rpx;
+  font-family: PingFangSC-Medium, PingFang SC;
+  font-weight: 500;
+  color: #000000;
+  line-height: 40rpx;
+}
+page .gt_content .con_swiper .swiper_item .con_list .scroll_view .con_item .con_plateStatus .con_status {
+  font-size: 28rpx;
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;
+  color: #485EF4;
+  line-height: 40rpx;
+}
+page .gt_content .con_swiper .swiper_item .con_list .scroll_view .con_item .con_snNum {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 6rpx;
+}
+page .gt_content .con_swiper .swiper_item .con_list .scroll_view .con_item .con_snNum .con_sn {
+  display: flex;
+}
+page .gt_content .con_swiper .swiper_item .con_list .scroll_view .con_item .con_snNum .con_sn .con_text {
+  font-size: 28rpx;
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;
+  color: #909399;
+  line-height: 40rpx;
+}
+page .gt_content .con_swiper .swiper_item .con_list .scroll_view .con_item .con_snNum .con_sn .con_icon {
+  width: 24rpx;
+  height: 24rpx;
+  margin-left: 8rpx;
+  margin-top: 4rpx;
+}
+page .gt_content .con_swiper .swiper_item .con_list .scroll_view .con_item .con_snNum .con_num {
+  font-size: 28rpx;
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;
+  color: #000000;
+  line-height: 40rpx;
+}
+page .gt_content .con_swiper .swiper_item .con_list .scroll_view .con_item .con_fromTo {
+  margin-top: 32rpx;
+  display: flex;
+}
+page .gt_content .con_swiper .swiper_item .con_list .scroll_view .con_item .con_fromTo .con_text {
+  font-size: 32rpx;
+  font-family: PingFangSC-Medium, PingFang SC;
+  font-weight: 500;
+  color: #000000;
+  line-height: 44rpx;
+}
+page .gt_content .con_swiper .swiper_item .con_list .scroll_view .con_item .con_fromTo .con_fromToLine {
+  margin-top: -32rpx;
+}
+page .gt_content .con_swiper .swiper_item .con_list .scroll_view .con_item .con_keyVal {
+  margin-top: 16rpx;
+}
+page .gt_content .con_swiper .swiper_item .con_list .scroll_view .con_item .con_keyVal .con_text {
+  font-size: 28rpx;
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;
+  color: #909399;
+  line-height: 40rpx;
+  margin-top: 16rpx;
+}
+page .gt_content .con_swiper .swiper_item .con_list .scroll_view .con_item .con_keyVal .con_text:nth-child(3) {
+  margin-top: 32rpx;
+}
+page .gt_content .con_swiper .swiper_item .con_list .scroll_view .con_item .con_timeBtn {
+  display: flex;
+  justify-content: space-between;
+}
+page .gt_content .con_swiper .swiper_item .con_list .scroll_view .con_item .con_timeBtn .con_time {
+  font-size: 28rpx;
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;
+  color: #909399;
+  line-height: 40rpx;
+  margin-top: 6rpx;
+}
+page .gt_content .con_swiper .swiper_item .con_list .scroll_view .con_item .con_timeBtn .con_btn {
+  width: 160rpx;
+  height: 64rpx;
+  border-radius: 10rpx;
+  border: 2rpx solid #485EF4;
+  font-size: 28rpx;
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;
+  color: #485EF4;
+  line-height: 64rpx;
+  text-align: center;
+  margin-top: -6rpx;
+}
+page .gt_content .con_swiper #type3 .con_swiper2 swiper {
+  height: calc(100vh - 264rpx);
+}
+page .gt_content .con_swiper #type3 .con_swiper2 .swiper_item2 .con_empty2 {
+  width: 750rpx;
+  text-align: center;
+}
+page .gt_content .con_swiper #type3 .con_swiper2 .swiper_item2 .con_list2 .scroll_view2 {
+  height: calc(100vh - 264rpx);
+}
+page .gt_content .con_swiper #type3 .con_swiper2 .swiper_item2 .con_list2 .scroll_view2 .con_item2 {
+  width: 718rpx;
+  background: #FFFFFF;
+  border-radius: 20rpx;
+  margin: 20rpx 16rpx 0 16rpx;
+  padding: 24rpx;
+}
+page .gt_content .con_swiper #type3 .con_swiper2 .swiper_item2 .con_list2 .scroll_view2 .con_item2 .con_typeSn_status {
+  display: flex;
+  justify-content: space-between;
+}
+page .gt_content .con_swiper #type3 .con_swiper2 .swiper_item2 .con_list2 .scroll_view2 .con_item2 .con_typeSn_status .con_typeSn {
+  display: flex;
+}
+page .gt_content .con_swiper #type3 .con_swiper2 .swiper_item2 .con_list2 .scroll_view2 .con_item2 .con_typeSn_status .con_typeSn .con_type {
+  width: 68rpx;
+  height: 40rpx;
+  background: #485EF4;
+  border-radius: 6rpx;
+  font-size: 24rpx;
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;
+  color: #FFFFFF;
+  line-height: 40rpx;
+  text-align: center;
+}
+page .gt_content .con_swiper #type3 .con_swiper2 .swiper_item2 .con_list2 .scroll_view2 .con_item2 .con_typeSn_status .con_typeSn .orderType1 {
+  background: #485EF4;
+}
+page .gt_content .con_swiper #type3 .con_swiper2 .swiper_item2 .con_list2 .scroll_view2 .con_item2 .con_typeSn_status .con_typeSn .orderType2 {
+  background: #FFBF27;
+}
+page .gt_content .con_swiper #type3 .con_swiper2 .swiper_item2 .con_list2 .scroll_view2 .con_item2 .con_typeSn_status .con_typeSn .orderType3 {
+  background: #FF6067;
+  margin-left: 20rpx;
+}
+page .gt_content .con_swiper #type3 .con_swiper2 .swiper_item2 .con_list2 .scroll_view2 .con_item2 .con_typeSn_status .con_typeSn .con_sn {
+  display: flex;
+  font-size: 28rpx;
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;
+  color: #909399;
+  line-height: 40rpx;
+  margin-left: 22rpx;
+}
+page .gt_content .con_swiper #type3 .con_swiper2 .swiper_item2 .con_list2 .scroll_view2 .con_item2 .con_typeSn_status .con_typeSn .con_sn .con_copyIcon {
+  width: 24rpx;
+  height: 24rpx;
+  margin: 6rpx 8rpx;
+  font-size: 24rpx;
+  color: #0C0C0C;
+}
+page .gt_content .con_swiper #type3 .con_swiper2 .swiper_item2 .con_list2 .scroll_view2 .con_item2 .con_typeSn_status .con_status {
+  font-size: 28rpx;
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;
+  color: #485EF4;
+  line-height: 40rpx;
+}
+page .gt_content .con_swiper #type3 .con_swiper2 .swiper_item2 .con_list2 .scroll_view2 .con_item2 .orderType1 {
+  background: #485EF4;
+}
+page .gt_content .con_swiper #type3 .con_swiper2 .swiper_item2 .con_list2 .scroll_view2 .con_item2 .orderType2 {
+  background: #FF6067;
+}
+page .gt_content .con_swiper #type3 .con_swiper2 .swiper_item2 .con_list2 .scroll_view2 .con_item2 .con_fromTo {
+  margin-top: 24rpx;
+}
+page .gt_content .con_swiper #type3 .con_swiper2 .swiper_item2 .con_list2 .scroll_view2 .con_item2 .con_fromTo .con_from {
+  display: flex;
+}
+page .gt_content .con_swiper #type3 .con_swiper2 .swiper_item2 .con_list2 .scroll_view2 .con_item2 .con_fromTo .con_from .con_city {
+  font-size: 28rpx;
+  font-family: PingFangSC-Medium, PingFang SC;
+  font-weight: 500;
+  color: #000000;
+  line-height: 40rpx;
+}
+page .gt_content .con_swiper #type3 .con_swiper2 .swiper_item2 .con_list2 .scroll_view2 .con_item2 .con_fromTo .con_from .con_address_type {
+  margin-left: 20rpx;
+}
+page .gt_content .con_swiper #type3 .con_swiper2 .swiper_item2 .con_list2 .scroll_view2 .con_item2 .con_fromTo .con_from .con_address_type .con_address {
+  font-size: 28rpx;
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;
+  color: #909399;
+  line-height: 40rpx;
+}
+page .gt_content .con_swiper #type3 .con_swiper2 .swiper_item2 .con_list2 .scroll_view2 .con_item2 .con_fromTo .con_from .con_address_type .con_type {
+  font-size: 28rpx;
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;
+  color: #909399;
+  line-height: 40rpx;
+  margin-top: 4rpx;
+}
+page .gt_content .con_swiper #type3 .con_swiper2 .swiper_item2 .con_list2 .scroll_view2 .con_item2 .con_fromTo .con_lineFT {
+  margin: -26rpx 0 0 42rpx;
+  width: 2rpx;
+  height: 60rpx;
+  border: 2rpx dashed #DFDFDF;
+}
+page .gt_content .con_swiper #type3 .con_swiper2 .swiper_item2 .con_list2 .scroll_view2 .con_item2 .con_fromTo .con_to {
+  display: flex;
+  margin-top: 24rpx;
+}
+page .gt_content .con_swiper #type3 .con_swiper2 .swiper_item2 .con_list2 .scroll_view2 .con_item2 .con_fromTo .con_to .con_city {
+  font-size: 28rpx;
+  font-family: PingFangSC-Medium, PingFang SC;
+  font-weight: 500;
+  color: #000000;
+  line-height: 40rpx;
+}
+page .gt_content .con_swiper #type3 .con_swiper2 .swiper_item2 .con_list2 .scroll_view2 .con_item2 .con_fromTo .con_to .con_address_type {
+  margin-left: 20rpx;
+}
+page .gt_content .con_swiper #type3 .con_swiper2 .swiper_item2 .con_list2 .scroll_view2 .con_item2 .con_fromTo .con_to .con_address_type .con_address {
+  font-size: 28rpx;
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;
+  color: #909399;
+  line-height: 40rpx;
+}
+page .gt_content .con_swiper #type3 .con_swiper2 .swiper_item2 .con_list2 .scroll_view2 .con_item2 .con_fromTo .con_to .con_address_type .con_type {
+  font-size: 28rpx;
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;
+  color: #909399;
+  line-height: 40rpx;
+  margin-top: 4rpx;
+}
+page .gt_content .con_swiper #type3 .con_swiper2 .swiper_item2 .con_list2 .scroll_view2 .con_item2 .con_keyVal {
+  margin-top: 12rpx;
+  margin-left: 10rpx;
+}
+page .gt_content .con_swiper #type3 .con_swiper2 .swiper_item2 .con_list2 .scroll_view2 .con_item2 .con_keyVal .con_key_val {
+  display: flex;
+  margin-top: 20rpx;
+}
+page .gt_content .con_swiper #type3 .con_swiper2 .swiper_item2 .con_list2 .scroll_view2 .con_item2 .con_keyVal .con_key_val .con_key {
+  font-size: 28rpx;
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;
+  color: #909399;
+  line-height: 40rpx;
+}
+page .gt_content .con_swiper #type3 .con_swiper2 .swiper_item2 .con_list2 .scroll_view2 .con_item2 .con_keyVal .con_key_val .con_val {
+  font-size: 28rpx;
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;
+  color: #000;
+  line-height: 40rpx;
+}
+page .gt_content .con_swiper #type3 .con_swiper2 .swiper_item2 .con_list2 .scroll_view2 .con_item2 .con_keyVal .con_key_val .con_val text:nth-child(3) {
+  color: #FF6067;
+}
+page .gt_content .con_swiper #type3 .con_swiper2 .swiper_item2 .con_list2 .scroll_view2 .con_item2 .con_time_price {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 32rpx;
+}
+page .gt_content .con_swiper #type3 .con_swiper2 .swiper_item2 .con_list2 .scroll_view2 .con_item2 .con_time_price .con_time {
+  font-size: 28rpx;
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;
+  color: #909399;
+  line-height: 40rpx;
+}
+page .gt_content .con_swiper #type3 .con_swiper2 .swiper_item2 .con_list2 .scroll_view2 .con_item2 .con_time_price .con_price {
+  font-size: 28rpx;
+  font-family: PingFangSC-Medium, PingFang SC;
+  font-weight: 500;
+  color: #FF6067;
+  line-height: 40rpx;
+}
+page .gt_content .con_swiper #type3 .con_swiper2 .swiper_item2 .con_list2 .scroll_view2 .con_item2 .con_line {
+  width: 670rpx;
+  height: 2rpx;
+  opacity: 0.1;
+  border: 1rpx solid #000000;
+  margin-top: 20rpx;
+}
+page .gt_content .con_swiper #type3 .con_swiper2 .swiper_item2 .con_list2 .scroll_view2 .con_item2 .con_pass_btns {
+  display: flex;
+  justify-content: space-between;
+}
+page .gt_content .con_swiper #type3 .con_swiper2 .swiper_item2 .con_list2 .scroll_view2 .con_item2 .con_pass_btns .con_pass {
+  font-size: 28rpx;
+  font-family: PingFangSC-Medium, PingFang SC;
+  font-weight: 500;
+  color: #000000;
+  line-height: 64rpx;
+  padding: 20rpx 0;
+}
+page .gt_content .con_swiper #type3 .con_swiper2 .swiper_item2 .con_list2 .scroll_view2 .con_item2 .con_btns {
+  display: flex;
+  justify-content: flex-end;
+  padding: 20rpx 12rpx;
+}
+page .gt_content .con_swiper #type3 .con_swiper2 .swiper_item2 .con_list2 .scroll_view2 .con_item2 .con_btns .con_btnItem {
+  text-align: center;
+  margin: 0 12rpx;
+  width: 136rpx;
+  height: 64rpx;
+  border-radius: 10rpx;
+  border: 2rpx solid #485EF4;
+  font-size: 28rpx;
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;
+  color: #485EF4;
+  line-height: 64rpx;
+}
+page .gt_content .con_popup .con_screen {
+  background: #fff;
+}
+page .gt_content .con_popup .con_screen .con_title {
+  font-size: 32rpx;
+  font-family: PingFangSC-Medium, PingFang SC;
+  font-weight: 500;
+  color: #000000;
+  line-height: 44rpx;
+  margin: 32rpx;
+}
+page .gt_content .con_popup .con_screen .con_time {
+  display: flex;
+  width: 686rpx;
+  height: 88rpx;
+  background: #F4F4F4;
+  border-radius: 16rpx;
+  margin-top: 32rpx;
+  margin-left: 32rpx;
+}
+page .gt_content .con_popup .con_screen .con_time .con_icon {
+  margin: 22rpx 24rpx;
+}
+page .gt_content .con_popup .con_screen .con_time .con_input {
+  width: 680rpx;
+}
+page .gt_content .con_popup .con_screen .con_sLine {
+  margin: 0 16rpx;
+  height: 56rpx;
+  white-space: nowrap;
+}
+page .gt_content .con_popup .con_screen .con_sLine scroll-view {
+  display: flex;
+}
+page .gt_content .con_popup .con_screen .con_sLine scroll-view .con_lineItem {
+  height: 56rpx;
+  border-radius: 27rpx;
+  border: 2rpx solid #000000;
+  font-size: 28rpx;
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;
+  color: #000000;
+  line-height: 56rpx;
+  text-align: center;
+  margin: 0 16rpx;
+  padding: 0 24rpx;
+  display: inline-block;
+}
+page .gt_content .con_popup .con_screen .con_sLine scroll-view .activeItem {
+  border: #485EF4;
+  background: #485EF4;
+  color: #fff;
+}
+page .gt_content .con_popup .con_screen .con_btns {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 88rpx;
+}
+page .gt_content .con_popup .con_screen .con_btns .con_btnItem {
+  width: 348rpx;
+  height: 100rpx;
+  border-radius: 16rpx;
+  border: 2rpx solid #485EF4;
+  font-size: 32rpx;
+  font-family: PingFangSC-Medium, PingFang SC;
+  font-weight: 500;
+  color: #485EF4;
+  line-height: 100rpx;
+  text-align: center;
+}
+page .gt_content .con_popup .con_screen .con_btns .con_btnItem:nth-child(2) {
+  background: #485EF4;
+  color: #fff;
+}
+

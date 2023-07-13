@@ -1,0 +1,1 @@
+<view class="gt_content"><view data-event-opts="{{[['tap',[['previewImg',['$event']]]]]}}" class="con_img" bindtap="__e"><image src="{{imgPath}}" mode="widthFix"></image></view></view>

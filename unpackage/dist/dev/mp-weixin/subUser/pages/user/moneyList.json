@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "余额明细",
+  "enablePullDownRefresh": false,
+  "usingComponents": {
+    "u-empty": "/static/uview/components/u-empty/u-empty"
+  }
+}

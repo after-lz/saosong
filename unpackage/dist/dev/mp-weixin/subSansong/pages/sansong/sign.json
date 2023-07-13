@@ -1,0 +1,9 @@
+{
+  "navigationBarTitleText": "签收",
+  "enablePullDownRefresh": false,
+  "usingComponents": {
+    "u-toast": "/static/uview/components/u-toast/u-toast",
+    "u-upload": "/static/uview/components/u-upload/u-upload",
+    "sign-input": "/components/am-sign-input/am-sign-input"
+  }
+}

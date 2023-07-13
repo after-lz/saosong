@@ -1,0 +1,9 @@
+{
+  "navigationBarTitleText": "",
+  "enablePullDownRefresh": false,
+  "navigationStyle": "custom",
+  "usingComponents": {
+    "u-swiper": "/static/uview/components/u-swiper/u-swiper",
+    "u-line": "/static/uview/components/u-line/u-line"
+  }
+}

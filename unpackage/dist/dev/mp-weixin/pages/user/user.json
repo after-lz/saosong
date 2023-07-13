@@ -1,0 +1,10 @@
+{
+  "navigationBarTitleText": "",
+  "enablePullDownRefresh": false,
+  "navigationStyle": "custom",
+  "usingComponents": {
+    "u-toast": "/static/uview/components/u-toast/u-toast",
+    "u-line": "/static/uview/components/u-line/u-line",
+    "u-swiper": "/static/uview/components/u-swiper/u-swiper"
+  }
+}

@@ -1,0 +1,1 @@
+<view class="gt_content"><view class="con_empty"><u-empty vue-id="66405a84-1" text="暂无数据" color="#000" src="{{$root.g0}}" icon-size="550" margin-top="200" font-size="32" bind:__l="__l"></u-empty></view></view>

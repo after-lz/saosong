@@ -1,0 +1,10 @@
+{
+  "navigationBarTitleText": "增加企业账户",
+  "enablePullDownRefresh": false,
+  "usingComponents": {
+    "u-toast": "/static/uview/components/u-toast/u-toast",
+    "u-upload": "/static/uview/components/u-upload/u-upload",
+    "u-line": "/static/uview/components/u-line/u-line",
+    "u-input": "/static/uview/components/u-input/u-input"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "navigationBarTitleText": "立即发券",
+  "enablePullDownRefresh": false,
+  "usingComponents": {
+    "u-form": "/static/uview/components/u-form/u-form",
+    "u-form-item": "/static/uview/components/u-form-item/u-form-item",
+    "u-input": "/static/uview/components/u-input/u-input",
+    "u-button": "/static/uview/components/u-button/u-button",
+    "u-calendar": "/static/uview/components/u-calendar/u-calendar"
+  }
+}

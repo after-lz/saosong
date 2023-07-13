@@ -1,0 +1,11 @@
+{
+  "navigationBarTitleText": "专线管理",
+  "enablePullDownRefresh": false,
+  "usingComponents": {
+    "u-toast": "/static/uview/components/u-toast/u-toast",
+    "u-table": "/static/uview/components/u-table/u-table",
+    "u-tr": "/static/uview/components/u-tr/u-tr",
+    "u-td": "/static/uview/components/u-td/u-td",
+    "u-line": "/static/uview/components/u-line/u-line"
+  }
+}

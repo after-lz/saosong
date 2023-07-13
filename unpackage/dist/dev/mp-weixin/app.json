@@ -1,0 +1,129 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/login/login",
+    "pages/order/order",
+    "pages/sansong/sansong",
+    "pages/message/message",
+    "pages/user/user",
+    "pages/index/historyList",
+    "pages/order/orderInfo",
+    "pages/test/test",
+    "pages/login/companyAuth",
+    "pages/login/peopleAuth",
+    "pages/index/orderInfo",
+    "pages/index/billDetail",
+    "pages/login/mobileLogin",
+    "pages/test/mapOrder",
+    "pages/sansong/empty",
+    "pages/login/licence",
+    "pages/order/billDetail",
+    "pages/user/empty",
+    "pages/order/search"
+  ],
+  "subPackages": [
+    {
+      "root": "subSansong",
+      "pages": [
+        "pages/sansong/loadSend",
+        "pages/sansong/companyManage",
+        "pages/sansong/lineManage",
+        "pages/sansong/lineAdd",
+        "pages/sansong/companyJoin",
+        "pages/sansong/ticketManage",
+        "pages/sansong/instantCoupon",
+        "pages/sansong/companyImg",
+        "pages/sansong/companyInfo",
+        "pages/sansong/shipPickup",
+        "pages/sansong/confirmArrive",
+        "pages/sansong/upArrive",
+        "pages/sansong/companyCooperate",
+        "pages/sansong/licenceImg",
+        "pages/sansong/insure",
+        "pages/sansong/sign",
+        "pages/sansong/receipt",
+        "pages/sansong/addMoney",
+        "pages/sansong/sendList",
+        "pages/sansong/sendInfo",
+        "pages/sansong/waybillList",
+        "pages/sansong/addCooperate",
+        "pages/sansong/transportScope",
+        "pages/sansong/adjustSend"
+      ]
+    },
+    {
+      "root": "subUser",
+      "pages": [
+        "pages/user/addBankCardPerson",
+        "pages/user/wallet",
+        "pages/user/charge",
+        "pages/user/moneyList",
+        "pages/user/addBankCardCompany",
+        "pages/user/withdrawal",
+        "pages/user/bankList",
+        "pages/user/withdrawalList",
+        "pages/user/withdrawalDetail",
+        "pages/user/setting",
+        "pages/user/qrcode",
+        "pages/user/packet",
+        "pages/user/packetRecord",
+        "pages/user/packetRules",
+        "pages/user/transferredBalance"
+      ]
+    }
+  ],
+  "window": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "伞送-物流端",
+    "navigationBarBackgroundColor": "#FFFFFF",
+    "backgroundColor": "#F3F4F5"
+  },
+  "tabBar": {
+    "backgroundColor": "#f7f7f7",
+    "color": "#909399",
+    "selectedColor": "#485EF4",
+    "list": [
+      {
+        "iconPath": "./static/tabbar/index.png",
+        "selectedIconPath": "static/tabbar/indexSelected.png",
+        "pagePath": "pages/index/index",
+        "text": "货源"
+      },
+      {
+        "iconPath": "static/tabbar/order.png",
+        "selectedIconPath": "static/tabbar/orderSelected.png",
+        "pagePath": "pages/order/order",
+        "text": "订单"
+      },
+      {
+        "iconPath": "static/tabbar/sansong.png",
+        "selectedIconPath": "static/tabbar/sansongSelected.png",
+        "pagePath": "pages/sansong/sansong",
+        "text": "伞送"
+      },
+      {
+        "iconPath": "static/tabbar/message.png",
+        "selectedIconPath": "static/tabbar/messageSelected.png",
+        "pagePath": "pages/message/message",
+        "text": "消息"
+      },
+      {
+        "iconPath": "static/tabbar/user.png",
+        "selectedIconPath": "static/tabbar/userSelected.png",
+        "pagePath": "pages/user/user",
+        "text": "我的"
+      }
+    ]
+  },
+  "permission": {
+    "scope.userLocation": {
+      "desc": "匹配周边物流订单"
+    }
+  },
+  "requiredPrivateInfos": [
+    "chooseLocation",
+    "getLocation"
+  ],
+  "lazyCodeLoading": "requiredComponents",
+  "usingComponents": {}
+}

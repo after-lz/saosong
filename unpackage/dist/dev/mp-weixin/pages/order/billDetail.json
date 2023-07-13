@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "费用明细",
+  "enablePullDownRefresh": false,
+  "usingComponents": {
+    "u-line": "/static/uview/components/u-line/u-line"
+  }
+}

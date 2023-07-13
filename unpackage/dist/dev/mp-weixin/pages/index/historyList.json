@@ -1,0 +1,12 @@
+{
+  "navigationBarTitleText": "历史记录",
+  "enablePullDownRefresh": false,
+  "usingComponents": {
+    "u-toast": "/static/uview/components/u-toast/u-toast",
+    "u-tabs-swiper": "/static/uview/components/u-tabs-swiper/u-tabs-swiper",
+    "u-empty": "/static/uview/components/u-empty/u-empty",
+    "u-popup": "/static/uview/components/u-popup/u-popup",
+    "u-icon": "/static/uview/components/u-icon/u-icon",
+    "u-input": "/static/uview/components/u-input/u-input"
+  }
+}

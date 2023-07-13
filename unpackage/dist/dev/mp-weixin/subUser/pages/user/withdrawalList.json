@@ -1,0 +1,8 @@
+{
+  "navigationBarTitleText": "提现记录",
+  "enablePullDownRefresh": false,
+  "usingComponents": {
+    "u-empty": "/static/uview/components/u-empty/u-empty",
+    "u-line": "/static/uview/components/u-line/u-line"
+  }
+}

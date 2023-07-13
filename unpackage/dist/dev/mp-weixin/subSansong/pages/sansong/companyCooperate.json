@@ -1,0 +1,13 @@
+{
+  "navigationBarTitleText": "合作企业",
+  "enablePullDownRefresh": false,
+  "usingComponents": {
+    "u-toast": "/static/uview/components/u-toast/u-toast",
+    "u-tabs-swiper": "/static/uview/components/u-tabs-swiper/u-tabs-swiper",
+    "u-notice-bar": "/static/uview/components/u-notice-bar/u-notice-bar",
+    "u-popup": "/static/uview/components/u-popup/u-popup",
+    "u-radio-group": "/static/uview/components/u-radio-group/u-radio-group",
+    "u-radio": "/static/uview/components/u-radio/u-radio",
+    "u-checkbox": "/static/uview/components/u-checkbox/u-checkbox"
+  }
+}

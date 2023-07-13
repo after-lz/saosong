@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "",
+  "enablePullDownRefresh": false,
+  "usingComponents": {
+    "select-switch": "/components/xuan-switch/xuan-switch"
+  }
+}

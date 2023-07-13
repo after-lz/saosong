@@ -1,0 +1,15 @@
+{
+  "navigationBarTitleText": "企业入驻",
+  "enablePullDownRefresh": false,
+  "usingComponents": {
+    "u-toast": "/static/uview/components/u-toast/u-toast",
+    "u-swiper": "/static/uview/components/u-swiper/u-swiper",
+    "u-icon": "/static/uview/components/u-icon/u-icon",
+    "u-input": "/static/uview/components/u-input/u-input",
+    "u-switch": "/static/uview/components/u-switch/u-switch",
+    "u-checkbox-group": "/static/uview/components/u-checkbox-group/u-checkbox-group",
+    "u-checkbox": "/static/uview/components/u-checkbox/u-checkbox",
+    "u-line": "/static/uview/components/u-line/u-line",
+    "u-select": "/static/uview/components/u-select/u-select"
+  }
+}

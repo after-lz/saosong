@@ -1,0 +1,9 @@
+{
+  "navigationBarTitleText": "运输保单",
+  "enablePullDownRefresh": false,
+  "usingComponents": {
+    "u-toast": "/static/uview/components/u-toast/u-toast",
+    "u-upload": "/static/uview/components/u-upload/u-upload",
+    "u-swiper": "/static/uview/components/u-swiper/u-swiper"
+  }
+}

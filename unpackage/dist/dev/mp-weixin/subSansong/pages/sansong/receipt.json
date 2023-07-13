@@ -1,0 +1,8 @@
+{
+  "navigationBarTitleText": "上传回单",
+  "enablePullDownRefresh": false,
+  "usingComponents": {
+    "u-toast": "/static/uview/components/u-toast/u-toast",
+    "u-upload": "/static/uview/components/u-upload/u-upload"
+  }
+}

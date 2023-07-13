@@ -1,0 +1,6 @@
+{
+  "component": true,
+  "usingComponents": {
+    "umask": "/components/am-sign-input/u-mask/u-mask"
+  }
+}

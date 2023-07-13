@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "企业管理",
+  "enablePullDownRefresh": false,
+  "usingComponents": {
+    "u-swiper": "/static/uview/components/u-swiper/u-swiper"
+  }
+}

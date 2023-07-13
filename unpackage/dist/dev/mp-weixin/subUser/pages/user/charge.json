@@ -1,0 +1,8 @@
+{
+  "navigationBarTitleText": "充值",
+  "enablePullDownRefresh": false,
+  "usingComponents": {
+    "u-toast": "/static/uview/components/u-toast/u-toast",
+    "u-input": "/static/uview/components/u-input/u-input"
+  }
+}

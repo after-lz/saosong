@@ -1,0 +1,1 @@
+<view class="gt_content"><view class="con_text"><text>扫一扫发货/取货</text></view><view class="con_qrcode"><image src="{{apiDomain+url+text}}" mode="widthFix"></image></view><view class="con_companyName"><text>{{companyName}}</text></view></view>

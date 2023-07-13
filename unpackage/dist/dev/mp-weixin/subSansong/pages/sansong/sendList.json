@@ -1,0 +1,9 @@
+{
+  "navigationBarTitleText": "装车记录",
+  "enablePullDownRefresh": true,
+  "usingComponents": {
+    "u-search": "/static/uview/components/u-search/u-search",
+    "u-empty": "/static/uview/components/u-empty/u-empty",
+    "u-line": "/static/uview/components/u-line/u-line"
+  }
+}
