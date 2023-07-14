@@ -329,9 +329,7 @@
 
 			var list = uni.getStorageSync('pcaList')
 			gt.provinceCityAreaList = list;
-
 			gt.licencesObj = uni.getStorageSync('licencesObj');
-
 
 		},
 
@@ -555,6 +553,8 @@
 			},
 
 			goLicence() {
+				let gt = this;
+				gt.refresh = false;
 				uni.navigateTo({
 					url: './licenceImg'
 				});
