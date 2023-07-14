@@ -500,10 +500,7 @@
 					</view>
 				</u-popup>
 			</view>
-
-
 		</view>
-
 	</view>
 </template>
 
@@ -515,8 +512,8 @@
 
 				mobile: '',
 
-				listenStatus: false,
-				audioStatus: false,
+				listenStatus: true,
+				audioStatus: true,
 
 				tabList: [{
 					name: '极速'
@@ -602,8 +599,8 @@
 			// if (mobile) {
 			// gt.gtonMessage();
 			// }
-
-
+			uni.setStorageSync('audioStatus', true);
+			uni.setStorageSync('listenStatus', true);
 			var companyInfo = uni.getStorageSync('companyInfo');
 			gt.logistics_id = companyInfo.logistics_id;
 		},
@@ -626,8 +623,7 @@
 			gt.listenStatus = uni.getStorageSync('listenStatus');
 
 
-			var audioStatus = uni.getStorageSync('audioStatus');
-			gt.audioStatus = audioStatus;
+			gt.audioStatus = uni.getStorageSync('audioStatus');
 
 			// var companyAuth = uni.getStorageSync('companyAuth');
 			// gt.companyAuth = companyAuth;
