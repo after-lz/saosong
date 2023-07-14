@@ -201,6 +201,12 @@
 				"enablePullDownRefresh": false
 			}
 		},  {
+			"path": "pages/sansong/useInfo",
+			"style": {
+				"navigationBarTitleText": "使用明细",
+				"enablePullDownRefresh": false
+			}
+		},  {
 			"path": "pages/sansong/instantCoupon",
 			"style": {
 				"navigationBarTitleText": "立即发券",

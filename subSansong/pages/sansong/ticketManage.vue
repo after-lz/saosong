@@ -7,11 +7,11 @@
 		<view class="con_swiper">
 			<swiper :current="currentTab" @animationfinish="animationfinish">
 				<swiper-item class="swiper-item" id="active">
-					<scroll-view scroll-y="true">
+					<scroll-view scroll-y="true" @scrolltolower="loadMore(1)" style="height: 79vh;overflow: auto">
 						<view class="card" v-for="item in list" :key="item.id">
 							<view class="card_left">
-								<view class="money">50元</view>
-								<view class="money_des">满减券</view>
+								<view class="money">{{ (+item.coupon_min_price).toFixed(0) }}元</view>
+								<view class="money_des">{{ item.coupon_type_name }}</view>
 							</view>
 							<view class="card_right">
 								<u-row class="row-info">
@@ -34,71 +34,42 @@
 								</u-row>
 								<u-row class="row-info">
 									<u-col span="12" text-align="left">
-										<view class="label">有效期至{{ item.date_end }}</view>
+										<view class="label time">有效期至{{ item.date_from + '-' + item.date_end }}</view>
 									</u-col>
 								</u-row>
 								<u-row class="row-info">
 									<u-col span="4" text-align="left">
-										<view class="label">已领取{{ item.takeNum }}</view>
+										<view class="label">已领取:{{ item.takeNum }}张</view>
 									</u-col>
 									<u-col span="4" text-align="left">
-										<view class="label">已使用{{ item.usedNum }}</view>
+										<view class="label">已使用:{{ item.usedNum }}张</view>
 									</u-col>
 									<u-col span="4" text-align="left">
-										<view class="label">未领取{{ item.unTakeNum }}</view>
+										<view class="label">未领取:{{ item.unTakeNum }}张</view>
 									</u-col>
 								</u-row>
+								<view class="btn1" @click="show = true, id = item.id">结束发券</view>
+								<view class="btn2" v-if="item.item.status == 4">{{ judgeStatus(item.status) }}</view>
 							</view>
-							<!-- <view class="card_right">
-								<view class="card_title">
-									<text class="blod">{{ item.coupon_title }}</text>
-									<text class="coupon_info">明细</text>
-								</view>
-								<view class="row">
-									<view class="label">发券金额</view>
-									<view class="label_info">￥{{ item.coupon_price }}</view>
-								</view>
-								<view class="row">
-									<view class="label">发券数量</view>
-									<view class="label_info">{{ item.coupon_num }}</view>
-								</view>
-								<view class="card_time">
-									有效期至{{ item.date_end }}
-								</view>
-								<view class="row_3">
-									<view class="col">
-										<view class="label">已领取</view>
-										<view class="label_info">{{ item.takeNum }}张</view>
-									</view>
-									<view class="col">
-										<view class="label">已使用</view>
-										<view class="label_info">{{ item.usedNum }}张</view>
-									</view>
-									<view class="col">
-										<view class="label">未领取</view>
-										<view class="label_info">{{ item.unTakeNum }}张</view>
-									</view>
-								</view>
-							</view> -->
 						</view>
-							
 					</scroll-view>
 					<view class="btn" @click="goInstantCoupon">立即发券</view>
 				</swiper-item>
 				<swiper-item class="swiper-item" id="down">
-					<scroll-view scroll-y="true">
-						<view class="card" v-for="item in overList" :key="item.id">
+					<scroll-view scroll-y="true" @scrolltolower="loadMore(2)" style="height: 90vh;overflow: auto">
+						<view class="card" v-for="item in list" :key="item.id">
 							<view class="card_left">
-								<view class="money">50元</view>
-								<view class="money_des">满减券</view>
+								<view class="money">{{ (+item.coupon_min_price).toFixed(0) }}元</view>
+								<view class="money_des">{{ item.coupon_type_name }}</view>
 							</view>
 							<view class="card_right">
 								<u-row class="row-info">
-									<u-col span="8">
+									<u-col span="6">
 										<view class="blod">{{ item.coupon_title }}</view>
 									</u-col>
-									<u-col span="4" text-align="right">
-										<view class="coupon_info">明细</view>
+									<u-col span="6" text-align="right">
+										<view class="status">{{ judgeStatus(item.status) }}</view>
+										<view class="coupon_info" @click="goCouponInfo(item)">明细</view>
 									</u-col>
 								</u-row>
 								<u-row class="row-info">
@@ -113,18 +84,18 @@
 								</u-row>
 								<u-row class="row-info">
 									<u-col span="12" text-align="left">
-										<view class="label">有效期至{{ item.date_end }}</view>
+										<view class="label time">有效期至{{ item.date_from + '-' + item.date_end }}</view>
 									</u-col>
 								</u-row>
 								<u-row class="row-info">
 									<u-col span="4" text-align="left">
-										<view class="label">已领取{{ item.takeNum }}</view>
+										<view class="label">已领取:{{ item.takeNum }}张</view>
 									</u-col>
 									<u-col span="4" text-align="left">
-										<view class="label">已使用{{ item.usedNum }}</view>
+										<view class="label">已使用:{{ item.usedNum }}张</view>
 									</u-col>
 									<u-col span="4" text-align="left">
-										<view class="label">未领取{{ item.unTakeNum }}</view>
+										<view class="label">未领取:{{ item.unTakeNum }}张</view>
 									</u-col>
 								</u-row>
 							</view>				
@@ -132,6 +103,8 @@
 					</scroll-view>
 				</swiper-item>
 			</swiper>
+			<u-modal v-model="show" content="确定要结束当前优惠券的发放吗？" title="结束提醒" @confirm="confirm" :show-cancel-button="true"></u-modal>
+			<u-toast ref="uToast" />
 		</view>
 	</view>
 </template>
@@ -148,46 +121,78 @@
 				currentTab: 0,
 				activeStyle: {'background-color': '#409eff', 'color': '#fff !important'},
 				list: [],
-				overList: []
+				show: false,
+				id: undefined,
+				params: {},
+				over: false
 			}
 		},
-		onLoad() {
-			
-		},
 		mounted() {
-			let gt = this;
-			var url = '/logistics/coupon/list';
-			var data= {
+			let gt = this
+			gt.params = {
 				page: 1,
 				limit: 10,
-				status: gt.currentTab===0?1:2
-			};
-			gt.gtRequest.post(url,data).then(res=>{
-				gt.list = res.list
-			});
+				status: gt.currentTab === 0 ? 1 : 2
+			}
+			gt.getList()
 		},
 		methods: {
 			tabsChange(index) {
 				let gt = this
 				gt.currentTab = index
-				var url = '/logistics/coupon/list';
-				var data= {
-					page: 1,
-					limit: 10,
-					status: gt.currentTab===0?1:2
-				};
-				gt.gtRequest.post(url,data).then(res=>{
-					gt.currentTab===0? gt.list = res.list:gt.overList = res.list
-				});
+				gt.params.status = gt.currentTab === 0 ? 1 : 2
+				gt.params.page = 1
+				gt.over = false
+				gt.list = []
+				gt.getList()
+			},
+			getList() {
+				let gt = this
+				gt.gtRequest.post('/logistics/coupon/list', gt.params).then(res=>{
+					gt.list = [...gt.list, ...res.list]
+					gt.over = res.list.length < gt.params.limit
+				})
 			},
 			animationfinish(item) {
 				let gt = this
 				gt.currentTab = item.detail.current
 			},
+			confirm() {
+				let gt = this
+				gt.gtRequest.post('/logistics/coupon/endCoupon', {coupon_id: gt.id}).then(res=> {
+					gt.getList()
+					gt.$refs.uToast.show({
+						title: '结束发放优惠券成功'
+					})
+				})
+			},
+			loadMore() {
+				let gt = this
+				if(gt.over) return
+				gt.params.page++
+				gt.getList()
+			},
+			judgeStatus(type) {
+				switch (type){
+					case 0:
+						return '未启用'
+					case 1:
+						return '已启用'
+					case 2:
+						return '已过期'
+					case 3:
+						return '已下架'
+					case 4:
+						return '已领完'
+					default:
+						return ''
+				}
+			},
 			goCouponInfo(item) {
 				uni.navigateTo({
 					url: './useInfo?id='+item.id,
 				})
+				return false
 			},
 			goInstantCoupon() {
 				uni.navigateTo({
@@ -231,61 +236,86 @@
 			.con_swiper {
 				swiper {
 					height: calc(100vh - 88rpx);
-					
 				}
 			}
 			.btn {
 				width: 90%;
-				margin: 0 auto;
+				//margin: 0 auto;
 				height: 72rpx;
 				line-height: 72rpx;
 				text-align: center;
 				border-radius: 16rpx;
 				background-color: #409eff;
 				color: #fff;
+				position: absolute;
+				bottom: 5%;
+				left: 5%;
+			}
+			.btn1 {
+				position: absolute;
+				background-color: #409eff;
+				color: #fff;
+				border-radius: 10rpx;
+				padding: 6rpx;
+				font-size: 24rpx;
+				width: 130rpx;
+				text-align: center;
+				right: 20rpx;
+				top: 70rpx;
+			}
+			.btn2 {
+				position: absolute;
+				right: 30rpx;
+				top: 120rpx;
+				color: #8080ff;
+				font-weight: 700;
 			}
 			.card {
-				 display: flex;
+				position: relative;
+				display: flex;
 				padding: 20rpx;
 				margin: 20rpx;
 				border: 2rpx solid #f2f2f2;
 				.card_left {
 					display: flex;
+					flex-wrap: wrap;
 					width: 170rpx;
 					height: 230rpx;
+					justify-content: center;
 					align-items: center;
 					background-color: #e4e4e4;
+					color: #fff;
+					.money {
+						font-size: 36rpx;
+						font-weight: 700;
+						width: 100%;
+						text-align: center;
+					}
 				}
 				.card_right {
-					width: 70%;
+					width: calc(100% - 170rpx);
 					.row-info {
 						.coupon_info {
 							color: #409eff;
+							display: inline-block;
 						}
 					}
 				}
-				// .card_right {
-				// 	.card_title {
-				// 		display: flex;
-				// 		justify-content: space-between;
-				// 	}
-				// 	.coupon_info {
-				// 		width: 130px;
-				// 		display: flex;
-				// 		justify-content:flex-end;
-				// 	}
-				// 	.row {
-				// 		display: flex;
-				// 	}
-				// 	.row_3 {
-				// 		display: flex;
-				// 		.col {
-				// 			display: flex;
-				// 		}
-				// 	}
-				// }
 			}
 			.blod {
+				font-weight: 700;
+			}
+			.time {
+				color: #999999;
+			}
+			.label {
+				padding: 8rpx 0;
+				font-size: 24rpx;
+			}
+			.status {
+				color: #8080ff;
+				display: inline-block;
+				margin-right: 30rpx;
 				font-weight: 700;
 			}
 		}
