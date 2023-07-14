@@ -28,7 +28,8 @@
 				</view>
 			</view>
 			<view class="con_list">
-				<view class="con_item u-line-1" v-for="(item,index) in historyList" :key="index" @click="searcList(item)">
+				<view class="con_item u-line-1" v-for="(item,index) in historyList" :key="index"
+					@click="searcList(item)">
 					<text>{{item}}</text>
 				</view>
 			</view>
@@ -75,7 +76,8 @@
 												<view class="con_copyIcon"
 													@click.stop="gtCommon.copyStr(item.deliver_sn)">
 													<!-- <text class="custom-icon custom-icon-copy"></text> -->
-													<image :src="gtCommon.getOssImg('order/copy.png')" mode="widthFix"></image>
+													<image :src="gtCommon.getOssImg('order/copy.png')" mode="widthFix">
+													</image>
 												</view>
 											</view>
 										</view>
@@ -150,7 +152,8 @@
 											</view>
 											<view class="con_val">
 												<text v-if="item.transport_day_max == 0">面议</text>
-												<text v-else>{{item.transport_day_min}} - {{item.transport_day_max}}天</text>
+												<text v-else>{{item.transport_day_min}} -
+													{{item.transport_day_max}}天</text>
 											</view>
 										</view>
 
@@ -222,9 +225,9 @@
 											v-if="item.status == 7">
 											<text>确认发车</text>
 										</view>
-										<view class="con_btnItem" @click.stop="confirmStart(item)"
+										<view class="con_btnItem" @click.stop="cancelConfirm(item)"
 											v-if="item.cancel_status == 1">
-											<text>取消确认</text>
+											<text>确认取消申请</text>
 										</view>
 										<!-- <view class="con_btnItem" @click.stop="confirmArriva(item)"
 											v-if="item.status == 9">
@@ -356,6 +359,8 @@
 					</view>
 				</u-popup>
 			</view>
+			<u-modal v-model="showModel" title="确认取消订单申请" content="您确认同意货主的取消订单申请吗？同意后，订单将被取消，终止承运。"
+				:show-cancel-button="true" cancel-text="联系货主" @confirm="confirm"></u-modal>
 		</view>
 	</view>
 </template>
@@ -369,8 +374,6 @@
 
 				historyShow: false,
 				historyList: [],
-
-
 				screenShow: false,
 				calcendarShow: false,
 				timeStr: '',
@@ -483,6 +486,8 @@
 				dataList: [],
 
 				break: false,
+				showModel: false,
+				cancelId: ''
 			}
 		},
 		onLoad() {
@@ -501,10 +506,10 @@
 			var orderSearchVal = uni.getStorageSync('orderSearchVal');
 			gt.searchVal = orderSearchVal;
 			uni.removeStorageSync('orderSearchVal');
-			
-			setTimeout(function(){
+
+			setTimeout(function() {
 				gt.reGetOrderList();
-			},500);
+			}, 500);
 		},
 		onHide() {
 			let gt = this;
@@ -517,7 +522,7 @@
 			uni.stopPullDownRefresh();
 		},
 		methods: {
-			searcList(item){
+			searcList(item) {
 				let gt = this;
 				gt.searchVal = item;
 				gt.orderSearch();
@@ -526,8 +531,8 @@
 				let gt = this;
 				// gt.historyShow = true;
 				uni.navigateTo({
-					url:'./search'
-				})				
+					url: './search'
+				})
 
 			},
 			clearHistory() {
@@ -535,7 +540,7 @@
 				gt.historyList = [];
 				uni.setStorageSync('wayBillHistory', []);
 			},
-			
+
 			orderSearch() {
 				let gt = this;
 				gt.historyShow = false;
@@ -633,11 +638,11 @@
 				var currentTab = gt.currentTab;
 				gt.currentTab = item.detail.current;
 				gt.statusIndex = item.detail.current;
-				
-				console.log(1113,currentTab);
-				console.log(1114,gt.currentTab);
-				
-				if(currentTab != gt.currentTab){
+
+				console.log(1113, currentTab);
+				console.log(1114, gt.currentTab);
+
+				if (currentTab != gt.currentTab) {
 					gt.reGetOrderList();
 				}
 			},
@@ -646,7 +651,7 @@
 
 
 				var token = await gt.gtRequest.getToken();
-				console.log(621,token);
+				console.log(621, token);
 				if (token) {
 					var url = "/logistics/specialline/get_special_line_list";
 					var data = {
@@ -714,13 +719,13 @@
 			},
 			async reGetOrderList() {
 				let gt = this;
-				console.log('break:',gt.break);
+				console.log('break:', gt.break);
 				// return false;
 				if (gt.break) {
 					return false;
-				}else{
+				} else {
 					var token = await gt.gtRequest.getToken();
-					console.log(694,token);
+					console.log(694, token);
 					if (token) {
 						gt.page = 1;
 						gt.size = 10;
@@ -744,7 +749,7 @@
 					}
 				}
 
-				
+
 			},
 			getOrderList() {
 				let gt = this;
@@ -757,7 +762,7 @@
 				var data = {
 					page: gt.page,
 					limit: gt.size,
-					search_key:gt.searchVal,
+					search_key: gt.searchVal,
 				};
 
 				if (gt.currentTab == 1) {
@@ -808,7 +813,7 @@
 
 				gt.gtRequest.post(url, data).then(res => {
 					console.log(res);
-					if(gt.page == 1){
+					if (gt.page == 1) {
 						gt.dataList = [];
 					}
 					gt.dataList = gt.dataList.concat(res.list);
@@ -820,7 +825,7 @@
 					}
 				});
 			},
-			
+
 			loadMore() {
 				console.log('loadMore');
 				let gt = this;
@@ -887,7 +892,28 @@
 				});
 				return false;
 			},
-			goSendInfo(item){
+			cancelConfirm(item) {
+				let gt = this
+				gt.showModel = true
+				gt.cancelId = item.deliver_sn
+			},
+			confirm() {
+				let gt = this
+				var url = '/logistics/order/confirm_cancel_apply';
+				var data = {
+					deliver_sn: gt.cancelId
+				};
+				gt.gtRequest.post(url, data).then(res => {
+					if (res.code === 1) {
+						gt.$refs.uToast.show({
+							title: '订单已取消！',
+							type: 'success',
+						});
+					}
+				});
+				gt.showModel = false
+			},
+			goSendInfo(item) {
 				uni.navigateTo({
 					url: '/subSansong/pages/sansong/sendInfo?orderSn=' + item.waybill_sn,
 				});
@@ -1081,7 +1107,7 @@
 													.con_text {}
 
 													.con_copyIcon {
-														width:24rpx;
+														width: 24rpx;
 														height: 24rpx;
 														margin: 6rpx 8rpx;
 														font-size: 24rpx;
@@ -1290,9 +1316,10 @@
 											padding: 20rpx 12rpx;
 
 											.con_btnItem {
+												display: flex;
 												text-align: center;
 												margin: 0 12rpx;
-												width: 136rpx;
+												padding: 0 10rpx;
 												height: 64rpx;
 												border-radius: 10rpx;
 												border: 2rpx solid #000000;
