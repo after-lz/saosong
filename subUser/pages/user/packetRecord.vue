@@ -39,6 +39,17 @@
 			}
 		},
 		mounted() {
+			let gt = this;
+			var url = '/logistics/companywallet/get_wallet_log';
+			var data= {
+				page: 1,
+				limit: 10,
+				wallet_type: 'money02',
+				data_type: '1'
+			};
+			gt.gtRequest.post(url,data).then(res=>{
+				console.log(res)
+			});
 			for (let i = 0; i < 20; i++) {
 				this.list.push({
 					id: i+1,

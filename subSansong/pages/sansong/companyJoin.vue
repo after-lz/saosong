@@ -25,9 +25,9 @@
 				<view class="con_name">
 					<u-input v-model="companyName" placeholder="输入公司名称" height="92" />
 				</view>
-				<view class="con_invoiceSwitch">
+				<!-- <view class="con_invoiceSwitch">
 					<view class="con_required">
-						<!-- <text>*</text> -->
+						<text>*</text>
 					</view>
 					<view class="con_text">
 						<text>是否提供增值发票</text>
@@ -43,12 +43,12 @@
 					<view class="con_text">
 						<text>提供发票形式：</text>
 					</view>
-					<!-- <view class="con_radio"> -->
-					<!-- <u-radio-group v-model="invoiceType">
+					<view class="con_radio">
+					<u-radio-group v-model="invoiceType">
 							<u-radio name="1">电子发票</u-radio>
 							<u-radio name="2">纸质发票</u-radio>
-						</u-radio-group> -->
-					<!-- </view> -->
+						</u-radio-group>
+					</view>
 					<view class="con_checkbox">
 						<u-checkbox-group @change="invoiceTypeChange">
 							<u-checkbox v-model="fapiao_electron_status" name="电子发票">电子发票</u-checkbox>
@@ -70,7 +70,7 @@
 					<view class="con_unit">
 						<text>%</text>
 					</view>
-				</view>
+				</view> -->
 				<view class="con_notice">
 					<view class="con_text">
 						<text>公告板</text>

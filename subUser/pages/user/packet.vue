@@ -78,7 +78,7 @@
 			goRecord() {
 				uni.navigateTo({
 					url: './packetRecord'
-				})
+				});
 			},
 			goRules() {
 				uni.navigateTo({
