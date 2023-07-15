@@ -7,7 +7,8 @@
 		<view class="con_swiper">
 			<swiper :current="currentTab" @animationfinish="animationfinish">
 				<swiper-item class="swiper-item" id="active">
-					<scroll-view scroll-y="true" @scrolltolower="loadMore(1)" style="height: 79vh;overflow: auto">
+					<u-empty text="您还没有发券" mode="list" v-if="!list.length"></u-empty>
+					<scroll-view scroll-y="true" @scrolltolower="loadMore(1)" style="height: 79vh;overflow: auto" v-else>
 						<view class="card" v-for="item in list" :key="item.id">
 							<view class="card_left">
 								<view class="money">{{ (+item.coupon_min_price).toFixed(0) }}元</view>
@@ -49,14 +50,15 @@
 									</u-col>
 								</u-row>
 								<view class="btn1" @click="show = true, id = item.id">结束发券</view>
-								<view class="btn2" v-if="item.item.status == 4">{{ judgeStatus(item.status) }}</view>
+								<view class="btn2" v-if="item.status == 4">{{ judgeStatus(item.status) }}</view>
 							</view>
 						</view>
 					</scroll-view>
 					<view class="btn" @click="goInstantCoupon">立即发券</view>
 				</swiper-item>
 				<swiper-item class="swiper-item" id="down">
-					<scroll-view scroll-y="true" @scrolltolower="loadMore(2)" style="height: 90vh;overflow: auto">
+					<u-empty text="您还没有发券" mode="list" v-if="!list.length"></u-empty>
+					<scroll-view scroll-y="true" @scrolltolower="loadMore(2)" style="height: 90vh;overflow: auto" v-else>
 						<view class="card" v-for="item in list" :key="item.id">
 							<view class="card_left">
 								<view class="money">{{ (+item.coupon_min_price).toFixed(0) }}元</view>
