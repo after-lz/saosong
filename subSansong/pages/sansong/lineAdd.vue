@@ -662,9 +662,9 @@
 				price10_2: '',
 
 				th_status: true,
-				th_price: '0.00',
+				th_price: '',
 				sh_status: true,
-				sh_price: '0.00',
+				sh_price: '',
 
 
 				// provinceCityAreaList: [],
