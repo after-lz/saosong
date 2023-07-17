@@ -77,7 +77,7 @@
 			</view>
 			<view class="con_item" v-for="(item,index) in arriveStationList" :key="index">
 				<!-- <view class="con_removeBtn" @click="removeArriveStation(index)" v-if="index != 0"> -->
-					<!-- 20230704测试要求第一个也能删除 -->
+				<!-- 20230704测试要求第一个也能删除 -->
 				<view class="con_removeBtn" @click="removeArriveStation(index)">
 					<u-icon name="close-circle-fill" color="#FF6067" size="48"></u-icon>
 				</view>
@@ -557,6 +557,7 @@
 
 <script>
 	import gtPCA from "@/components/gt-pca/gt-pca.vue";
+	import find from "lodash/find";
 	export default {
 		components: {
 			gtPCA: gtPCA,
@@ -564,6 +565,7 @@
 		data() {
 			return {
 				id: 0,
+				startArea: '',
 
 				step: 1,
 
@@ -594,7 +596,7 @@
 						cityName: '',
 					}],
 				],
-				
+
 				arrivePca: [
 					[{
 						cityName: '',
@@ -611,8 +613,8 @@
 				GTPCAShowS: false,
 				GTPCAShowE: false,
 				fromTo: 's',
-				
-				GTPCAShow:false,
+
+				GTPCAShow: false,
 
 
 
@@ -681,17 +683,20 @@
 		},
 		onLoad(options) {
 			let gt = this;
-		
+
 			// var list = uni.getStorage('pcaList')
 			uni.getStorage({
 				key: 'pcaList',
 				success: function(res) {
-					console.log('pcaList:', res);
 					gt.provinceCityAreaList = res.data;
+					if (options.startArea) {
+						var startArea = JSON.parse(options.startArea)
+						console.log(startArea)
+						gt.getStartArea(startArea)
+					}
 				},
 
 			});
-			console.log(660);
 			if (options.id) {
 				gt.id = options.id;
 				gt.getDataInfo();
@@ -707,10 +712,10 @@
 			gtPCASelect(res) {
 				console.log(res);
 				console.log(res.length);
-				if(res.length == 10){
+				if (res.length == 10) {
 					return false;
 				}
-				
+
 				let gt = this;
 				if (gt.fromTo == 's') {
 					if (res.length > 10) {
@@ -728,6 +733,23 @@
 				if (gt.fromTo == 'e') {
 					if (res.length > 10) {
 						gt.toPca = JSON.parse(res);
+						gt.arriveStationList = [{
+							id: '',
+							company: '',
+							manage: '',
+							mobile: '',
+							address: '',
+							lng: '',
+							lat: '',
+							pca: gt.toPca[0][0].cityName + '-' + gt.toPca[1][0].cityName + '-' + gt.toPca[2][0].cityName,
+							
+							provinceStr: gt.toPca[0][0].cityName,
+							// provinceCode: '',
+							cityStr: gt.toPca[1][0].cityName,
+							// cityCode: '',
+							areaStr: gt.toPca[2][0].cityName,
+							// areaCode: '',
+						}]
 					} else {
 						gt.toPca = [
 							[],
@@ -747,147 +769,82 @@
 				};
 				gt.gtRequest.post(url, data).then(res => {
 					var info = res.info;
-
 					gt.break = false;
 					var fromPca = [];
-					for (var i = 0; i < gt.provinceCityAreaList.length; i++) {
-						if (gt.break) {
-							break;
-						}
-						if (gt.provinceCityAreaList[i].city_name == info.start_province) {
-							var provinceItem = {
-								cityCode: gt.provinceCityAreaList[i].city_code,
-								cityName: gt.provinceCityAreaList[i].city_name,
-								cityType: gt.provinceCityAreaList[i].city_type,
-								parentCode: gt.provinceCityAreaList[i].parent_code,
+					var provinceItem = find(gt.provinceCityAreaList, ['city_name', info.start_province])
+					if (provinceItem) {
+						fromPca.push([{
+							cityCode: provinceItem.city_code,
+							cityName: provinceItem.city_name,
+							cityType: provinceItem.city_type,
+							parentCode: provinceItem.parent_code,
+							selected: true,
+						}]);
+						var cityItem = find(provinceItem.children, ['city_name', info.start_city])
+						if (cityItem) {
+							fromPca.push([{
+								cityCode: cityItem.city_code,
+								cityName: cityItem.city_name,
+								cityType: cityItem.city_type,
+								parentCode: cityItem.parent_code,
 								selected: true,
-							};
-							fromPca.push([provinceItem]);
-							for (var j = 0; j < gt.provinceCityAreaList[i].children.length; j++) {
-								if (gt.break) {
-									break;
-								}
-								if (gt.provinceCityAreaList[i].children[j].city_name == info.start_city) {
-									var cityItem = {
-										cityCode: gt.provinceCityAreaList[i].children[j].city_code,
-										cityName: gt.provinceCityAreaList[i].children[j].city_name,
-										cityType: gt.provinceCityAreaList[i].children[j].city_type,
-										parentCode: gt.provinceCityAreaList[i].children[j].parent_code,
-										selected: true,
-									};
-									fromPca.push([cityItem]);
-									for (var k = 0; k < gt.provinceCityAreaList[i].children[j].children
-										.length; k++) {
-										if (gt.break) {
-											break;
-										}
-										if (gt.provinceCityAreaList[i].children[j].children[k].city_name == info
-											.start_county) {
-											var areaItem = {
-												cityCode: gt.provinceCityAreaList[i].children[j].children[k]
-													.city_code,
-												cityName: gt.provinceCityAreaList[i].children[j].children[k]
-													.city_name,
-												cityType: gt.provinceCityAreaList[i].children[j].children[k]
-													.city_type,
-												parentCode: gt.provinceCityAreaList[i].children[j].children[k]
-													.parent_code,
-												selected: true,
-											};
-											fromPca.push([areaItem]);
-										}
-
-									}
-									gt.break = true;
-									break;
-								}
+							}]);
+							var areaItem = find(cityItem.children, ['city_name', info.start_county])
+							if (areaItem) {
+								fromPca.push([{
+									cityCode: areaItem.city_code,
+									cityName: areaItem.city_name,
+									cityType: areaItem.city_type,
+									parentCode: areaItem.parent_code,
+									selected: true,
+								}])
 							}
 						}
 					}
-
 					gt.fromPca = fromPca;
 
 					gt.break = false;
 					var toPca = [];
-					for (var i = 0; i < gt.provinceCityAreaList.length; i++) {
-						if (gt.break) {
-							break;
-						}
-						if (gt.provinceCityAreaList[i].city_name == info.end_province) {
-							var provinceItem = {
-								cityCode: gt.provinceCityAreaList[i].city_code,
-								cityName: gt.provinceCityAreaList[i].city_name,
-								cityType: gt.provinceCityAreaList[i].city_type,
-								parentCode: gt.provinceCityAreaList[i].parent_code,
+					var toProvinceItem = find(gt.provinceCityAreaList, ['city_name', info.end_province])
+					if (toProvinceItem) {
+						toPca.push([{
+							cityCode: toProvinceItem.city_code,
+							cityName: toProvinceItem.city_name,
+							cityType: toProvinceItem.city_type,
+							parentCode: toProvinceItem.parent_code,
+							selected: true,
+						}]);
+						var toCityItem = find(toProvinceItem.children, ['city_name', info.end_city])
+						if (toCityItem) {
+							toPca.push([{
+								cityCode: toCityItem.city_code,
+								cityName: toCityItem.city_name,
+								cityType: toCityItem.city_type,
+								parentCode: toCityItem.parent_code,
 								selected: true,
-							};
-							toPca.push([provinceItem]);
-							for (var j = 0; j < gt.provinceCityAreaList[i].children.length; j++) {
-								if (gt.break) {
-									break;
-								}
-								if (gt.provinceCityAreaList[i].children[j].city_name == info.end_city) {
-									var cityItem = {
-										cityCode: gt.provinceCityAreaList[i].children[j].city_code,
-										cityName: gt.provinceCityAreaList[i].children[j].city_name,
-										cityType: gt.provinceCityAreaList[i].children[j].city_type,
-										parentCode: gt.provinceCityAreaList[i].children[j].parent_code,
+							}]);
+							var areaArr = info.end_county.split(',');
+							var area2 = [];
+							for (var m = 0; m < areaArr.length; m++) {
+								var toAreaItem = find(toCityItem.children, ['city_name', areaArr[m]]);
+								if (toAreaItem) {
+									area2.push({
+										cityCode: toAreaItem.city_code,
+										cityName: toAreaItem.city_name,
+										cityType: toAreaItem.city_type,
+										parentCode: toAreaItem.parent_code,
 										selected: true,
-									};
-									toPca.push([cityItem]);
-									var areaArr = info.end_county.split(',');
-									var area2 = [];
-
-
-									for (var k = 0; k < gt.provinceCityAreaList[i].children[j].children
-										.length; k++) {
-										if (gt.break) {
-											break;
-										}
-
-
-										for (var m = 0; m < areaArr.length; m++) {
-											if (gt.break) {
-												break;
-											}
-											if (gt.provinceCityAreaList[i].children[j].children[k].city_name ==
-												areaArr[m]) {
-												var areaItem = {
-													cityCode: gt.provinceCityAreaList[i].children[j].children[
-															k]
-														.city_code,
-													cityName: gt.provinceCityAreaList[i].children[j].children[
-															k]
-														.city_name,
-													cityType: gt.provinceCityAreaList[i].children[j].children[
-															k]
-														.city_type,
-													parentCode: gt.provinceCityAreaList[i].children[j]
-														.children[k]
-														.parent_code,
-													selected: true,
-												};
-												area2.push(areaItem);
-											}
-										}
-
-
-
-
-									}
-									if (area2.length) {
-										toPca.push(area2);
-									}
-									gt.break = true;
-									break;
+									});
 								}
+
 							}
+							if (area2.length) {
+								toPca.push(area2);
+							}
+							gt.break = true;
 						}
 					}
-
 					gt.toPca = toPca;
-
-
 
 					var arriveStationList = [];
 					for (var i = 0; i < info.outlets_list.length; i++) {
@@ -939,6 +896,43 @@
 					gt.sh_price = info.dispatch_price;
 				});
 			},
+			getStartArea(startArea) {
+				let gt = this;
+				var fromPca = [];
+				var provinceItem = find(gt.provinceCityAreaList, ['city_name', startArea.start_province])
+				console.log(gt.provinceCityAreaList)
+				if (provinceItem) {
+					fromPca.push([{
+						cityCode: provinceItem.city_code,
+						cityName: provinceItem.city_name,
+						cityType: provinceItem.city_type,
+						parentCode: provinceItem.parent_code,
+						selected: true,
+					}]);
+					var cityItem = find(provinceItem.children, ['city_name', startArea.start_city])
+					if (cityItem) {
+						fromPca.push([{
+							cityCode: cityItem.city_code,
+							cityName: cityItem.city_name,
+							cityType: cityItem.city_type,
+							parentCode: cityItem.parent_code,
+							selected: true,
+						}]);
+						var areaItem = find(cityItem.children, ['city_name', startArea.start_county])
+						if (areaItem) {
+							fromPca.push([{
+								cityCode: areaItem.city_code,
+								cityName: areaItem.city_name,
+								cityType: areaItem.city_type,
+								parentCode: areaItem.parent_code,
+								selected: true,
+							}])
+						}
+					}
+				}
+				gt.fromPca = fromPca;
+				console.log(gt.fromPca)
+			},
 			showGTPCA(str) {
 				let gt = this;
 				gt.fromTo = str;
@@ -947,7 +941,7 @@
 				gt.GTPCAShowS = str == 'e' ? false : true;
 				gt.GTPCAShowE = str == 's' ? false : true;
 			},
-			
+
 			addArriveStation() {
 				let gt = this;
 				var arriveStationItem = {
@@ -958,13 +952,13 @@
 					address: '',
 					lng: '',
 					lat: '',
-					pca: '',
+					pca: gt.toPca[0][0].cityName + '-' + gt.toPca[1][0].cityName + '-' + gt.toPca[2][0].cityName,
 
-					provinceStr: '',
+					provinceStr: gt.toPca[0][0].cityName,
 					// provinceCode: '',
-					cityStr: '',
+					cityStr: gt.toPca[1][0].cityName,
 					// cityCode: '',
-					areaStr: '',
+					areaStr: gt.toPca[2][0].cityName,
 					// areaCode: '',
 				};
 				gt.arriveStationList.push(arriveStationItem);
@@ -992,8 +986,8 @@
 				gt.currentItemArriveStation = index;
 
 				gt.GTPCAShow = true;
-				
-				
+
+
 				// if (gt.arriveStationList[index].areaStr) {
 
 				// 	var provinceList = gt.provinceCityAreaList;
@@ -1031,11 +1025,13 @@
 
 				var arr = JSON.parse(e);
 				console.log(arr);
-				if(arr[0][0]){
+				if (arr[0][0]) {
 					gt.arriveStationList[index].provinceStr = arr[0][0].cityName;
 					gt.arriveStationList[index].cityStr = arr[1][0].cityName;
 					gt.arriveStationList[index].areaStr = arr[2][0].cityName;
-					gt.arriveStationList[index].pca = arr[0][0].cityName + '-' + arr[1][0].cityName + '-' + arr[2][0].cityName;
+					gt.arriveStationList[index].pca = arr[0][0].cityName + '-' + arr[1][0].cityName + '-' + arr[2][
+						0
+					].cityName;
 				}
 			},
 
@@ -1151,9 +1147,11 @@
 					}
 
 
-					var price1 = '{"P1":"' + gt.price1_1 + '","P3":"' + gt.price3_1 + '","P6":"' + gt.price6_1 +
+					var price1 = '{"P1":"' + gt.price1_1 + '","P3":"' + gt.price3_1 + '","P6":"' + gt
+						.price6_1 +
 						'","P10":"' + gt.price10_1 + '"}';
-					var price2 = '{"P1":"' + gt.price1_2 + '","P3":"' + gt.price3_2 + '","P6":"' + gt.price6_2 +
+					var price2 = '{"P1":"' + gt.price1_2 + '","P3":"' + gt.price3_2 + '","P6":"' + gt
+						.price6_2 +
 						'","P10":"' + gt.price10_2 + '"}';
 
 
