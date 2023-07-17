@@ -646,7 +646,7 @@
 
 
 
-				quotationSwitch: false,
+				quotationSwitch: true,
 
 				minDay1: '',
 				maxDay1: '',

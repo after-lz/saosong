@@ -1,11 +1,11 @@
 <template>
 	<view class="gt_content">
 		<view class="con_list">
-			<view class="con_empty" v-if="dataList.length == 0">
+			<!-- <view class="con_empty" v-if="dataList.length == 0">
 
 				<u-empty text="暂无数据" color="#000" :src="gtCommon.getOssImg('index/empty.png')" icon-size="550"
 					margin-top="200" font-size="32"></u-empty>
-			</view>
+			</view> -->
 			<view class="con_scroll">
 				<scroll-view class="scroll_view" scroll-y="true" @scrolltolower="loadMore">
 					<view class="con_item" v-for="(item,index) in dataList" :key="index">
@@ -30,14 +30,15 @@
 							<text>**** **** **** {{item.bank_number.substr(-4)}}</text>
 						</view>
 					</view>
+					<view class="con_btn" @click="showAddBankCard">
+						<u-icon name="plus" size="38"></u-icon>
+						<text>添加银行卡</text>			
+						<u-select v-model="bankCardShow" :list="bankCardTypeList" @confirm="goAdd"></u-select>
+					</view>
 				</scroll-view>
 			</view>
 		</view>
-		<view class="con_btn" @click="showAddBankCard">
-			<text>+增加银行卡</text>
-
-			<u-select v-model="bankCardShow" :list="bankCardTypeList" @confirm="goAdd"></u-select>
-		</view>
+		
 	</view>
 </template>
 
@@ -174,7 +175,7 @@
 				height: 120rpx;
 				background: #FFFFFF;
 				border-radius: 16rpx;
-				font-size: 32rpx;
+				font-size: 42rpx;
 				font-family: PingFangSC-Medium, PingFang SC;
 				font-weight: 500;
 				color: #000000;

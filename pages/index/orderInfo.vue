@@ -726,14 +726,15 @@
 				};
 				gt.gtRequest.post(url, data).then(res => {
 
-					if (res.order_info.logistics_id) {
+					// 不知道为什么会返回
+					// if (res.order_info.logistics_id) {
 						console.log('relaunch');
 						// uni.redirectTo({
 						// 	url:'../index/index'
 						// });
-						uni.navigateBack()
-						return false;
-					}
+						// uni.navigateBack()
+						// return false;
+					// }
 					// gt.dataInfo = res.order_info;
 					gt.cargoInfo = res.cargo_info;
 					if (res.order_info.is_yuyue) {

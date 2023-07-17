@@ -365,10 +365,11 @@
 			let gt = this;
 			var companyInfo = uni.getStorageSync('companyInfo');
 			gt.companyInfo = companyInfo;
+			gt.reGetDataList();
 		},
 		onShow() {
-			let gt = this;
-			gt.reGetDataList();
+			// let gt = this;
+			// gt.reGetDataList();
 		},
 		methods: {
 			tabsChange(index) {
@@ -441,6 +442,7 @@
 				});
 			},
 			goOrderInfo(item) {
+				console.log('-------')
 				let gt = this;
 				if (item.status > 20) {
 					gt.$refs.uToast.show({
