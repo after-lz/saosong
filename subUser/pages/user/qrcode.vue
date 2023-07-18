@@ -15,7 +15,7 @@
 			<text>推荐下载并成功认证，可领取红包</text>
 		</view>
 		<view class="con_btn">
-
+			<u-button type="primary" size="medium" @click="saveImage">保存</u-button>
 		</view>
 	</view>
 </template>
@@ -32,19 +32,37 @@
 			return {
 				switchList: ['邀请码', '专线码'],
 				apiDomain: '',
+				// url: '/api/qrcode/qrcode?text=',
 				url: '/api/qrcode/qrcode?text=',
 				text: '876588',
 			}
 		},
 		onLoad() {
 			let gt = this;
-			
+
 			var apiDomain = uni.getStorageSync('apiDomain');
 			gt.apiDomain = apiDomain;
 		},
 		methods: {
 			changeSwitch(isSwitch) {
 				console.log(isSwitch);
+			},
+			saveImage() {
+				let gt = this;
+				console.log(222)
+				uni.downloadFile({
+					url: gt.apiDomain + gt.url + gt.text,
+					success: (res) => {
+						console.log(res)
+						uni.saveImageToPhotosAlbum({
+							filePath: res.tempFilePath,
+							success: function() {
+								console.log('save success');
+							}
+						});
+					}
+				})
+
 			}
 		}
 	}
@@ -92,6 +110,12 @@
 				color: #000000;
 				line-height: 44rpx;
 				text-align: center;
+			}
+
+			.con_btn {
+				display: flex;
+				justify-content: center;
+				margin-top: 20px;
 			}
 		}
 	}

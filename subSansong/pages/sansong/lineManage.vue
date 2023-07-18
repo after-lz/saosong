@@ -8,7 +8,7 @@
 				<image :src="gtCommon.getOssImg('sansong/empty.png')" mode="widthFix"></image>
 			</view>
 			<view class="con_text">
-				<text>您还添加任何专线</text>
+				<text>您还未添加任何专线</text>
 			</view>
 		</view>
 		<view class="con_list" v-else>
@@ -245,8 +245,7 @@
 							<text>上架</text>
 						</view>
 
-						<!-- <view class="con_btn" @click="goEdit(item)" v-if="item.status == 0"> -->
-						<view class="con_btn" @click="goEdit(item)">
+						<view class="con_btn" @click="goEdit(item)" v-if="item.status == 0">
 							<text>修改</text>
 						</view>
 					</view>
@@ -268,6 +267,14 @@
 				page: 1,
 				size: 10,
 				end: false,
+				startArea: '',
+			}
+		},
+		onLoad(options) {
+			let gt = this;
+			if (options.startArea) {
+				gt.startArea = JSON.parse(options.startArea)
+				console.log(gt.startArea)
 			}
 		},
 		onShow() {
@@ -312,7 +319,11 @@
 					});
 				} else {
 					uni.navigateTo({
-						url: './lineAdd'
+						url: './lineAdd?startArea=' + JSON.stringify({
+							start_city: gt.startArea.city,
+							start_county: gt.startArea.county,
+							start_province: gt.startArea.province
+						}),
 					});
 				}
 				return false;

@@ -741,8 +741,9 @@
 							address: '',
 							lng: '',
 							lat: '',
-							pca: gt.toPca[0][0].cityName + '-' + gt.toPca[1][0].cityName + '-' + gt.toPca[2][0].cityName,
-							
+							pca: gt.toPca[0][0].cityName + '-' + gt.toPca[1][0].cityName + '-' + gt.toPca[2][0]
+								.cityName,
+
 							provinceStr: gt.toPca[0][0].cityName,
 							// provinceCode: '',
 							cityStr: gt.toPca[1][0].cityName,
@@ -1034,7 +1035,6 @@
 					].cityName;
 				}
 			},
-
 
 			chooseAddress(index) {
 				let gt = this;
@@ -1619,6 +1619,20 @@
 				line-height: 100rpx;
 				text-align: center;
 				margin: 46rpx 16rpx 20rpx 16rpx;
+			}
+
+			.cancel_btn {
+				position: absolute;
+				display: inline-block;
+				top: 5rpx;
+				left: 30rpx;
+			}
+
+			.confirm_btn {
+				position: absolute;
+				display: inline-block;
+				top: 5rpx;
+				right: 30rpx;
 			}
 		}
 	}

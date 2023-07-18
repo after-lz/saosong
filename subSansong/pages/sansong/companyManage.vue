@@ -173,6 +173,7 @@
 				swiperList: [],
 				parkId: 0,
 				lineNum: 0,
+				startArea:'',
 			}
 		},
 		onLoad() {
@@ -215,6 +216,11 @@
 
 				gt.gtRequest.post(url).then(res => {
 					gt.lineNum = res.line_num;
+					gt.startArea = {
+						city: res.company_info.city,
+						county: res.company_info.county,
+						province: res.company_info.province
+					}
 				});
 			},
 			goCompanyInfo() {
@@ -230,10 +236,10 @@
 				});
 			},
 			goLineManage() {
-				console.log('goLineManage');
 				let gt = this;
+				console.log(JSON.stringify(gt.startArea))
 				uni.navigateTo({
-					url: './lineManage'
+					url: './lineManage?startArea='+JSON.stringify(gt.startArea)
 				});
 			},
 			goTicketManage() {
