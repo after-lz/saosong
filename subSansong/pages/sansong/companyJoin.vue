@@ -497,9 +497,11 @@
 			parkConfirm(res) {
 				console.log(res);
 				let gt = this;
-				gt.parkId = res[0].value;
-				gt.parkStr = res[0].label;
-				gt.parkIndex = res[0].index;
+				if(res[0].value !== null) {
+					gt.parkId = res[0].value;
+					gt.parkStr = res[0].label;
+					gt.parkIndex = res[0].index;
+				}
 			},
 
 			showPCA() {
@@ -509,7 +511,9 @@
 			confirmArea(e) {
 				// console.log(e);
 				let gt = this;
-
+				gt.parkId = '';
+				gt.parkStr = '';
+				gt.parkIndex = 0;
 				gt.provinceStr = e[0].label;
 				gt.provinceCode = e[0].value;
 				gt.cityStr = e[1].label;
