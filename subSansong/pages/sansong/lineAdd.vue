@@ -211,13 +211,13 @@
 						</view>
 					</view>
 					<view class="con_num">
-						<u-input v-model="minDay1" type="digit" input-align="center" height="80" placeholder="天数" />
+						<u-input v-model="minDay1" type="number" input-align="center" height="80" maxlength="2" placeholder="天数" />
 					</view>
 					<view class="con_line">
 						<u-line length="90rpx" color="#000"></u-line>
 					</view>
 					<view class="con_num">
-						<u-input v-model="maxDay1" type="digit" input-align="center" height="80" placeholder="天数" />
+						<u-input v-model="maxDay1" type="number" input-align="center" height="80" maxlength="2" placeholder="天数" />
 					</view>
 					<view class="con_unit">
 						<text>天</text>
