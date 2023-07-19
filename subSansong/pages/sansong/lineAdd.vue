@@ -476,7 +476,7 @@
 										</view>
 										<view class="con_val">
 											<view class="con_input">
-												<u-input v-model="th_price" type="digit" heigth="60" placeholder="单价" />
+												<u-input v-model="th_price" type="digit" heigth="60" placeholder="输入价格" />
 											</view>
 											<view class="con_unit">
 												<text>元</text>
@@ -501,7 +501,7 @@
 										</view>
 										<view class="con_val">
 											<view class="con_input">
-												<u-input v-model="sh_price" type="digit" heigth="60" placeholder="单价" />
+												<u-input v-model="sh_price" type="digit" heigth="60" placeholder="输入价格" />
 											</view>
 											<view class="con_unit">
 												<text>元</text>
