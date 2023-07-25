@@ -78,7 +78,7 @@
 			<view class="con_item" v-for="(item,index) in arriveStationList" :key="index">
 				<!-- <view class="con_removeBtn" @click="removeArriveStation(index)" v-if="index != 0"> -->
 				<!-- 20230704测试要求第一个也能删除 -->
-				<view class="con_removeBtn" @click="removeArriveStation(index)">
+				<view class="con_removeBtn" @click="removeArriveStation(index)" v-if="item.flag">
 					<u-icon name="close-circle-fill" color="#FF6067" size="48"></u-icon>
 				</view>
 				<view class="con_keyVal">
@@ -93,7 +93,7 @@
 						</view>
 						<view class="con_val">
 							<view class="con_input">
-								<u-input v-model="item.company" type="text" height="80" placeholder="请输入名称" />
+								<u-input v-model="item.company" type="text" height="80" placeholder="请输入名称" :disabled="!item.flag" />
 							</view>
 						</view>
 					</view>
@@ -108,7 +108,7 @@
 						</view>
 						<view class="con_val">
 							<view class="con_input">
-								<u-input v-model="item.manage" type="text" height="80" placeholder="输入姓名" />
+								<u-input v-model="item.manage" type="text" height="80" placeholder="输入姓名" :disabled="!item.flag" />
 							</view>
 						</view>
 					</view>
@@ -123,7 +123,7 @@
 						</view>
 						<view class="con_val">
 							<view class="con_input">
-								<u-input v-model="item.mobile" type="number" height="80" placeholder="请输入手机号码" />
+								<u-input v-model="item.mobile" type="number" height="80" placeholder="请输入手机号码" :disabled="!item.flag" />
 							</view>
 						</view>
 					</view>
@@ -140,7 +140,7 @@
 							<view class="con_input">
 
 								<u-input v-model="item.pca" type="select" height="80" placeholder="请选择所在城市" disabled
-									:clearable="false" @click="showGTPCA2(index)"></u-input>
+									:clearable="false" @click="showGTPCA2(index, item.flag)"></u-input>
 							</view>
 						</view>
 					</view>
@@ -156,9 +156,9 @@
 						</view>
 						<view class="con_val">
 							<view class="con_input">
-								<u-input v-model="item.address" type="textarea" placeholder="请输入地址" />
+								<u-input v-model="item.address" type="textarea" placeholder="请输入地址" :disabled="!item.flag" />
 							</view>
-							<view class="con_icon" style="border: 1rpx soild red;" @click="chooseAddress(index)">
+							<view class="con_icon" style="border: 1rpx soild red;" @click="chooseAddress(index)" v-if="item.flag">
 								<u-icon name="map-fill" color="#485EF4" size="40"></u-icon>
 							</view>
 						</view>
@@ -677,8 +677,8 @@
 				currentItemArriveStation: 0,
 
 				arriveStationArr: [],
-
-
+				isEdit: false,
+				isAdd: false
 			}
 		},
 		onLoad(options) {
@@ -693,6 +693,7 @@
 						var startArea = JSON.parse(options.startArea)
 						console.log(startArea)
 						gt.getStartArea(startArea)
+						gt.isAdd = startArea.isAdd
 					}
 				},
 
@@ -701,6 +702,7 @@
 				gt.id = options.id;
 				gt.getDataInfo();
 			}
+			gt.isEdit = options.isEdit
 		},
 		methods: {
 
@@ -862,7 +864,7 @@
 						item.provinceStr = info.outlets_list[i].outlets_province;
 						item.cityStr = info.outlets_list[i].outlets_city;
 						item.areaStr = info.outlets_list[i].outlets_county;
-
+						item.flag = info.outlets_list[i].logistics_id == info.logistics_id
 						arriveStationList.push(item);
 					}
 
@@ -872,7 +874,10 @@
 					gt.manageName = info.line_contact;
 					gt.manageMobile = info.line_mobile;
 					gt.lineType = info.line_type;
-					gt.arriveStationList = arriveStationList;
+					let list1 = arriveStationList.filter(k=> k.flag)
+					let list2 = arriveStationList.filter(k=> !k.flag)
+					gt.arriveStationList = [...list1, ...list2]
+					// gt.arriveStationList = arriveStationList;
 
 					// gt.arriveStationArr = info.outlets_ids.split(',');
 
@@ -936,6 +941,7 @@
 			},
 			showGTPCA(str) {
 				let gt = this;
+				if((gt.isAdd && str == 's') || gt.isEdit) return;
 				gt.fromTo = str;
 				gt.allArea = str == 's' ? false : true;
 				gt.height = '600rpx';
@@ -981,7 +987,8 @@
 					}
 				});
 			},
-			showGTPCA2(index) {
+			showGTPCA2(index, type) {
+				if(!type) return
 				console.log(index);
 				let gt = this;
 				gt.currentItemArriveStation = index;

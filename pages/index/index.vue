@@ -48,7 +48,25 @@
 			<u-notice-bar mode="horizontal" :list="noticeList" color="#fff" bg-color="#FF6067"></u-notice-bar>
 		</view> -->
 		<view class="con_tip">
-			<view class="con_tipItem" v-if="!companyAuth">
+			<view class="con_tipItem" v-if="!companyAuth && checkStatus === 0">
+				<view class="con_iconText">
+					<view class="con_icon">
+						<image :src="gtCommon.getOssImg('index/companyAuth.png')" mode="widthFix"></image>
+					</view>
+					<view class="con_text">
+						<view class="con_title">
+							<text>认证即可获得红包奖励</text>
+						</view>
+						<view class="con_descript">
+							<text>企业认证及实名认证后可接单</text>
+						</view>
+					</view>
+				</view>
+				<view class="con_btn" @click="goAuth">
+					<text>认证中</text>
+				</view>
+			</view>
+			<view class="con_tipItem" v-if="!companyAuth && checkStatus !== 0">
 				<view class="con_iconText">
 					<view class="con_icon">
 						<image :src="gtCommon.getOssImg('index/companyAuth.png')" mode="widthFix"></image>
@@ -588,7 +606,7 @@
 				logistics_id: 0,
 
 				clientId: '',
-
+				checkStatus: -1
 			}
 		},
 		onLoad() {
@@ -603,11 +621,12 @@
 			uni.setStorageSync('listenStatus', true);
 			var companyInfo = uni.getStorageSync('companyInfo');
 			gt.logistics_id = companyInfo.logistics_id;
+			
 		},
 		onReady() {
 			let gt = this;
 		},
-		onShow() {
+		async onShow() {
 			let gt = this;
 			gt.clientId = uni.getStorageSync('clientId');
 
@@ -640,9 +659,11 @@
 
 			gt.getLocation();
 			if (gt.mobile) {
-				gt.getCompanyInfo();
-
-
+				await gt.getCompanyInfo();
+				if(gt.companyAuth) return
+				gt.gtRequest.post("/logistics/company/get_company_approve_info").then(res => {
+					gt.checkStatus = res.company_approve_info.status
+				})
 			}
 		},
 		onPullDownRefresh() {
@@ -722,11 +743,11 @@
 					}
 				})
 			},
-			getCompanyInfo() {
+			async getCompanyInfo() {
 				let gt = this;
 				var url = "/logistics/company/get_index_info";
 
-				gt.gtRequest.post(url).then(res => {
+				await gt.gtRequest.post(url).then(res => {
 					gt.lineNum = res.line_num;
 					gt.companyAuth = res.company_info.is_company_approve;
 					uni.setStorageSync('companyAuth', res.company_info.is_company_approve);

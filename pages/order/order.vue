@@ -605,13 +605,15 @@
 				gt.stime = '';
 				gt.etime = '';
 				gt.timeStr = '';
-				// gt.lineId = 0;
-				// gt.lineStr = '';
-				gt.lineIndex = 9999;
+				gt.lineId = 0;
+				gt.lineStr = '';
+				gt.lineIndex = 0;
 				gt.orderTypeIndex = 9999;
 				gt.yuyueTypeIndex = 9999;
 				gt.deliverTypeIndex = 9999;
-				gt.statusIndex = gt.currentTab;
+				// gt.statusIndex = gt.currentTab;
+				gt.statusIndex = 0;
+				gt.currentTab = 0;
 			},
 
 			submitScreen() {

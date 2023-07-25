@@ -8,7 +8,7 @@
 
 		<view class="con_searchScreen">
 			<view class="con_search" :style="currentTab != 2 ? 'width:660rpx':'width:760rpx'">
-				<u-search placeholder="输入订单号/运单号/手机号/车牌号/货名" v-model="searchVal" bg-color="#F3F4F6" :clearabled="false"
+				<u-search placeholder="输入订单号/运单号/车牌号" v-model="searchVal" bg-color="#F3F4F6" :clearabled="false"
 					:show-action="false" height="72" margin="8rpx 24rpx" @search="reGetDataList"></u-search>
 			</view>
 			<view class="con_screen" @click="showScreen" v-if="currentTab != 2">

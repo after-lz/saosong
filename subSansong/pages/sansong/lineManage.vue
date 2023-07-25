@@ -314,7 +314,8 @@
 						url: './lineAdd?startArea=' + JSON.stringify({
 							start_city: urlParams.start_city,
 							start_county: urlParams.start_county,
-							start_province: urlParams.start_province
+							start_province: urlParams.start_province,
+							isAdd: true
 						}),
 					});
 				} else {
@@ -373,7 +374,7 @@
 			},
 			goEdit(item) {
 				uni.navigateTo({
-					url: './lineAdd?id=' + item.line_id,
+					url: './lineAdd?id=' + item.line_id + '&isEdit=true',
 				});
 				return false;
 			},
