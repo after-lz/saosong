@@ -13,7 +13,7 @@
 			<view v-for="item in dataList" :key='item.log_id' class="item">
 				<view class="item_left">
 					<view class="item_title">{{ item.remark }}</view>
-					<view class="item_time">{{ gtCommon.formateTime(item.create_time, 'YYYY-MM-DD HH:mm:SS') }}}</view>
+					<view class="item_time">{{ gtCommon.formateTime(item.create_time, 'YYYY-MM-DD HH:mm:SS') }}</view>
 				</view>
 				<view class="item_right">
 					<text v-if="item.number > 0">+{{ item.number }}</text>
