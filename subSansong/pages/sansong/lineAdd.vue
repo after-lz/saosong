@@ -78,7 +78,7 @@
 			<view class="con_item" v-for="(item,index) in arriveStationList" :key="index">
 				<!-- <view class="con_removeBtn" @click="removeArriveStation(index)" v-if="index != 0"> -->
 				<!-- 20230704测试要求第一个也能删除 -->
-				<view class="con_removeBtn" @click="removeArriveStation(index)" v-if="item.flag">
+				<view class="con_removeBtn" @click="removeArriveStation(index)" v-if="!item.flag">
 					<u-icon name="close-circle-fill" color="#FF6067" size="48"></u-icon>
 				</view>
 				<view class="con_keyVal">
@@ -93,7 +93,7 @@
 						</view>
 						<view class="con_val">
 							<view class="con_input">
-								<u-input v-model="item.company" type="text" height="80" placeholder="请输入名称" :disabled="!item.flag" />
+								<u-input v-model="item.company" type="text" height="80" placeholder="请输入名称" :disabled="item.flag" />
 							</view>
 						</view>
 					</view>
@@ -108,7 +108,7 @@
 						</view>
 						<view class="con_val">
 							<view class="con_input">
-								<u-input v-model="item.manage" type="text" height="80" placeholder="输入姓名" :disabled="!item.flag" />
+								<u-input v-model="item.manage" type="text" height="80" placeholder="输入姓名" :disabled="item.flag" />
 							</view>
 						</view>
 					</view>
@@ -123,7 +123,7 @@
 						</view>
 						<view class="con_val">
 							<view class="con_input">
-								<u-input v-model="item.mobile" type="number" height="80" placeholder="请输入手机号码" :disabled="!item.flag" />
+								<u-input v-model="item.mobile" type="number" height="80" placeholder="请输入手机号码" :disabled="item.flag" />
 							</view>
 						</view>
 					</view>
@@ -156,9 +156,9 @@
 						</view>
 						<view class="con_val">
 							<view class="con_input">
-								<u-input v-model="item.address" type="textarea" placeholder="请输入地址" :disabled="!item.flag" />
+								<u-input v-model="item.address" type="textarea" placeholder="请输入地址" :disabled="item.flag" />
 							</view>
-							<view class="con_icon" style="border: 1rpx soild red;" @click="chooseAddress(index)" v-if="item.flag">
+							<view class="con_icon" style="border: 1rpx soild red;" @click="chooseAddress(index)" v-if="!item.flag">
 								<u-icon name="map-fill" color="#485EF4" size="40"></u-icon>
 							</view>
 						</view>
@@ -532,19 +532,31 @@
 
 		<view class="con_popup">
 			<view class="con_GTPCA">
-				<u-popup v-model="GTPCAShowS" mode="bottom" height="600">
+				<u-popup v-model="GTPCAShowS" mode="bottom" height="600" :mask-close-able='false'>
+					<view class="confirm">
+						<view class="close" @click="confirm(false, 'GTPCAShowS')">取消</view>
+						<view class="ok" @click="confirm(true, 'GTPCAShowS')">确认</view>
+					</view>
 					<gtPCA :pcaList="provinceCityAreaList" :height="height" :show="GTPCAShowS" :selectedList="fromPca"
 						:allArea="false" @gtPCASelect="gtPCASelect"></gtPCA>
 				</u-popup>
 			</view>
 			<view class="con_GTPCA">
-				<u-popup v-model="GTPCAShowE" mode="bottom" height="600">
+				<u-popup v-model="GTPCAShowE" mode="bottom" height="600" :mask-close-able='false'>
+					<view class="confirm">
+						<view class="close" @click="confirm(false, 'GTPCAShowE')">取消</view>
+						<view class="ok" @click="confirm(true, 'GTPCAShowE')">确认</view>
+					</view>
 					<gtPCA :pcaList="provinceCityAreaList" :height="height" :show="GTPCAShowE" :selectedList="toPca"
 						:allArea="true" @gtPCASelect="gtPCASelect"></gtPCA>
 				</u-popup>
 			</view>
 			<view class="con_GTPCA">
-				<u-popup v-model="GTPCAShow" mode="bottom" height="600">
+				<u-popup v-model="GTPCAShow" mode="bottom" height="600" :mask-close-able='false'>
+					<view class="confirm">
+						<view class="close" @click="confirm(false, 'GTPCAShow')">取消</view>
+						<view class="ok" @click="confirm(true, 'GTPCAShow')">确认</view>
+					</view>
 					<gtPCA :pcaList="provinceCityAreaList" :height="height" :show="GTPCAShow" :selectedList="arrivePca"
 						:allArea="false" @gtPCASelect="confirmArea"></gtPCA>
 				</u-popup>
@@ -678,7 +690,8 @@
 
 				arriveStationArr: [],
 				isEdit: false,
-				isAdd: false
+				isAdd: false,
+				flag: false
 			}
 		},
 		onLoad(options) {
@@ -713,12 +726,11 @@
 			},
 			gtPCASelect(res) {
 				console.log(res);
-				console.log(res.length);
-				if (res.length == 10) {
+				// console.log(res.length);
+				let gt = this;
+				if (res.length == 10 || !gt.flag) {
 					return false;
 				}
-
-				let gt = this;
 				if (gt.fromTo == 's') {
 					if (res.length > 10) {
 						gt.fromPca = JSON.parse(res);
@@ -864,7 +876,7 @@
 						item.provinceStr = info.outlets_list[i].outlets_province;
 						item.cityStr = info.outlets_list[i].outlets_city;
 						item.areaStr = info.outlets_list[i].outlets_county;
-						item.flag = info.outlets_list[i].logistics_id == info.logistics_id
+						item.flag = info.outlets_list[i].logistics_id != info.logistics_id
 						arriveStationList.push(item);
 					}
 
@@ -874,8 +886,8 @@
 					gt.manageName = info.line_contact;
 					gt.manageMobile = info.line_mobile;
 					gt.lineType = info.line_type;
-					let list1 = arriveStationList.filter(k=> k.flag)
-					let list2 = arriveStationList.filter(k=> !k.flag)
+					let list1 = arriveStationList.filter(k=> !k.flag)
+					let list2 = arriveStationList.filter(k=> k.flag)
 					gt.arriveStationList = [...list1, ...list2]
 					// gt.arriveStationList = arriveStationList;
 
@@ -939,12 +951,17 @@
 				gt.fromPca = fromPca;
 				console.log(gt.fromPca)
 			},
+			confirm(type, that) {
+				let gt = this
+				gt.flag = type
+				gt[that] = false
+			},
 			showGTPCA(str) {
 				let gt = this;
 				if((gt.isAdd && str == 's') || gt.isEdit) return;
 				gt.fromTo = str;
 				gt.allArea = str == 's' ? false : true;
-				gt.height = '600rpx';
+				gt.height = '510rpx';
 				gt.GTPCAShowS = str == 'e' ? false : true;
 				gt.GTPCAShowE = str == 's' ? false : true;
 			},
@@ -988,7 +1005,7 @@
 				});
 			},
 			showGTPCA2(index, type) {
-				if(!type) return
+				if(type) return
 				console.log(index);
 				let gt = this;
 				gt.currentItemArriveStation = index;
@@ -1029,6 +1046,7 @@
 			confirmArea(e) {
 				console.log(e);
 				let gt = this;
+				if(!gt.flag) return
 				var index = gt.currentItemArriveStation;
 
 				var arr = JSON.parse(e);
@@ -1214,6 +1232,14 @@
 		background: $gtBackgroundColor;
 
 		.gt_content {
+			.confirm {
+				display: flex;
+				justify-content: space-between;
+				padding: 30rpx 40rpx 0 40rpx;
+				.ok {
+					color: rgb(41, 121, 255);
+				}
+			}
 			.con_step1 {
 
 				.con_title {

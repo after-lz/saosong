@@ -180,8 +180,8 @@
 					<view class="con_list">
 						<u-radio-group v-model="lineIndex" @change="lineChange">
 							<scroll-view scroll-y="true" style="height: 700rpx;">
-								<u-radio v-for="(item, index) in lineList" :key="index" :name="index"
-									v-if="item.order_count">
+								<u-radio v-for="(item, index) in lineList" :key="index" :name="index">
+									<!-- 不知道为啥ios要过滤，安卓没有 v-if="item.order_count" -->
 									<view class="con_item">
 										<view class="con_name">
 											<text>{{item.start_city}}</text>
