@@ -827,6 +827,7 @@
 													font-weight: 500;
 													color: #000000;
 													line-height: 40rpx;
+													white-space: nowrap;
 												}
 
 												.con_address_type {
@@ -868,6 +869,7 @@
 													font-weight: 500;
 													color: #000000;
 													line-height: 40rpx;
+													white-space: nowrap;
 												}
 
 												.con_address_type {

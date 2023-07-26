@@ -234,7 +234,7 @@
 				};
 				gt.gtRequest.post(url, data).then(res => {
 					gt.dataInfo = res;
-					gt.imgList = res.waybill_info.images.split('||');
+					gt.imgList = res.waybill_info.images && res.waybill_info.images.split('||');
 					gt.actionList = res.waybill_log_list;
 					gt.sendTime = res.waybill_info.create_time;
 				});

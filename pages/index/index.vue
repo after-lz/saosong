@@ -182,7 +182,7 @@
 										</view>
 										<view class="con_val">
 											<text v-if="item.transport_day_max == 0">面议</text>
-											<text v-else>{{item.transport_day_min}} - {{item.transport_day_max}}天</text>
+											<view v-else>{{item.transport_day_min}} - {{item.transport_day_max}}天</view>
 										</view>
 									</view>
 
@@ -330,7 +330,7 @@
 										</view>
 										<view class="con_val">
 											<text v-if="item.transport_day_max == 0">面议</text>
-											<text v-else>{{item.transport_day_min}} - {{item.transport_day_max}}天</text>
+											<view v-else>{{item.transport_day_min}} - {{item.transport_day_max}}天</view>
 										</view>
 									</view>
 
@@ -530,7 +530,7 @@
 
 				mobile: '',
 
-				listenStatus: true,
+				listenStatus: false,
 				audioStatus: true,
 
 				tabList: [{
@@ -618,7 +618,7 @@
 			// gt.gtonMessage();
 			// }
 			uni.setStorageSync('audioStatus', true);
-			uni.setStorageSync('listenStatus', true);
+			// uni.setStorageSync('listenStatus', true);
 			var companyInfo = uni.getStorageSync('companyInfo');
 			gt.logistics_id = companyInfo.logistics_id;
 			
@@ -637,13 +637,8 @@
 			if (gt.mobile) {
 				gt.gtonMessage();
 			}
-
-
 			gt.listenStatus = uni.getStorageSync('listenStatus');
-
-
 			gt.audioStatus = uni.getStorageSync('audioStatus');
-
 			// var companyAuth = uni.getStorageSync('companyAuth');
 			// gt.companyAuth = companyAuth;
 
@@ -1446,6 +1441,7 @@
 												font-weight: 500;
 												color: #000000;
 												line-height: 40rpx;
+												white-space: nowrap;
 											}
 
 											.con_address_type {
@@ -1487,6 +1483,7 @@
 												font-weight: 500;
 												color: #000000;
 												line-height: 40rpx;
+												white-space: nowrap;
 											}
 
 											.con_address_type {

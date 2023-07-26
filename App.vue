@@ -76,25 +76,29 @@
 			var apiDomain = '';
 			if (envVersion == 'release') {
 				//    console.log('正式版生产环境');
-				apiDomain = 'https://saasdemo.sansongkeji.com';
+				// apiDomain = 'https://saasdemo.sansongkeji.com';
+				apiDomain = "http://test.sansongkeji.com";
 				uni.setStorageSync('environment', 'prod');
 
 			} else {
 				environment = uni.getStorageSync('environment');
 				if (environment == 'prod') {
 					//    console.log('开发版生产环境');
-					apiDomain = 'https://saasdemo.sansongkeji.com';
+					// apiDomain = 'https://saasdemo.sansongkeji.com';
+					apiDomain = "http://test.sansongkeji.com";
 					uni.setStorageSync('environment', 'prod');
 				} else {
-					   console.log('开发版开发环境');
-					apiDomain = 'https://saasdemo.sansongkeji.com';
+					   // console.log('开发版开发环境');
+					// apiDomain = 'https://saasdemo.sansongkeji.com';
+					apiDomain = "http://test.sansongkeji.com";
 					// apiDomain = 'http://192.168.2.16:9080';
 				}
 			}
 
 			if (envVersion == 'develop') {
-				   console.log('测试版生产环境');
-				apiDomain = 'https://saasdemo.sansongkeji.com';
+				   // console.log('测试版生产环境');
+				// apiDomain = 'https://saasdemo.sansongkeji.com';
+				apiDomain = "http://test.sansongkeji.com";
 				uni.setStorageSync('environment', 'prod');
 			}
 			// #endif
@@ -102,18 +106,12 @@
 			
 			
 			// #ifdef APP-PLUS
-			// var apiDomain = 'https://sansong.yingjiezj.com';
-			// var apiDomain = 'https://orderapi.sansongkeji.com';
-			var apiDomain = 'https://saasdemo.sansongkeji.com';
-			
+			var apiDomain = 'http://test.sansongkeji.com';
+			// var apiDomain = 'https://saasdemo.sansongkeji.com';
 			uni.setStorageSync('environment', 'prod');
 			// #endif
 
-
-			// var apiDomain = 'https://sansong.yingjiezj.com';
-
 			var apiDomainStorage = uni.getStorageSync('apiDomain');
-
 			if (!apiDomainStorage) {
 				uni.setStorageSync('apiDomain', apiDomain);
 			} else {
@@ -121,8 +119,6 @@
 					uni.setStorageSync('apiDomain', apiDomain);
 				}
 			}
-			
-
 			var pcaList = uni.getStorageSync('pcaList');
 			if (!pcaList) {
 				var url = '/api/appgobal/get_city_data';
@@ -159,12 +155,8 @@
 				});
 			}
 			let gt = this;
-
 			// uni.setStorageSync('audioStatus', false);
 			
-
-
-
 
 			// #ifdef APP-PLUS
 			plus.screen.lockOrientation("portrait-primary")
