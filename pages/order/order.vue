@@ -226,7 +226,7 @@
 										</view>
 										<view class="con_btnItem" @click.stop="cancelConfirm(item)"
 											v-if="item.cancel_status == 1">
-											<text>确认取消申请</text>
+											<text>确认取消</text>
 										</view>
 										<!-- <view class="con_btnItem" @click.stop="confirmArriva(item)"
 											v-if="item.status == 9">
