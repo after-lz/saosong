@@ -701,14 +701,13 @@
 					var nowTime = parseInt((new Date().getTime()) / 1000);
 					// console.log(nowTime);
 					var time = 1800 + gt.dataInfo.create_time - nowTime;
-					// console.log(time);
 					if (time > 0 && time < 1800) {
 						var minute = parseInt(time / 60);
 						var seconds = parseInt(time % 60);
 
 						minute = minute > 9 ? minute : '0' + minute;
 						seconds = seconds > 9 ? seconds : '0' + seconds;
-						title += '（ ' + minute + ':' + seconds + ' ）';
+						title += '（倒计时 ' + minute + ':' + seconds + ' ）';
 					} else {
 						clearInterval(gt.timer);
 					}
