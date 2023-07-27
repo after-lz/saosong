@@ -27,10 +27,12 @@
 		<!-- #endif -->
 
 		<view class="con_movable">
-			<movable-area class="movable-area">
+			<!-- #ifdef MP-WEIXIN -->
+			<movable-area class="movable-area" :scale-area="ture">
 				<movable-view class="movable-view" :x="moveX" :y="moveY" direction="vertical"
 					@change="movableViewChange">
 					<view class="con_orderInfo">
+			<!-- #endif -->
 						<scroll-view :scroll-y="scrollY" style="width:750rpx;height: 100vh;background: #f3f4f5;">
 
 							<view class="con_label_btn">
@@ -956,10 +958,11 @@
 							</view>
 
 						</scroll-view>
-
+			<!-- #ifdef MP-WEIXIN -->
 					</view>
 				</movable-view>
 			</movable-area>
+			<!-- #endif -->
 		</view>
 
 		<view class="con_popup">
@@ -1075,7 +1078,7 @@
 
 
 				moveX: 0,
-				moveY: 150,
+				moveY: 0,
 				scrollY: false,
 
 				trajectoryList: [],
@@ -1102,7 +1105,7 @@
 				success(res) {
 					console.log(res);
 					gt.screenHeight = res.screenHeight;
-					gt.moveY = res.screenHeight * 0.6;
+					// gt.moveY = res.screenHeight * 0.6;
 				},
 
 				fail(res) {
@@ -1113,7 +1116,9 @@
 				}
 			});
 
-
+			// #ifdef APP-PLUS
+			gt.scrollY = true;
+			// #endif
 		},
 		onShow() {
 			let gt = this;
@@ -1978,6 +1983,7 @@
 				z-index: 9999;
 				// border: 1rpx solid red;
 
+				// #ifdef MP-WEIXIN
 				.movable-area {
 					height: 100vh;
 					width: 750rpx;
@@ -1991,6 +1997,7 @@
 						height: 160rpx;
 
 						.con_orderInfo {
+				// #endif
 							scroll-view {
 								.con_label_btn {
 									width: 718rpx;
@@ -2694,10 +2701,12 @@
 								}
 
 							}
+				// #ifdef MP-WEIXIN
 						}
 					}
 
 				}
+				// #endif
 			}
 
 			.con_popup {
