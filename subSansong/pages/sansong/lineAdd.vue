@@ -958,10 +958,10 @@
 			},
 			showGTPCA(str) {
 				let gt = this;
+				gt.height = '600rpx';
 				if((gt.isAdd && str == 's') || gt.isEdit) return;
 				gt.fromTo = str;
 				gt.allArea = str == 's' ? false : true;
-				gt.height = '510rpx';
 				gt.GTPCAShowS = str == 'e' ? false : true;
 				gt.GTPCAShowE = str == 's' ? false : true;
 			},
