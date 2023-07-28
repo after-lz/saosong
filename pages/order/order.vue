@@ -860,10 +860,9 @@
 				});
 			},
 			confirmStart(item) {
-				console.log(item);
 				let gt = this;
 				uni.navigateTo({
-					url: '/subSansong/pages/sansong/loadSend?orderSn=' + item.deliver_sn,
+					url: '/subSansong/pages/sansong/loadSend?orderSn=' + item.deliver_sn + '&line_id=' + item.line_id,
 				});
 				return false;
 			},

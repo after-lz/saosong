@@ -439,24 +439,23 @@
 				imgList: [],
 
 				companyInfo: {},
-
+				flag: false
 			}
 		},
-		onLoad() {
+		async onLoad(option) {
 			let gt = this;
 			var url = "/logistics/company/get_company_info";
-			
 			gt.gtRequest.post(url).then(r=>{
 				uni.setStorageSync('companyInfo', r.company_info);
 			});
-			
-			
 			var conmpanyInfo = uni.getStorageSync('companyInfo');
 			gt.companyInfo = conmpanyInfo;
+			await gt.showLine(true)
+			if(option.line_id) gt.flag = true
+			let choseIndex = gt.lineList.findIndex(item=> item.line_id == option.line_id)
+			if(choseIndex !== -1) gt.lineChange(choseIndex)
 		},
 		methods: {
-
-
 			plateConfirm(res) {
 				console.log(res);
 				let gt = this;
@@ -464,21 +463,21 @@
 			},
 
 
-			showLine() {
+			async showLine(type) {
 				let gt = this;
+				if(gt.flag) return
 				var url = "/logistics/waybill/get_special_line_list";
 				var data = {
 					page: 1,
 					limit: 9999,
 				};
-				gt.gtRequest.post(url, data).then(res => {
+				await gt.gtRequest.post(url, data).then(res => {
 					gt.lineList = res.list;
-					gt.lineShow = true;
+					if(!type) gt.lineShow = true;
 				});
 			},
 
 			lineChange(index) {
-				console.log(index);
 				let gt = this;
 				gt.lineIndex = index;
 				var item = gt.lineList[index];

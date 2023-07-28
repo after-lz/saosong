@@ -207,6 +207,9 @@
 					height: calc(100vh - 80rpx);
 				}
 			}
+			.u-empty {
+				height: 80vh;
+			}
 			.card {
 				padding: 24rpx;
 				margin: 20rpx 16rpx;

@@ -61,7 +61,14 @@
 						trigger: ['blur', 'change']
 					}],
 					coupon_num: [{
-						required: true,
+						validator: (rule, value, callback) => {
+							let gt = this
+							if(+gt.form.coupon_num > 0) {
+								return true
+							} else {
+								return callback(false)
+							}
+						},
 						message: '请输入数量',
 						trigger: ['blur', 'change']
 					}],

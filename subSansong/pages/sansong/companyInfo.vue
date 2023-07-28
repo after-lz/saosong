@@ -21,7 +21,6 @@
 									<view class="con_auth" v-if="authStatus == 1">
 										<image :src="gtCommon.getOssImg('user/auth.png')" mode="widthFix"></image>
 									</view>
-
 								</view>
 							</view>
 							<view class="con_rate">
@@ -653,15 +652,19 @@
 
 								.con_name_icons {
 									display: flex;
-
+									align-items: center;
+									padding-top: 24rpx;
 									.con_name {
 										font-size: 36rpx;
 										font-family: PingFangSC-Medium, PingFang SC;
 										font-weight: 500;
 										color: #000000;
 										line-height: 50rpx;
-										margin-top: 24rpx;
+										// margin-top: 24rpx;
 										margin-left: 40rpx;
+									}
+									.con_auth image {
+										width: 128rpx;
 									}
 								}
 

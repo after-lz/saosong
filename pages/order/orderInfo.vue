@@ -996,7 +996,7 @@
 					</view>
 
 					<view class="con_list">
-						<scroll-view scroll-y="true">
+						<scroll-view scroll-y="true" style="height: 52vh;overflow: auto;">
 							<view class="trajectoryItem" v-for="(item,index) in trajectoryList" :key="index">
 								<view class="con_icon_title">
 									<view class="con_icon">
@@ -1889,7 +1889,7 @@
 				}
 				if (action == 'confirmStart') {
 					uni.navigateTo({
-						url: '/subSansong/pages/sansong/loadSend?orderSn=' + gt.dataInfo.deliver_sn,
+						url: '/subSansong/pages/sansong/loadSend?orderSn=' + gt.dataInfo.deliver_sn + '&line_id=' + gt.dataInfo.line_id,
 					});
 					return false;
 				}
