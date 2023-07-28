@@ -2,12 +2,11 @@
 	<view class="gt_content">
 		<view class="info" :style="{'background-image': `url(${gtCommon.getOssImg('user/card_bg.png')})`}">
 			<view class="info_top">
-				<view>下次清零时间：{{ gtCommon.formateTime(data.nextClearTime, 'YYYY-MM-DD') }}</view>
+				<view>清零时间：{{ gtCommon.formateTime(data.nextClearTime, 'YYYY-MM-DD') }}</view>
 				<view @click="goRecord">红包记录</view>
 			</view>
 			<view class="info_bottom">
-				<view class="balance">{{ data.money02 }}</view>
-				<view class="balanceMsg">红包余额(元)</view>
+				<view class="balance">{{ data.money02.toFixed(2) }}</view>
 				<view class="con_btnItem" @click="goBalance" :class="data.zhuanyueeSwitch ? '' : 'dis'">
 					<text>转到余额</text>
 				</view>
@@ -46,33 +45,36 @@
 </template>
 
 <script>
+	const apiDomain = uni.getStorageSync('apiDomain')
 	export default {
 		data() {
 			return {
 				list: [
 					{
 						id: 1,
-						type: 1,
-						money: 10
+						type: 1
 					},
 					{
 						id: 2,
-						type: 2,
-						money: 10
+						type: 2
 					},
 					{
 						id: 3,
-						type: 3,
-						money: 5
-					},
+						type: 3
+					}
 				],
 				data: {
 					nextClearTime: '', // 下次清零时间
 					money02: 0, // 红包金额
 					zhuanyueeSwitch: 0, // 是否可以转余额
 					ruleStr: '' // 规则
-				}
+				},
+				token: ''
 			}
+		},
+		onLoad() {
+			let gt = this
+			gt.token = gt.gtRequest.getToken()
 		},
 		mounted() {
 			let gt = this
@@ -94,10 +96,38 @@
 				// })
 				let gt = this
 				if(!gt.data.zhuanyueeSwitch) return
-				gt.gtRequest.post("/logistics/Companywallet/apply_zhuanyuee").then(res=> {
-					uni.showToast({
-						title: res.msg
-					})
+				// gt.gtRequest.post("/logistics/Companywallet/apply_zhuanyuee").then(res=> {
+				// 	uni.showToast({
+				// 		title: res.msg
+				// 	})
+				// })
+				let params = {
+					login_token: gt.token
+				}
+				uni.request({
+					url: apiDomain + "/logistics/Companywallet/apply_zhuanyuee",
+					data: params,
+					method: 'GET',
+					success: function(res) {
+						console.log(res)	
+						if(res.code == 1) {
+							uni.showToast({
+								title: res.msg
+							})
+						} else {
+							uni.showToast({
+								title: '转余额失败',
+								icon: 'error'
+							})
+						}
+					},
+					fail: function(res) {
+						console.log(res)
+						uni.showToast({
+							title: '转余额失败',
+							icon: 'error'
+						})
+					}
 				})
 			},
 			goNext(type) {
@@ -146,7 +176,6 @@
 			height: 368rpx;
 			display: flex;
 			justify-content: center;
-			align-items: center;
 			flex-wrap: wrap;
 			background-repeat: no-repeat;
 			background-size: 718rpx 368rpx;
@@ -168,11 +197,6 @@
 					width: 100%;
 					text-align: center;
 					font-size: 80rpx;
-				}
-				.balanceMsg {
-					width: 100%;
-					margin: 10rpx 0;
-					text-align: center;
 				}
 				.con_btnItem {
 					width: 200rpx;

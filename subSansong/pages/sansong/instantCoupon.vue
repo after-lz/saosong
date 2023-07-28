@@ -1,33 +1,37 @@
 <template>
 	<view class="gt_content">
-		<u-form :model="form" ref="uForm" label-width="auto" :border-bottom="false">
-			<u-form-item label="类型:" prop="">
+		<u-form :model="form" ref="uForm" label-width="auto">
+			<u-form-item label="发券类型:" prop="" class="title" :border-bottom="false">
 				<text>满减券</text>
 			</u-form-item>
-			<u-form-item label="满足金额" required prop="coupon_price">
+			<u-form-item label="满足金额" required prop="coupon_price" :border-bottom="false">
 				<view class="row">
-					<u-input v-model.number="form.coupon_min_price" type="digit" border placeholder="金额" class="uni-input"
-						@input="(e)=>inputChange(e, 1)" />
+					<view class="col">
+						<u-input v-model.number="form.coupon_min_price" type="digit" placeholder="金额" @input="(e)=>inputChange(e, 1)" />
+						<view class="msg1">元</view>
+					</view>
 					<view class="msg">减</view>
-					<u-input v-model.number="form.coupon_price" type="digit" border placeholder="金额" class="uni-input"
-						@input="(e)=>inputChange(e, 2)" />
+					<view class="col">
+						<u-input v-model.number="form.coupon_price" type="digit" placeholder="金额" @input="(e)=>inputChange(e, 2)" />
+						<view class="msg1">元</view>
+					</view>
 				</view>
 			</u-form-item>
-			<u-form-item label="发券数量" required prop="coupon_num">
+			<u-form-item label="发券数量" required prop="coupon_num" :border-bottom="false">
 				<view class="row">
-					<u-input v-model="form.coupon_num" type="number" border placeholder="输入数量" />
-					<view class="msg">发券金额￥</view>
+					<u-input v-model.number="form.coupon_num" type="number" placeholder="输入数量"/>
+					<view class="msg">发券金额：{{ money }}元</view>
 				</view>
 			</u-form-item>
-			<u-form-item label="有效日期" required prop="time">
-				<u-input :value="time" border disabled placeholder="请选择" @click="show = true" class="time" />
+			<u-form-item label="有效时间" required prop="time" :border-bottom="false">
+				<u-input :value="time" disabled placeholder="请选择" @click="show = true" class="time" />
 			</u-form-item>
-			<u-form-item label="适用范围" prop="">
-				<u-input value="全部专线" border disabled class="disabled" />
+			<u-form-item label="适用范围" prop="" :border-bottom="false">
+				<u-input value="全部专线" disabled class="disabled" />
 			</u-form-item>
 		</u-form>
-		<u-button @click="submit" class="btn" type="primary">提交</u-button>
-		<u-calendar v-model="show" mode="range" @change="change"></u-calendar>
+		<u-button @click="submit" class="btn" type="primary">确认发券</u-button>
+		<u-calendar v-model="show" mode="range" max-date="9999-12-31" @change="change"></u-calendar>
 		<u-toast ref="uToast" />
 	</view>
 </template>
@@ -84,13 +88,19 @@
 			let gt = this
 			gt.$refs.uForm.setRules(gt.rules)
 		},
+		computed: {
+			money() {
+				let gt = this
+				return (+gt.form.coupon_price || 0) * (+gt.form.coupon_num || 0)
+			}
+		},
 		methods: {
 			inputChange(e, type) {
 				let gt = this
 				setTimeout(() => {
 					if (type === 1) {
 						gt.form.coupon_min_price = +e > 0 ? +e : undefined
-					} else {
+					} else if(type === 2) {
 						gt.form.coupon_price = +e > 0 && +e < +gt.form.coupon_min_price ? +e : undefined
 					}
 				}, 0)
@@ -106,17 +116,15 @@
 				gt.$refs.uForm.validate(valid => {
 					if (valid) {
 						gt.gtRequest.post('/logistics/coupon/distribute', gt.form).then(res => {
-							if (res.code === 1) {
-								gt.$refs.uToast.show({
-									title: '发券成功',
-									type: 'success'
+							gt.$refs.uToast.show({
+								title: '发券成功',
+								type: 'success'
+							})
+							setTimeout(()=> {
+								uni.navigateBack({
+									delta: 1
 								})
-								setTimeout(()=> {
-									uni.navigateBack({
-										delta: 1
-									})
-								}, 2000)
-							}
+							}, 2000)
 						})
 					} else {
 						console.log('验证失败');
@@ -128,32 +136,49 @@
 </script>
 
 <style lang="scss">
+	page {
+		background-color: #F3F4F5;
+	}
 	.gt_content {
 		padding: 40rpx;
+		font-size: 28rpx;
+		color: #000000;
+		background-color: #fff;
+		.title {
+			font-weight: 700;
+			font-size: 32rpx;
+		}
+		.u-input {
+			width: 200rpx;
+			height: 64rpx;
+			background-color: #F4F4F4;
+			border-radius: 8rpx;
+			padding: 0 20rpx !important;
+			.u-input__input {
+				min-height: 64rpx !important;
+			}
+		}
 	}
-
-	.u-input {
-		width: 200rpx;
-	}
-
-	.time .u-input {
-		width: 92%;
-	}
-
 	.row {
 		display: flex;
 		align-items: center;
 		justify-content: flex-start;
 	}
-
+	.col {
+		position: relative;
+		.msg1 {
+			position: absolute;
+			top: 0%;
+			right: 0;
+			transform: translate(-50%, -5%);
+		}
+	}
 	.msg {
-		margin: 0 40rpx;
+		margin: 0 20rpx;
 	}
-
-	.disabled .u-input {
-		background-color: #f2f2f2;
+	.time .u-input {
+		width: 400rpx;
 	}
-
 	.btn {
 		position: absolute;
 		bottom: 10%;

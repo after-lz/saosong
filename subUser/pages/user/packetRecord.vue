@@ -12,10 +12,10 @@
 			</view>
 			<view v-for="item in dataList" :key='item.log_id' class="item">
 				<view class="item_left">
-					<view class="item_title">{{ item.remark }}</view>
+					<view>{{ item.log_type_msg }}</view>
 					<view class="item_time">{{ gtCommon.formateTime(item.create_time, 'YYYY-MM-DD HH:mm:SS') }}</view>
 				</view>
-				<view class="item_right">
+				<view>
 					<text v-if="item.number > 0">+{{ item.number }}</text>
 					<text v-else>{{ item.number }}</text>
 				</view>
@@ -128,17 +128,11 @@ page {
 		color: #000;
 		margin: 0 8rpx;
 		.item_left {
-			.item_title {
-				font-weight: 700;
-			}
 			.item_time {
-				color: #a2a4a6;
-				font-size: 26rpx;
+				color: #909399;
+				font-size: 24rpx;
 				margin-top: 10rpx;
 			}
-		}
-		.item_right {
-			font-weight: 700;
 		}
 	}
 }

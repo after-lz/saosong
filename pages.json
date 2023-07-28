@@ -209,7 +209,7 @@
 		},  {
 			"path": "pages/sansong/instantCoupon",
 			"style": {
-				"navigationBarTitleText": "立即发券",
+				"navigationBarTitleText": "发券",
 				"enablePullDownRefresh": false
 			}
 		},{

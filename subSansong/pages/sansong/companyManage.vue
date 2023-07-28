@@ -72,6 +72,62 @@
 						</view>
 					</view>
 				</view>
+			</view>
+		</view>
+
+		<view class="con_menu">
+			<view class="con_menuTitle">
+				<text>企业营销</text>
+			</view>
+			<view class="con_list">
+				<view class="con_item" style="display: none;">
+					<view class="con_title_status">
+						<view class="con_title">
+							<text>品质专线</text>
+						</view>
+						<view class="con_status">
+							<text>已缴纳</text>
+						</view>
+					</view>
+					<view class="con_descript">
+						<view class="con_text">
+							<text> 缴纳平台押金</text>
+							<text style="color: #485EF4;font-size: 28rpx;margin-left: 10rpx;">无限抢单</text>
+						</view>
+					</view>
+				</view>
+				<view class="con_item" style="display: none;">
+					<view class="con_title_status">
+						<view class="con_title">
+							<text>会员专线</text>
+						</view>
+						<view class="con_status">
+							<text></text>
+						</view>
+					</view>
+					<view class="con_descript">
+						<view class="con_text">
+							<text> 购买会员</text>
+							<text style="color: #485EF4;font-size: 28rpx;margin-left: 10rpx;">优先抢单</text>
+						</view>
+					</view>
+				</view>
+				<view class="con_item" style="background-color: #485EF4;display: none;">
+					<view class="con_title_status">
+						<view class="con_title" style="color: #fff;">
+							<text>专线推广</text>
+						</view>
+						<view class="con_status">
+							<text></text>
+						</view>
+					</view>
+					<view class="con_descript">
+						<view class="con_text" style="color: #fff;">
+							<text> 马上付费享</text>
+							<text style="font-size: 28rpx;margin-left: 10rpx;">置顶推广</text>
+						</view>
+					</view>
+				</view>
 				<view class="con_item" @click="goTicketManage">
 					<view class="con_title_status">
 						<view class="con_title">
@@ -88,78 +144,6 @@
 						</view>
 					</view>
 				</view>
-			</view>
-		</view>
-
-		<view class="con_menu" style="display: none;">
-			<view class="con_menuTitle">
-				<text>企业营销</text>
-			</view>
-			<view class="con_list">
-				<view class="con_item">
-					<view class="con_title_status">
-						<view class="con_title">
-							<text>品质专线</text>
-						</view>
-						<view class="con_status">
-							<text>已缴纳</text>
-						</view>
-					</view>
-					<view class="con_descript">
-						<view class="con_text">
-							<text> 缴纳平台押金</text>
-							<text style="color: #485EF4;font-size: 28rpx;margin-left: 10rpx;">无限抢单</text>
-						</view>
-					</view>
-				</view>
-				<view class="con_item">
-					<view class="con_title_status">
-						<view class="con_title">
-							<text>会员专线</text>
-						</view>
-						<view class="con_status">
-							<text></text>
-						</view>
-					</view>
-					<view class="con_descript">
-						<view class="con_text">
-							<text> 购买会员</text>
-							<text style="color: #485EF4;font-size: 28rpx;margin-left: 10rpx;">优先抢单</text>
-						</view>
-					</view>
-				</view>
-				<view class="con_item" style="background-color: #485EF4;">
-					<view class="con_title_status">
-						<view class="con_title" style="color: #fff;">
-							<text>专线推广</text>
-						</view>
-						<view class="con_status">
-							<text></text>
-						</view>
-					</view>
-					<view class="con_descript">
-						<view class="con_text" style="color: #fff;">
-							<text> 马上付费享</text>
-							<text style="font-size: 28rpx;margin-left: 10rpx;">置顶推广</text>
-						</view>
-					</view>
-				</view>
-				<!-- <view class="con_item" @click="goTicketManage">
-					<view class="con_title_status">
-						<view class="con_title">
-							<text>发券管理</text>
-						</view>
-						<view class="con_status">
-							<text></text>
-						</view>
-					</view>
-					<view class="con_descript">
-						<view class="con_text">
-							<text>发放优惠券</text>
-							<text style="color: #485EF4;font-size: 28rpx;">获取更多货主</text>
-						</view>
-					</view>
-				</view> -->
 			</view>
 		</view>
 
