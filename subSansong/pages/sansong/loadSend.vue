@@ -451,9 +451,18 @@
 			var conmpanyInfo = uni.getStorageSync('companyInfo');
 			gt.companyInfo = conmpanyInfo;
 			await gt.showLine(true)
-			if(option.line_id) gt.flag = true
-			let choseIndex = gt.lineList.findIndex(item=> item.line_id == option.line_id)
-			if(choseIndex !== -1) gt.lineChange(choseIndex)
+			if(option.line_id) {
+				gt.flag = true
+				let choseIndex = gt.lineList.findIndex(item=> item.line_id == option.line_id)
+				if(choseIndex !== -1) await gt.lineChange(choseIndex)
+			}	
+			if(option.orderSn) {
+				let choseItem = gt.orderList.find(item=> item.deliver_sn == option.orderSn)
+				if (choseItem) {
+					choseItem.selected = true
+					gt.orderStr = '已选1单'
+				}
+			}
 		},
 		methods: {
 			plateConfirm(res) {
@@ -477,7 +486,7 @@
 				});
 			},
 
-			lineChange(index) {
+			async lineChange(index) {
 				let gt = this;
 				gt.lineIndex = index;
 				var item = gt.lineList[index];
@@ -500,7 +509,7 @@
 					page: 1,
 					limit: 9999,
 				};
-				gt.gtRequest.post(url, data).then(res => {
+				await gt.gtRequest.post(url, data).then(res => {
 					for (var i = 0; i < res.list.length; i++) {
 						res.list[i].selected = false;
 					}

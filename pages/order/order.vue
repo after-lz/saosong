@@ -234,7 +234,7 @@
 										</view> -->
 										<view class="con_btnItem" @click.stop="confirmSign(item)"
 											v-if="item.status == 11">
-											<text>签收</text>
+											<text>确认签收</text>
 										</view>
 										<view class="con_btnItem" @click.stop="uploadReceipt(item)"
 											v-if="item.status == 13">
@@ -855,8 +855,12 @@
 					gt.$refs.uToast.show({
 						title: '揽收成功！',
 						type: 'success',
-						url: 'pages/order/orderInfo?orderSn=' + item.deliver_sn,
+						// url: 'pages/order/orderInfo?orderSn=' + item.deliver_sn,
 					});
+					gt.page = 1;
+					gt.size = 10;
+					gt.end = false;
+					gt.getOrderList();
 				});
 			},
 			confirmStart(item) {

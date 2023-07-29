@@ -26,9 +26,9 @@
 			<u-form-item label="有效时间" required prop="time" :border-bottom="false">
 				<u-input :value="time" disabled placeholder="请选择" @click="show = true" class="time" />
 			</u-form-item>
-			<u-form-item label="适用范围" prop="" :border-bottom="false">
+			<!-- <u-form-item label="适用范围" prop="" :border-bottom="false">
 				<u-input value="全部专线" disabled class="disabled" />
-			</u-form-item>
+			</u-form-item> -->
 		</u-form>
 		<u-button @click="submit" class="btn" type="primary">确认发券</u-button>
 		<u-calendar v-model="show" mode="range" max-date="9999-12-31" @change="change"></u-calendar>
