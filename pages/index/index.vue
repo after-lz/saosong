@@ -586,12 +586,13 @@
 				moveY: 450,
 				logistics_id: 0,
 				clientId: '',
-				checkStatus: -1
+				checkStatus: -1,
+				innerAudioContext: null
 			}
 		},
 		onLoad() {
 			let gt = this;
-			const innerAudioContext = uni.createInnerAudioContext();
+			gt.innerAudioContext = uni.createInnerAudioContext();
 			// console.log(gt.$gtWSS.socketTask);
 			var mobile = uni.getStorageSync('mobile');
 			gt.mobile = mobile;
@@ -674,9 +675,9 @@
 						var orderInfo = obj.data;
 						var orderInfo = orderInfo.order_info;
 						if (orderInfo.logistics_id == gt.logistics_id) {
-							innerAudioContext.stop();
-							innerAudioContext.src = 'https://baohusan-uisource.oss-cn-shanghai.aliyuncs.com/mp-transport/index/seizeOrderSuccess.mp3';
-							innerAudioContext.play();
+							gt.innerAudioContext.stop();
+							gt.innerAudioContext.src = 'https://baohusan-uisource.oss-cn-shanghai.aliyuncs.com/mp-transport/index/seizeOrderSuccess.mp3';
+							gt.innerAudioContext.play();
 							gt.$refs.uToast.show({
 								title: '抢单成功',
 								type: 'success',
@@ -993,9 +994,9 @@
 								gt.orderSn = item.deliver_sn;
 								gt.seizeShow = true;
 								// const innerAudioContext = uni.createInnerAudioContext();
-								innerAudioContext.stop();
-								innerAudioContext.src = 'https://baohusan-uisource.oss-cn-shanghai.aliyuncs.com/mp-transport/index/receiveOrderSuccess.mp3';
-								innerAudioContext.play();
+								gt.innerAudioContext.stop();
+								gt.innerAudioContext.src = 'https://baohusan-uisource.oss-cn-shanghai.aliyuncs.com/mp-transport/index/receiveOrderSuccess.mp3';
+								gt.innerAudioContext.play();
 							});
 						}
 					}
