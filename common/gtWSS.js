@@ -57,8 +57,6 @@ function init(wsUrl) {
 		clearInterval(reconnectInterval)
 		isOpenSocket = true
 		canReconnect = true
-
-
 		//开启心跳机制
 		heartBeat()
 	})
@@ -66,19 +64,12 @@ function init(wsUrl) {
 		//自定义处理onMessage方法
 		console.log(res);
 		let gt = this;
-
-
 		// 	var pages = getCurrentPages();
 		// 	var currentRoute = pages[pages.length-1].route;
 		// 	console.log(currentRoute);
-
-
 		var data = res.data;
-		// console.log(data);
 		var obj = JSON.parse(data);
 		var type = obj.type;
-
-
 		// 	uni.setStorageSync('client_id',obj.client_id);
 		if (type == 'init') {
 			var url = "/api/applogin/bind_client_id";
@@ -86,48 +77,31 @@ function init(wsUrl) {
 				client_id: obj.client_id,
 			};
 			uni.setStorageSync('clientId',obj.client_id);
-
 			gtRequest.post(url, data).then(res => {
 
 			});
 		}
-
-		// return false;
 		var audioStatus = uni.getStorageSync('audioStatus');
 		if (!audioStatus) {
 			return false;
 		}
-
-
-
 		if (type == 'order_new_order') {
-			var orderInfo = obj.data;
-			// console.log(orderInfo);
-			var orderInfo = orderInfo.order_info;
-			// console.log(orderInfo);
-			// return false;
+			// var orderInfo = obj.data;
+			// orderInfo = orderInfo.order_info;
 			innerAudioContext.stop();
-
 			// innerAudioContext.autoplay = true;
-			innerAudioContext.src =
-				'https://baohusan-uisource.oss-cn-shanghai.aliyuncs.com/mp-transport/index/new_order.mp3';
+			innerAudioContext.src = 'https://baohusan-uisource.oss-cn-shanghai.aliyuncs.com/mp-transport/index/new_order.mp3';
 			innerAudioContext.play();
 		}
 
 		if (type == 'order_rob_result') {
-			var orderInfo = obj.data;
-			// console.log(orderInfo);
-			var orderInfo = orderInfo.order_info;
-			// console.log(orderInfo);
-			// return false;
-
-			if (orderInfo.logistics_id == logisticsId) {
-				innerAudioContext.stop();
-				innerAudioContext.src =
-					'https://baohusan-uisource.oss-cn-shanghai.aliyuncs.com/mp-transport/index/seizeOrderSuccess.mp3';
-				innerAudioContext.play();
-			}
-
+			// var orderInfo = obj.data;
+			// orderInfo = orderInfo.order_info;
+			// if (orderInfo.logistics_id == logisticsId) {
+			// 	innerAudioContext.stop();
+			// 	innerAudioContext.src = 'https://baohusan-uisource.oss-cn-shanghai.aliyuncs.com/mp-transport/index/seizeOrderSuccess.mp3';
+			// 	innerAudioContext.play();
+			// }
 		}
 
 		// if (type == 'order_receive_success') {

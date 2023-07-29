@@ -28,7 +28,7 @@ function getToken() {
 }
 
 function post(url, data = {}, rejectStatus = false) {
-	console.log('rejectStatus:', rejectStatus);
+	// console.log('rejectStatus:', rejectStatus);
 	const apiDomain = uni.getStorageSync('apiDomain');
 	// //    console.log(apiDomain);
 
@@ -55,8 +55,8 @@ function post(url, data = {}, rejectStatus = false) {
 		// return false;
 		var token = await getToken();
 
-		console.log(url);
-		console.log(token);
+		// console.log(url);
+		// console.log(token);
 
 		if (url != '/api/wechat/get_miniprogram_phone' && url != '/api/applogin/login_post' && url !=
 			'/api/applogin/get_verify_code' && url != '/api/appgobal/get_ad_data' && url !=
@@ -105,7 +105,7 @@ function post(url, data = {}, rejectStatus = false) {
 							showCancel: false,
 							success: function(res) {
 								if (res.confirm) {
-									console.log('用户点击确定');
+									// console.log('用户点击确定');
 									uni.navTo('/pages/login/login')
 								}
 							}
@@ -119,15 +119,15 @@ function post(url, data = {}, rejectStatus = false) {
 							showCancel: false,
 							success: function(res) {
 								if (res.confirm) {
-									console.log('用户点击确定');
+									// console.log('用户点击确定');
 									uni.navTo('/pages/login/companyAuth')
 								}
 							}
 						});
 						return false;
 					} else {
-						console.log('dfd');
-						console.log(rejectStatus);
+						// console.log('dfd');
+						// console.log(rejectStatus);
 						if (rejectStatus) {
 							reject(data.msg);
 						} else {
@@ -147,7 +147,7 @@ function post(url, data = {}, rejectStatus = false) {
 			fail: function(res) {
 				clearTimeout(t);
 				uni.hideLoading();
-				console.log('失败', res);
+				// console.log('失败', res);
 				uni.showModal({
 					title: '提示',
 					content: "提交失败",
@@ -161,7 +161,7 @@ function post(url, data = {}, rejectStatus = false) {
 }
 
 function upload(file) {
-	console.log(file);
+	// console.log(file);
 	const apiDomain = uni.getStorageSync('apiDomain');
 
 
@@ -180,7 +180,7 @@ function upload(file) {
 			login_token: '',
 			sign: '',
 		};
-		console.log(data);
+		// console.log(data);
 
 
 		uni.uploadFile({
@@ -189,14 +189,14 @@ function upload(file) {
 			name: 'file',
 			formData: data,
 			success: function(res) {
-				console.log(res);
+				// console.log(res);
 				clearTimeout(t);
 				uni.hideLoading();
 
 				var data = res.data;
 				var data = JSON.parse(data);
-				console.log(data);
-				console.log(data.code);
+				// console.log(data);
+				// console.log(data.code);
 
 				if (data.code == 1) {
 					resolve(data.data);
@@ -205,7 +205,7 @@ function upload(file) {
 				}
 			},
 			fail: function(res) {
-				console.log(res);
+				// console.log(res);
 				clearTimeout(t);
 				uni.hideLoading();
 

@@ -866,7 +866,7 @@
 								</view>
 							</view>
 
-							<view class="con_agreement" @click="gtCommon.goLicence(licencesObj.yunshu_xieyi_url)">
+							<view class="con_agreement" @click="gtCommon.goLicence(yunshu_xieyi_url)">
 								<text>《货物运输协议》</text>
 							</view>
 
@@ -1086,6 +1086,9 @@
 				trajectoryShow: false,
 
 				licencesObj: {},
+				
+				yunshu_xieyi_url:'https://saasdemo.sansongkeji.com/adminsite/#/agreement/transportation'
+				// yunshu_xieyi_url:'https://baidu.com'
 			}
 		},
 		onLoad(options) {
@@ -1105,7 +1108,7 @@
 				success(res) {
 					console.log(res);
 					gt.screenHeight = res.screenHeight;
-					// gt.moveY = res.screenHeight * 0.6;
+					gt.moveY = res.screenHeight * 0.6;
 				},
 
 				fail(res) {

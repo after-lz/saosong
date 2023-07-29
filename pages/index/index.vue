@@ -527,48 +527,31 @@
 		data() {
 			return {
 				maskShow: false,
-
 				mobile: '',
-
 				listenStatus: false,
 				audioStatus: true,
-
 				tabList: [{
 					name: '极速'
 				}, {
 					name: '指派'
 				}],
 				currentTab: 0,
-
-				noticeList: [
-					'寒雨连江夜入吴',
-					'平明送客楚山孤',
-					'洛阳亲友如相问',
-					'一片冰心在玉壶'
-				],
-
+				noticeList: [],
 				companyAuth: false,
 				lineNum: 0,
-
 				page: 1,
 				size: 10,
 				end: false,
-
 				dataList: [],
-
 				joinShow: false,
-
 				orderSn: '',
-
 				seizeShow: false,
-
 				quotationShow: false,
 				ownerQuotation: '',
 				ownerMobile: '',
 				myQuotation: '',
 				quotationTime: '',
 				quotationStatus: false,
-
 				refuseShow: false,
 				refuseReason: '',
 				refuseReasonList: [{
@@ -597,20 +580,18 @@
 					value: 1,
 				}],
 				refuseOtherReason: '',
-
 				lng: '',
 				lat: '',
 				moveX: 300,
 				moveY: 450,
-
 				logistics_id: 0,
-
 				clientId: '',
 				checkStatus: -1
 			}
 		},
 		onLoad() {
 			let gt = this;
+			const innerAudioContext = uni.createInnerAudioContext();
 			// console.log(gt.$gtWSS.socketTask);
 			var mobile = uni.getStorageSync('mobile');
 			gt.mobile = mobile;
@@ -621,19 +602,13 @@
 			// uni.setStorageSync('listenStatus', true);
 			var companyInfo = uni.getStorageSync('companyInfo');
 			gt.logistics_id = companyInfo.logistics_id;
-			
-		},
-		onReady() {
-			let gt = this;
 		},
 		async onShow() {
 			let gt = this;
 			gt.clientId = uni.getStorageSync('clientId');
-
 			uni.setNavigationBarTitle({
 				title: '专线货源',
 			});
-
 			if (gt.mobile) {
 				gt.gtonMessage();
 			}
@@ -641,17 +616,13 @@
 			gt.audioStatus = uni.getStorageSync('audioStatus');
 			// var companyAuth = uni.getStorageSync('companyAuth');
 			// gt.companyAuth = companyAuth;
-
 			// gt.getLineNum();
-
-
 			// var companyInfo = uni.getStorageSync('companyInfo');
 			// if (companyInfo.parkId) {
 			// 	// gt.reGetOrderList();
 			// } else {
 			// 	gt.joinShow = true;
 			// }
-
 			gt.getLocation();
 			if (gt.mobile) {
 				await gt.getCompanyInfo();
@@ -669,7 +640,6 @@
 		methods: {
 			gtonMessage() {
 				let gt = this;
-				console.log('645:onMessage');
 				gt.gtWSS.socketTask.onMessage((res) => {
 					console.log('indexOnMessage:', res);
 					// uni.showModal({
@@ -677,30 +647,21 @@
 					// 	content:JSON.stringify(res)
 					// })
 					// gt.gtLog(res);
-
 					var data = res.data;
-					// console.log(data);
 					var obj = JSON.parse(data);
 					var type = obj.type;
-
 					if (type == 'order_new_order') {
 						if (!gt.listenStatus) {
 							return false;
 						}
 						var orderInfo = obj.data;
-						// console.log(orderInfo);
 						var orderInfo = orderInfo.order_info;
-						console.log(orderInfo);
-						// return false;
-
 						for (var i = 0; i < gt.dataList.length; i++) {
 							if (orderInfo.id == gt.dataList[i].id) {
 								return false;
 							}
 						}
-
 						if (orderInfo.order_type == 2 && gt.currentTab == 0) {
-
 							gt.dataList.unshift(orderInfo);
 						}
 						if (orderInfo.order_type == 1 && gt.currentTab == 1) {
@@ -708,17 +669,14 @@
 						}
 					}
 					if (type == 'order_rob_result') {
-
 						gt.maskShow = false;
 						uni.hideLoading();
-
 						var orderInfo = obj.data;
 						var orderInfo = orderInfo.order_info;
-						console.log(orderInfo);
-						// uni.navigateTo({
-						// });
-
 						if (orderInfo.logistics_id == gt.logistics_id) {
+							innerAudioContext.stop();
+							innerAudioContext.src = 'https://baohusan-uisource.oss-cn-shanghai.aliyuncs.com/mp-transport/index/seizeOrderSuccess.mp3';
+							innerAudioContext.play();
 							gt.$refs.uToast.show({
 								title: '抢单成功',
 								type: 'success',
@@ -741,7 +699,6 @@
 			async getCompanyInfo() {
 				let gt = this;
 				var url = "/logistics/company/get_index_info";
-
 				await gt.gtRequest.post(url).then(res => {
 					gt.lineNum = res.line_num;
 					gt.companyAuth = res.company_info.is_company_approve;
@@ -759,11 +716,9 @@
 			},
 			getLocation() {
 				let gt = this;
-
 				uni.getLocation({
 					type: 'gcj02',
 					success(res) {
-						console.log(759, res);
 						if (res.errMsg == 'getLocation:ok') {
 							gt.lng = res.longitude;
 							gt.lat = res.latitude;
@@ -772,7 +727,6 @@
 						}
 					},
 					fail(res) {
-						console.log(758, res);
 						// #ifdef MP-WEIXIN
 						uni.getSetting({
 							success(res) {
@@ -816,12 +770,9 @@
 					}
 				})
 			},
-
 			goAuth() {
 				let gt = this;
-
 				if (gt.mobile) {
-
 					uni.navigateTo({
 						url: '../login/companyAuth',
 					});
@@ -835,7 +786,6 @@
 			},
 			goLine() {
 				let gt = this;
-
 				if (gt.mobile) {
 					uni.navigateTo({
 						url: '/subSansong/pages/sansong/lineAdd',
@@ -859,13 +809,10 @@
 				gt.currentTab = index;
 				gt.reGetOrderList();
 			},
-
 			animationfinish(item) {
 				let gt = this;
-
 				var currentTab = gt.currentTab;
 				gt.currentTab = item.detail.current;
-
 				if (currentTab != gt.currentTab) {
 					gt.reGetOrderList();
 				}
@@ -876,7 +823,6 @@
 				})
 			},
 			loadMore() {
-				console.log('loadMore');
 				let gt = this;
 				gt.getOrderList();
 			},
@@ -918,7 +864,6 @@
 				});
 			},
 			goOrderInfo(item) {
-				console.log(item);
 				let gt = this;
 				var orderSn = '';
 				if (item.deliver_sn) {
@@ -942,9 +887,7 @@
 				gt.seizeShow = false;
 			},
 			showQuotation(item) {
-				console.log(item);
 				let gt = this;
-
 				gt.orderSn = item.deliver_sn;
 				gt.ownerQuotation = item.last_price;
 				gt.ownerMobile = item.pickup_mobile;
@@ -955,13 +898,10 @@
 				} else {
 					gt.quotationStatus = false;
 				}
-
-
 				gt.quotationShow = true;
 			},
 			contactOwner() {
 				let gt = this;
-
 				uni.makePhoneCall({
 					phoneNumber: gt.ownerMobile
 				});
@@ -982,7 +922,6 @@
 					});
 					return false;
 				}
-
 				if (gt.myQuotation * 100 <= gt.ownerQuotation * 100) {
 					gt.$refs.uToast.show({
 						title: '我的报价不能低于货主出价',
@@ -1006,10 +945,7 @@
 				});
 			},
 			seizeOrder(item) {
-				console.log(item);
-
 				let gt = this;
-
 				uni.showModal({
 					title: '提示',
 					content: '确定抢单吗？',
@@ -1037,24 +973,18 @@
 									type: 'error',
 									back: true,
 								});
-
 							});
 						}
 					}
 				})
-
 			},
 			receiveOrder(item) {
-				console.log(item);
-
 				let gt = this;
-
 				uni.showModal({
 					title: '提示',
 					content: '确定接单吗？',
 					success(res) {
 						if (res.confirm) {
-
 							var url = "/logistics/order/confirm_receving";
 							var data = {
 								deliver_sn: item.deliver_sn,
@@ -1062,22 +992,15 @@
 							gt.gtRequest.post(url, data).then(res => {
 								gt.orderSn = item.deliver_sn;
 								gt.seizeShow = true;
-
-
-								const innerAudioContext = uni.createInnerAudioContext();
+								// const innerAudioContext = uni.createInnerAudioContext();
 								innerAudioContext.stop();
-								innerAudioContext.src =
-									'https://baohusan-uisource.oss-cn-shanghai.aliyuncs.com/mp-transport/index/receiveOrderSuccess.mp3';
+								innerAudioContext.src = 'https://baohusan-uisource.oss-cn-shanghai.aliyuncs.com/mp-transport/index/receiveOrderSuccess.mp3';
 								innerAudioContext.play();
-
-
 							});
 						}
 					}
 				})
-
 			},
-
 			reGetOrderList() {
 				let gt = this;
 				// var token = gt.gtRequest.getToken();
@@ -1104,11 +1027,9 @@
 					limit: gt.size,
 				};
 				gt.gtRequest.post(url, data).then(res => {
-					console.log(res);
 					if (gt.page == 1) {
 						gt.dataList = [];
 					}
-
 					gt.dataList = gt.dataList.concat(res.list);
 					if (res.list.length == gt.size) {
 						gt.page = gt.page + 1;
@@ -1120,7 +1041,6 @@
 			changeListenStatus() {
 				let gt = this;
 				if (gt.listenStatus) {
-
 					gt.audioStatus = false;
 					gt.listenStatus = false;
 					uni.setStorageSync('audioStatus', false);
@@ -1131,7 +1051,6 @@
 					uni.setStorageSync('audioStatus', true);
 					gt.reGetOrderList();
 				}
-
 				uni.setStorageSync('listenStatus', gt.listenStatus);
 			},
 			audioSwitch() {
@@ -1142,8 +1061,6 @@
 				gt.audioStatus = !gt.audioStatus;
 				uni.setStorageSync('audioStatus', gt.audioStatus);
 			},
-
-
 		}
 	}
 </script>
@@ -1151,25 +1068,20 @@
 <style lang="scss">
 	page {
 		background: $gtBackgroundColor;
-
 		.gt_content {
 			.con_listenStatus_tabSwiper {
 				display: flex;
 				justify-content: space-between;
 				background: #fff;
-
 				.con_listenAudio {
 					display: flex;
-
 					.con_listenStatus {
-
 						.con_listen {
 							.con_text {
 								margin: 16rpx 8rpx;
 								width: 172rpx;
 								height: 64rpx;
 								border-radius: 32rpx;
-
 								border: 2rpx solid $gtProjectColor;
 								font-size: 32rpx;
 								font-family: PingFangSC-Medium, PingFang SC;
@@ -1179,14 +1091,12 @@
 								text-align: center;
 							}
 						}
-
 						.con_unListen {
 							.con_text {
 								margin: 16rpx 8rpx;
 								width: 172rpx;
 								height: 64rpx;
 								border-radius: 32rpx;
-
 								border: 2rpx solid #909399;
 								font-size: 32rpx;
 								font-family: PingFangSC-Medium, PingFang SC;
@@ -1196,24 +1106,18 @@
 								text-align: center;
 							}
 						}
-
-
 					}
-
 					.con_audioStatus {
 						width: 64rpx;
 						height: 64rpx;
 						margin: 16rpx 8rpx;
 					}
 				}
-
 				.con_tabSwiper {
 					width: 300rpx;
 				}
 			}
-
 			.con_tip {
-
 				// position: fixed;
 				// z-index: 999;
 				.con_tipItem {
@@ -1224,17 +1128,14 @@
 					background: #FFFFFF;
 					border-radius: 16rpx;
 					margin: 20rpx 16rpx 0 16rpx;
-
 					.con_iconText {
 						display: flex;
-
 						.con_icon {
 							width: 48rpx;
 							height: 40rpx;
 							margin-top: 40rpx;
 							margin-left: 20rpx;
 						}
-
 						.con_text {
 							.con_title {
 								font-size: 28rpx;
@@ -1245,7 +1146,6 @@
 								margin-top: 18rpx;
 								margin-left: 20rpx;
 							}
-
 							.con_descript {
 								font-size: 24rpx;
 								font-family: PingFangSC-Regular, PingFang SC;
@@ -1255,10 +1155,7 @@
 								margin-left: 20rpx;
 							}
 						}
-
-
 					}
-
 					.con_btn {
 						width: 160rpx;
 						height: 60rpx;
@@ -1275,18 +1172,15 @@
 					}
 				}
 			}
-
 			.con_swiper {
 				swiper {
 					height: calc(100vh - 80rpx);
-
 					.swiper-item {
 						.con_empty {
 							.con_img {
 								width: 528rpx;
 								margin: 200rpx auto 0 auto;
 							}
-
 							.con_text {
 								font-size: 32rpx;
 								font-family: PingFangSC-Regular, PingFang SC;
@@ -1296,7 +1190,6 @@
 								margin-top: 16rpx;
 								text-align: center;
 							}
-
 							.con_historyBtn {
 								width: 240rpx;
 								height: 76rpx;
@@ -1309,15 +1202,11 @@
 								line-height: 76rpx;
 								margin: 70rpx auto 0 auto;
 								text-align: center;
-
 							}
 						}
-
-
 						.con_list {
 							.con_scrollView {
 								height: calc(100vh - 80rpx);
-
 								.con_item {
 									width: 718rpx;
 									// height: 692rpx;
@@ -1325,14 +1214,11 @@
 									border-radius: 20rpx;
 									margin: 20rpx 16rpx 0 16rpx;
 									padding: 24rpx;
-
 									// 				.con_typeSn_status {
 									// 					display: flex;
 									// 					justify-content: space-between;
-
 									// 					.con_typeSn {
 									// 						display: flex;
-
 									// 						.con_type {
 									// 							width: 68rpx;
 									// 							height: 40rpx;
@@ -1345,15 +1231,12 @@
 									// 							line-height: 40rpx;
 									// 							text-align: center;
 									// 						}
-
 									// 						.orderType1 {
 									// 							background: $gtProjectColor;
 									// 						}
-
 									// 						.orderType2 {
 									// 							background: #FFBF27;
 									// 						}
-
 									// 						.con_sn {
 									// 							display: flex;
 									// 							font-size: 28rpx;
@@ -1362,9 +1245,7 @@
 									// 							color: #909399;
 									// 							line-height: 40rpx;
 									// 							margin-left: 22rpx;
-
 									// 							.con_text {}
-
 									// 							.con_copyIcon {
 									// 								margin: 0 8rpx;
 									// 								font-size: 24rpx;
@@ -1372,7 +1253,6 @@
 									// 							}
 									// 						}
 									// 					}
-
 									// 					.con_status {
 									// 						font-size: 28rpx;
 									// 						font-family: PingFangSC-Regular, PingFang SC;
@@ -1381,7 +1261,6 @@
 									// 						line-height: 40rpx;
 									// 					}
 									// 				}
-
 									.con_type_distance {
 										display: flex;
 										justify-content: space-between;
@@ -1389,7 +1268,6 @@
 										margin: -24rpx;
 										border-radius: 16rpx 16rpx 0rpx 0rpx;
 										margin-bottom: 20rpx;
-
 										.con_type {
 											font-size: 32rpx;
 											font-family: PingFangSC-Medium, PingFang SC;
@@ -1398,12 +1276,9 @@
 											line-height: 44rpx;
 											margin: 22rpx 24rpx;
 										}
-
 										.con_distance {
 											display: flex;
-
 											.con_text {
-
 												font-size: 32rpx;
 												font-family: PingFangSC-Medium, PingFang SC;
 												font-weight: 500;
@@ -1411,7 +1286,6 @@
 												line-height: 44rpx;
 												margin: 22rpx 24rpx;
 											}
-
 											.con_icon {
 												margin-right: 24rpx;
 												width: 48rpx;
@@ -1420,21 +1294,16 @@
 											}
 										}
 									}
-
 									.orderType1 {
 										background: $gtProjectColor;
 									}
-
 									.orderType2 {
 										background: #FF6067;
 									}
-
 									.con_fromTo {
 										margin-top: 24rpx;
-
 										.con_from {
 											display: flex;
-
 											.con_city {
 												font-size: 28rpx;
 												font-family: PingFangSC-Medium, PingFang SC;
@@ -1443,10 +1312,8 @@
 												line-height: 40rpx;
 												white-space: nowrap;
 											}
-
 											.con_address_type {
 												margin-left: 20rpx;
-
 												.con_address {
 													font-size: 28rpx;
 													font-family: PingFangSC-Regular, PingFang SC;
@@ -1454,7 +1321,6 @@
 													color: #909399;
 													line-height: 40rpx;
 												}
-
 												.con_type {
 													font-size: 28rpx;
 													font-family: PingFangSC-Regular, PingFang SC;
@@ -1465,18 +1331,15 @@
 												}
 											}
 										}
-
 										.con_lineFT {
 											margin: -26rpx 0 0 42rpx;
 											width: 2rpx;
 											height: 60rpx;
 											border: 2rpx dashed #DFDFDF;
 										}
-
 										.con_to {
 											display: flex;
 											margin-top: 24rpx;
-
 											.con_city {
 												font-size: 28rpx;
 												font-family: PingFangSC-Medium, PingFang SC;
@@ -1485,10 +1348,8 @@
 												line-height: 40rpx;
 												white-space: nowrap;
 											}
-
 											.con_address_type {
 												margin-left: 20rpx;
-
 												.con_address {
 													font-size: 28rpx;
 													font-family: PingFangSC-Regular, PingFang SC;
@@ -1496,7 +1357,6 @@
 													color: #909399;
 													line-height: 40rpx;
 												}
-
 												.con_type {
 													font-size: 28rpx;
 													font-family: PingFangSC-Regular, PingFang SC;
@@ -1508,15 +1368,12 @@
 											}
 										}
 									}
-
 									.con_keyVal {
 										margin-top: 12rpx;
 										margin-left: 10rpx;
-
 										.con_key_val {
 											display: flex;
 											margin-top: 20rpx;
-
 											.con_key {
 												font-size: 28rpx;
 												font-family: PingFangSC-Regular, PingFang SC;
@@ -1524,26 +1381,22 @@
 												color: #909399;
 												line-height: 40rpx;
 											}
-
 											.con_val {
 												font-size: 28rpx;
 												font-family: PingFangSC-Regular, PingFang SC;
 												font-weight: 400;
 												color: #000;
 												line-height: 40rpx;
-
 												text:nth-child(3) {
 													color: #FF6067;
 												}
 											}
 										}
 									}
-
 									.con_time_price {
 										display: flex;
 										justify-content: space-between;
 										margin-top: 32rpx;
-
 										.con_time {
 											font-size: 28rpx;
 											font-family: PingFangSC-Regular, PingFang SC;
@@ -1551,7 +1404,6 @@
 											color: #909399;
 											line-height: 40rpx;
 										}
-
 										.con_price {
 											font-size: 28rpx;
 											font-family: PingFangSC-Medium, PingFang SC;
@@ -1560,7 +1412,6 @@
 											line-height: 40rpx;
 										}
 									}
-
 									.con_line {
 										width: 670rpx;
 										height: 2rpx;
@@ -1568,17 +1419,14 @@
 										border: 1rpx solid #000000;
 										margin-top: 20rpx;
 									}
-
 									.con_btns {
 										display: flex;
 										justify-content: flex-end;
 										padding: 20rpx 12rpx;
-
 										.con_btnItem {
 											text-align: center;
 											margin: 0 12rpx;
 										}
-
 										.con_refuseBtn {
 											width: 160rpx;
 											height: 64rpx;
@@ -1590,8 +1438,6 @@
 											color: #FF6067;
 											line-height: 64rpx;
 										}
-
-
 										.con_quotationBtn {
 											width: 160rpx;
 											height: 64rpx;
@@ -1603,7 +1449,6 @@
 											color: $gtProjectColor;
 											line-height: 64rpx;
 										}
-
 										.con_seizeBtn {
 											width: 160rpx;
 											height: 64rpx;
@@ -1615,8 +1460,6 @@
 											color: #FFFFFF;
 											line-height: 64rpx;
 										}
-
-
 										.con_viewBtn {
 											width: 144rpx;
 											height: 64rpx;
@@ -1635,11 +1478,9 @@
 								}
 							}
 						}
-
 					}
 				}
 			}
-
 			.con_movable {
 				.movable-area {
 					height: 100vh;
@@ -1647,14 +1488,11 @@
 					top: 0;
 					position: fixed;
 					pointer-events: none;
-
 					.movable-view {
 						pointer-events: auto;
 						width: 160rpx;
 						height: 160rpx;
-
 						.con_listenBtn {
-
 							width: 160rpx;
 							height: 160rpx;
 							border: 16rpx solid $gtProjectColor;
@@ -1671,7 +1509,6 @@
 							text-align: center;
 							z-index: 9999;
 							background: #fff;
-
 							.con_gif {
 								width: 100rpx;
 								height: 100rpx;
@@ -1681,10 +1518,6 @@
 					}
 				}
 			}
-
-
-
-
 			.con_popup {
 				.con_companyJoin {
 					.con_text {
@@ -1696,7 +1529,6 @@
 						letter-spacing: 1px;
 						margin: 108rpx 66rpx 0 66rpx;
 					}
-
 					.con_joinBtn {
 						width: 210rpx;
 						height: 76rpx;
@@ -1711,14 +1543,12 @@
 						margin: 108rpx auto 0 auto;
 					}
 				}
-
 				.con_serizeSuccess {
 					.con_img {
 						width: 200rpx;
 						height: 200rpx;
 						margin: 72rpx auto 0 auto;
 					}
-
 					.con_text {
 						font-size: 48rpx;
 						font-family: PingFangSC-Medium, PingFang SC;
@@ -1728,7 +1558,6 @@
 						margin-top: 68rpx;
 						text-align: center;
 					}
-
 					.con_viewBtn {
 						width: 339rpx;
 						height: 76rpx;
@@ -1742,7 +1571,6 @@
 						text-align: center;
 						margin: 80rpx auto 0 auto;
 					}
-
 					.con_confirmBtn {
 						width: 339rpx;
 						height: 76rpx;
@@ -1757,10 +1585,7 @@
 						margin: 18rpx auto 0 auto;
 					}
 				}
-
-
 				.con_quotation {
-
 					// padding: 34rpx;
 					// padding: 1rpx;
 					.con_title {
@@ -1773,32 +1598,26 @@
 						text-align: center;
 						margin-top: 34rpx;
 					}
-
 					.con_ownerQuotation_contact {
 						display: flex;
 						justify-content: space-between;
 						margin: 14rpx 0 0 34rpx;
-
 						.con_ownerWuotation {
 							font-size: 28rpx;
 							font-family: PingFangSC-Regular, PingFang SC;
 							font-weight: 400;
 							color: #000000;
 							line-height: 40rpx;
-
 							text:nth-child(2) {
 								color: $gtProjectColor;
 							}
 						}
-
 						.con_contact {
 							display: flex;
-
 							.con_icon {
 								// margin-top: 16rpx;
 								margin-right: 8rpx;
 							}
-
 							.con_text {
 								font-size: 28rpx;
 								font-family: PingFangSC-Regular, PingFang SC;
@@ -1809,20 +1628,16 @@
 							}
 						}
 					}
-
 					.con_myQuotation {
 						display: flex;
 						margin: 40rpx 68rpx 0 34rpx;
-
 						.con_text {
 							font-size: 28rpx;
 							font-family: PingFangSC-Regular, PingFang SC;
 							font-weight: 400;
 							color: #000000;
 							line-height: 64rpx;
-
 						}
-
 						.con_input {
 							width: 440rpx;
 							height: 64rpx;
@@ -1830,7 +1645,6 @@
 							border-radius: 8rpx;
 							padding: 0 10rpx;
 						}
-
 						.con_unit {
 							font-size: 24rpx;
 							font-family: PingFangSC-Regular, PingFang SC;
@@ -1840,7 +1654,6 @@
 							margin-left: 10rpx;
 						}
 					}
-
 					.con_tip {
 						width: 384rpx;
 						height: 34rpx;
@@ -1851,7 +1664,6 @@
 						line-height: 34rpx;
 						margin: 16rpx 0 0 34rpx;
 					}
-
 					.con_time {
 						font-size: 28rpx;
 						font-family: PingFangSC-Regular, PingFang SC;
@@ -1860,7 +1672,6 @@
 						line-height: 40rpx;
 						margin: 40rpx 0 50rpx 34rpx;
 					}
-
 					.con_confirmQuotation {
 						width: 240rpx;
 						height: 76rpx;
@@ -1875,7 +1686,6 @@
 						text-align: center;
 					}
 				}
-
 				.con_refuse {
 					.con_title {
 						font-size: 32rpx;
@@ -1886,14 +1696,11 @@
 						margin-top: 40rpx;
 						text-align: center;
 					}
-
 					.con_radio {
 						margin: 20rpx 32rpx 0 40rpx;
-
 						.u-radio {
 							flex-direction: row-reverse;
 							justify-content: space-between;
-
 							.u-radio__label {
 								font-size: 28rpx;
 								font-family: PingFangSC-Regular, PingFang SC;
@@ -1904,7 +1711,6 @@
 							}
 						}
 					}
-
 					.con_textarea {
 						width: 678rpx;
 						height: 132rpx;
@@ -1917,7 +1723,6 @@
 						font-weight: 400;
 						line-height: 40rpx;
 					}
-
 					.con_confirmBtn {
 						width: 718rpx;
 						height: 100rpx;
