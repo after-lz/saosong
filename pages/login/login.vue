@@ -242,9 +242,10 @@
 										if (environment == 'prod') {
 											url = 'wss://saasdemo.sansongkeji.com:3021';
 										} else {
-											url = 'wss://saasdemo.sansongkeji.com:3021';
+											url = 'wss://test.sansongkeji.com:8021';
 										}
-								
+										
+										gt.gtWSS.setWsUrl(url);
 										gt.gtWSS.init(url);
 								
 								
@@ -394,10 +395,12 @@
 							if (environment == 'prod') {
 								url = 'wss://saasdemo.sansongkeji.com:3021';
 							} else {
-								url = 'wss://saasdemo.sansongkeji.com:3021';
+								url = 'wss://test.sansongkeji.com:8021';
 							}
-
+							
+							gt.gtWSS.setWsUrl(url);
 							gt.gtWSS.init(url);
+							console.log("gt****",gt);
 
 
 							if (rs.user.is_approve == 0) {
@@ -553,9 +556,11 @@
 					if (environment == 'prod') {
 						url = 'wss://saasdemo.sansongkeji.com:3021';
 					} else {
-						url = 'wss://saasdemo.sansongkeji.com:3021';
+						url = 'wss://test.sansongkeji.com:8021';
 					}
+					gt.gtWSS.setWsUrl(url);
 					gt.gtWSS.init(url);
+					console.log("gt.gtWSS",gt.gtWSS)
 
 					if (rs.user.is_approve == 0) {
 						gt.$refs.uToast.show({

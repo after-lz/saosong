@@ -29,14 +29,17 @@ let socketTask = null
 //连接并打开之后可重连，且只执行重连方法一次
 let canReconnect = false
 
+
 //封装的对象，最后以模块化向外暴露，
 //init方法 初始化socketTask对象
 //completeClose方法 完全将socketTask关闭（不重连）
 //其他关于socketTask的方法与uniapp的socketTask api一致
 let ws = {
+	wsUrl:'',
 	socketTask: null,
 	init,
-	completeClose
+	completeClose,
+	setWsUrl
 }
 const innerAudioContext = uni.createInnerAudioContext();
 
@@ -166,7 +169,7 @@ function reconnect() {
 		let count = 0;
 		reconnectInterval = setInterval(() => {
 			console.log("正在尝试重连")
-			init();
+			init(ws.wsUrl);
 			count++
 			//重连一定次数后就不再重连
 			if (count >= reconnectTimes) {
