@@ -1,7 +1,5 @@
 <template>
 	<view class="gt_content">
-
-
 		<view class="con_toast">
 			<u-toast ref="uToast" />
 		</view>
@@ -9,7 +7,6 @@
 			<u-tabs-swiper ref="uTabs" :list="tabList" :current="currentTab" @change="tabsChange" :is-scroll="false"
 				swiperWidth="750"></u-tabs-swiper>
 		</view>
-
 		<view class="con_swiper">
 			<swiper :current="currentTab" @animationfinish="animationfinish">
 				<swiper-item class="swiper-item" id="type1">
@@ -19,8 +16,8 @@
 					</view>
 					<view class="con_list" v-else>
 						<scroll-view class="con_scrollView" scroll-y @scrolltolower="loadMore">
-							<view class="con_item" v-for="(item,index) in dataList" :key="index"
-								@click="goOrderInfo(item)">
+							<view class="con_item" v-for="(item,index) in dataList" :key="index">
+								<!-- @click="goOrderInfo(item)" -->
 								<view class="con_typeSn_status">
 									<view class="con_typeSn">
 										<view class="con_type orderType1" v-if="item.order_type == 1">
@@ -33,7 +30,7 @@
 											<view class="con_text">
 												<text>订单号：{{item.deliver_sn}}</text>
 											</view>
-											<view class="con_copyIcon" @click="copyStr(item.deliver_sn)">
+											<view class="con_copyIcon" @click.stop="copyStr(item.deliver_sn)">
 												<!-- <text class="custom-icon custom-icon-copy"></text> -->
 												<image :src="gtCommon.getOssImg('sansong/copy.png')" mode="widthFix">
 												</image>
@@ -44,9 +41,7 @@
 									<view class="con_status" v-if="item.status_msg != '未知'">
 										<text>{{item.status_msg}}</text>
 									</view>
-
 								</view>
-
 								<view class="con_fromTo">
 									<view class="con_from">
 										<view class="con_city">
@@ -61,10 +56,8 @@
 												<text v-if="item.jiaohuo_type == 2">上门自提</text>
 											</view>
 										</view>
-
 									</view>
 									<view class="con_line"></view>
-
 									<view class="con_to">
 										<view class="con_city">
 											<text>{{item.receive_city}}</text>
@@ -73,19 +66,14 @@
 											<view class="con_address">
 												<text>{{item.receive_address}}</text>
 											</view>
-
 											<view class="con_type">
 												<text v-if="item.peisong_type == 1">送货上门</text>
 												<text v-if="item.peisong_type == 2">自提</text>
 											</view>
 										</view>
 									</view>
-
-
 								</view>
-
 								<view class="con_keyVal">
-
 									<view class="con_key_val">
 										<view class="con_key">
 											<text>运输时效：</text>
@@ -95,7 +83,6 @@
 											<view v-else>{{item.transport_day_min}} - {{item.transport_day_max}}天</view>
 										</view>
 									</view>
-
 									<view class="con_key_val">
 										<view class="con_key">
 											<text>货物信息：</text>
@@ -118,7 +105,6 @@
 										</view>
 									</view>
 								</view>
-
 								<view class="con_time_price">
 									<view class="con_time">
 										<text>下单时间：{{$u.timeFormat(item.create_time, 'mm-dd hh:MM:ss')}}</text>
@@ -132,18 +118,13 @@
 										<text>)</text>
 									</view>
 								</view>
-
-								<view class="con_line">
-
-								</view>
+								<view class="con_line"></view>
 								<view class="con_viewBtn" @click.stop="showQuotation(item)">
 									<text>查看报价</text>
 								</view>
-
 							</view>
 						</scroll-view>
 					</view>
-
 				</swiper-item>
 				<swiper-item class="swiper-item" id="type2">
 					<view class="con_empty" v-if="dataList.length == 0">
@@ -152,8 +133,8 @@
 					</view>
 					<view class="con_list" v-else>
 						<scroll-view class="con_scrollView" scroll-y @scrolltolower="loadMore">
-							<view class="con_item" v-for="(item,index) in dataList" :key="index"
-								@click="goOrderInfo(item)">
+							<view class="con_item" v-for="(item,index) in dataList" :key="index">
+								<!-- @click="goOrderInfo(item)" -->
 								<view class="con_typeSn_status">
 									<view class="con_typeSn">
 										<view class="con_type orderType1" v-if="item.order_type == 1">
@@ -166,7 +147,7 @@
 											<view class="con_text">
 												<text>订单号：{{item.deliver_sn}}</text>
 											</view>
-											<view class="con_copyIcon" @click="copyStr(item.deliver_sn)">
+											<view class="con_copyIcon" @click.stop="copyStr(item.deliver_sn)">
 												<!-- <text class="custom-icon custom-icon-copy"></text> -->
 												<image :src="gtCommon.getOssImg('sansong/copy.png')" mode="widthFix">
 												</image>
@@ -177,9 +158,7 @@
 									<view class="con_status" v-if="item.status_msg != '未知'">
 										<text>{{item.status_msg}}</text>
 									</view>
-
 								</view>
-
 								<view class="con_fromTo">
 									<view class="con_from">
 										<view class="con_city">
@@ -194,10 +173,8 @@
 												<text v-if="item.jiaohuo_type == 2">上门自提</text>
 											</view>
 										</view>
-
 									</view>
 									<view class="con_line"></view>
-
 									<view class="con_to">
 										<view class="con_city">
 											<text>{{item.receive_city}}</text>
@@ -206,19 +183,14 @@
 											<view class="con_address">
 												<text>{{item.receive_address}}</text>
 											</view>
-
 											<view class="con_type">
 												<text v-if="item.peisong_type == 1">送货上门</text>
 												<text v-if="item.peisong_type == 2">自提</text>
 											</view>
 										</view>
 									</view>
-
-
 								</view>
-
 								<view class="con_keyVal">
-
 									<view class="con_key_val">
 										<view class="con_key">
 											<text>运输时效：</text>
@@ -228,7 +200,6 @@
 											<view v-else>{{item.transport_day_min}} - {{item.transport_day_max}}天</view>
 										</view>
 									</view>
-
 									<view class="con_key_val">
 										<view class="con_key">
 											<text>货物信息：</text>
@@ -251,7 +222,6 @@
 										</view>
 									</view>
 								</view>
-
 								<view class="con_time_price">
 									<view class="con_time">
 										<text>下单时间：{{$u.timeFormat(item.create_time, 'mm-dd hh:MM:ss')}}</text>
@@ -265,25 +235,16 @@
 										<text>)</text>
 									</view>
 								</view>
-
-								<!-- 	<view class="con_line">
-									
-								</view>
+								<!-- <view class="con_line"></view>
 								<view class="con_viewBtn" @click="showQuotation(item)">
 									<text>查看报价</text>
-								</view>
-								 -->
+								</view> -->
 							</view>
 						</scroll-view>
 					</view>
-
-
 				</swiper-item>
 			</swiper>
 		</view>
-
-
-
 		<view class="con_popup">
 			<view class="con_quotation">
 				<u-popup v-model="quotationShow" mode="center" width="718" height="426" border-radius="22">
@@ -314,7 +275,6 @@
 						<view class="con_unit">
 							<text>元</text>
 						</view>
-
 					</view>
 					<view class="con_tip">
 						<text>注：建议电话联系货主商谈后再报价</text>
@@ -325,9 +285,6 @@
 				</u-popup>
 			</view>
 		</view>
-
-
-
 	</view>
 </template>
 
@@ -335,7 +292,6 @@
 	export default {
 		data() {
 			return {
-
 				companyInfo: {},
 				tabList: [{
 					name: '报价记录'
@@ -343,22 +299,17 @@
 					name: '拒绝记录'
 				}],
 				currentTab: 0,
-
 				dataList: [],
 				page: 1,
 				size: 10,
 				end: false,
-
 				orderSn: '',
-
-
 				quotationShow: false,
 				ownerQuotation: '',
 				ownerMobile: '',
 				myQuotation: '',
 				quotationStatus: false,
-				quotationTime: '',
-
+				quotationTime: ''
 			}
 		},
 		onLoad() {
@@ -375,23 +326,20 @@
 			tabsChange(index) {
 				let gt = this;
 				gt.currentTab = index;
-				gt.getLineList();
-				gt.reGetOrderList();
+				// gt.getLineList();
+				gt.reGetDataList();
 			},
-
 			animationfinish(item) {
 				let gt = this;
 				var currentTab = gt.currentTab;
 				gt.currentTab = item.detail.current;
-
 				if (currentTab != gt.currentTab) {
-					gt.getLineList();
-					gt.reGetOrderList();
+					// gt.getLineList();
+					gt.reGetDataList();
 				}
 			},
 			reGetDataList() {
 				let gt = this;
-
 				gt.dataList = [];
 				gt.page = 1;
 				gt.size = 10;
@@ -409,7 +357,6 @@
 				if (gt.currentTab == 1) {
 					var url = "/logistics/order/get_order_list";
 				}
-
 				var data = {
 					page: gt.page,
 					limit: gt.size,
@@ -418,7 +365,6 @@
 					data.status = 80;
 				}
 				gt.gtRequest.post(url, data).then(res => {
-					console.log(res);
 					gt.dataList = gt.dataList.concat(res.list);
 					if (res.list.length == gt.size) {
 						gt.page = gt.page + 1;
@@ -427,7 +373,6 @@
 					}
 				});
 			},
-
 			loadMore() {
 				console.log('loadMore');
 				let gt = this;
@@ -442,7 +387,6 @@
 				});
 			},
 			goOrderInfo(item) {
-				console.log('-------')
 				let gt = this;
 				if (item.status > 20) {
 					gt.$refs.uToast.show({
@@ -462,11 +406,8 @@
 					url: './orderInfo?orderSn=' + item.deliver_sn
 				})
 			},
-
 			showQuotation(item) {
-				console.log(item);
 				let gt = this;
-
 				gt.orderSn = item.deliver_sn;
 				gt.ownerQuotation = item.last_price;
 				gt.ownerMobile = item.pickup_mobile;
@@ -477,13 +418,10 @@
 				} else {
 					gt.quotationStatus = false;
 				}
-
-
 				gt.quotationShow = true;
 			},
 			contactOwner() {
 				let gt = this;
-
 				uni.makePhoneCall({
 					phoneNumber: gt.ownerMobile
 				});

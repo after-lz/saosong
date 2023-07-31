@@ -160,11 +160,11 @@
 				areaCode: '',
 			}
 		},
-		onLoad() {
+		onLoad(option) {
 			let gt = this;
 			var list = uni.getStorageSync('pcaList')
 			gt.provinceCityAreaList = list;
-			gt.getAuthInfo();
+			if(option.flag) gt.getAuthInfo();
 		},
 		onShow() {
 			let gt = this;
@@ -234,11 +234,16 @@
 					license_pic: path,
 				};
 				gt.gtRequest.post(url, data).then(res => {
-					console.log(res);
 					gt.name = res.license_info.company_name;
 					gt.licenceSn = res.license_info.license_no;
 					gt.inchargeName = res.license_info.legal_truename;
 					gt.contact = res.license_info.legal_truename;
+				}).catch(res => {
+					gt.$refs.uToast.show({
+						title: '营业执照识别失败',
+						type: 'error',
+					});
+					return false;
 				});
 			},
 			removeImg() {

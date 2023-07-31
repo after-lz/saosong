@@ -12,6 +12,9 @@
 			</view>
 			<view class="con_item">
 				<view class="con_fromTo">
+					<view class="con_required">
+						<text>*</text>
+					</view>
 					<view class="con_from">
 						<view class="con_select">
 							<u-input v-model="fromPca[1][0].cityName" type="select" height="80" input-align="center"
@@ -1093,7 +1096,20 @@
 			async nextSave() {
 				let gt = this;
 				if (gt.step == 1) {
-
+					if (gt.$u.test.isEmpty(gt.fromPca[1][0].cityName)) {
+						gt.$refs.uToast.show({
+							title: '出发地不能为空！',
+							type: 'error',
+						});
+						return false;
+					}
+					if (gt.$u.test.isEmpty(gt.toPca[1][0].cityName)) {
+						gt.$refs.uToast.show({
+							title: '目的地不能为空！',
+							type: 'error',
+						});
+						return false;
+					}
 					if (gt.$u.test.isEmpty(gt.manageName)) {
 						gt.$refs.uToast.show({
 							title: '专线经理不能为空！',
@@ -1586,13 +1602,13 @@
 									.con_key {
 										display: flex;
 
-										.con_required {
-											font-size: 28rpx;
-											font-family: PingFangSC-Medium, PingFang SC;
-											font-weight: 500;
-											color: #FF6067;
-											line-height: 80rpx;
-										}
+										// .con_required {
+										// 	font-size: 28rpx;
+										// 	font-family: PingFangSC-Medium, PingFang SC;
+										// 	font-weight: 500;
+										// 	color: #FF6067;
+										// 	line-height: 80rpx;
+										// }
 
 										.con_text {
 											font-size: 28rpx;
@@ -1666,6 +1682,14 @@
 				display: inline-block;
 				top: 5rpx;
 				right: 30rpx;
+			}
+			.con_required {
+				font-size: 28rpx;
+				font-family: PingFangSC-Medium, PingFang SC;
+				font-weight: 500;
+				color: #FF6067;
+				line-height: 86rpx;
+				margin-right: 10rpx;
 			}
 		}
 	}

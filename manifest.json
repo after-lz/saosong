@@ -62,7 +62,8 @@
                     "NSLocationWhenInUseUsageDescription" : "根据用户当前位置计算订单距离",
                     "NSLocationAlwaysUsageDescription" : "根据用户当前位置计算订单距离",
                     "NSLocationAlwaysAndWhenInUseUsageDescription" : "根据用户当前位置计算订单距离"
-                }
+                },
+                "UIBackgroundModes" : "audio"
             },
             /* SDK配置 */
             "sdkConfigs" : {

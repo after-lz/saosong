@@ -126,20 +126,20 @@ function post(url, data = {}, rejectStatus = false) {
 						});
 						return false;
 					} else {
-						// console.log('dfd');
-						// console.log(rejectStatus);
 						if (rejectStatus) {
 							reject(data.msg);
 						} else {
-							uni.showModal({
-								title: '提示',
-								content: data.msg,
-								showCancel: false,
-
-							});
+							if(url == '/logistics/company/identify_business_license') {
+								reject()
+							} else {
+								uni.showModal({
+									title: '提示',
+									content: data.msg || '服务器异常',
+									showCancel: false,
+								});
+							}
 							return false;
 						}
-
 					}
 					return false;
 				}

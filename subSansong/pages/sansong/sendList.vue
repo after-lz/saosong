@@ -100,7 +100,7 @@
 
 			}
 		},
-		onLoad() {
+		onShow() {
 			let gt = this;
 			gt.reGetDataList();
 		},

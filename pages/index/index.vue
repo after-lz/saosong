@@ -587,7 +587,8 @@
 				logistics_id: 0,
 				clientId: '',
 				checkStatus: -1,
-				innerAudioContext: null
+				innerAudioContext: null,
+				flag: false
 			}
 		},
 		onLoad() {
@@ -702,6 +703,7 @@
 				var url = "/logistics/company/get_index_info";
 				await gt.gtRequest.post(url).then(res => {
 					gt.lineNum = res.line_num;
+					gt.flag = res.company_info.is_company_approve ? true : false
 					gt.companyAuth = res.company_info.is_company_approve;
 					uni.setStorageSync('companyAuth', res.company_info.is_company_approve);
 					if (res.company_info.is_company_approve && res.company_info.park_id == 0) {
@@ -775,7 +777,7 @@
 				let gt = this;
 				if (gt.mobile) {
 					uni.navigateTo({
-						url: '../login/companyAuth',
+						url: '../login/companyAuth?flag=' +  gt.flag,
 					});
 					return false;
 				} else {
