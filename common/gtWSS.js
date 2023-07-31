@@ -47,6 +47,10 @@ let companyInfo = uni.getStorageSync('companyInfo');
 
 let logisticsId = companyInfo.logistics_id;
 
+function setWsUrl(wsUrl){
+	ws.wsUrl = wsUrl;
+}
+
 function init(wsUrl) {
 	socketTask = uni.connectSocket({
 		url: wsUrl,
