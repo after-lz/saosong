@@ -266,8 +266,12 @@
 			.black {
 				color: #000;
 			}
-			.btn .u-btn {
+			.btn {
+				display: block;
 				margin: 30rpx 16rpx;
+				.u-btn {
+					// margin: 30rpx 16rpx;
+				}
 			}
 			.btn1 {
 				width: 156rpx;

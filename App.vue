@@ -2,6 +2,9 @@
 <script>
 	export default {
 		onLaunch: function(options) {
+			uni.setInnerAudioOption({
+				obeyMuteSwitch: false
+			});
 			uni.loadFontFace({
 				global: true,
 				family: 'PingFangSC-Medium',

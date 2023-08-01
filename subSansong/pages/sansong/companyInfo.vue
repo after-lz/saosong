@@ -49,7 +49,16 @@
 								</view>
 							</view>
 						</view> -->
-
+							<view class="packets">
+								<scroll-view :scroll-x="true" style="width: 100%; white-space: nowrap;" @scrolltolower="loadMore">
+									<block v-for="item in packetList" :key="item.id">
+										<view class="packet">
+											<view class="packet_min_price">￥{{ item.coupon_min_price }}</view>
+											<view class="packet_price">满{{ item.coupon_min_price }}减{{ item.coupon_price }}</view>
+										</view>
+									</block>
+								</scroll-view>
+							</view>
 							<view class="con_line">
 								<u-line length="666rpx" color="#F2F2F2" margin="24rpx 40rpx" />
 							</view>
@@ -522,15 +531,40 @@
 				size: 10,
 				end: false,
 				lineIndex: 0,
-
+				packetList: [],
+				params: {},
+				over: false
 			}
 		},
 		onLoad() {
 			let gt = this;
+			gt.params = {
+				logistics_id: uni.getStorageSync("companyInfo").logistics_id,
+				page: 1,
+				limit: 10
+			}
 			gt.getCompanyInfo();
 			gt.gtLineList();
+			gt.getPacketList()
 		},
 		methods: {
+			getPacketList() {
+				let gt = this
+				gt.gtRequest.post("/cargo/coupon/companyCouponList", gt.params).then(res => {
+					res.list.forEach(item=> {
+						item.coupon_price = parseFloat(item.coupon_price)
+						item.coupon_min_price = parseFloat(item.coupon_min_price)
+					})
+					gt.packetList = [...gt.packetList, ...res.list]
+					if(res.list.length < gt.params.limit) gt.over = true
+				})
+			},
+			loadMore() {
+				let gt = this
+				if(gt.over) return
+				gt.params.page++
+				gt.getPacketList()
+			},
 			preview() {
 				let gt = this;
 				uni.navigateTo({
@@ -693,7 +727,32 @@
 										}
 									}
 								}
-
+								.packets {
+									padding: 16rpx 36rpx 0;
+									.packet {
+										border-radius: 6rpx;
+										border: 2rpx solid #FF6067;
+										margin-right: 20rpx;
+										display: inline-flex;
+										font-size: 24rpx;
+										.packet_min_price {
+											height: 56rpx;
+											line-height: 56rpx;
+											background-color: #FF6067;
+											color: #ffff;
+											padding: 0 12rpx;
+										}
+										.packet_price {
+											height: 56rpx;
+											line-height: 56rpx;
+											background-color: #ffdfe1;
+											white-space: nowrap;
+											color: #FF6067;
+											padding: 0 16rpx;
+											border-radius: 0 6rpx 6rpx 0;
+										}
+									}
+								}
 								.con_notice {
 									font-size: 28rpx;
 									font-family: PingFangSC-Regular, PingFang SC;

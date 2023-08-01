@@ -81,7 +81,7 @@
 			<view class="con_item" v-for="(item,index) in arriveStationList" :key="index">
 				<!-- <view class="con_removeBtn" @click="removeArriveStation(index)" v-if="index != 0"> -->
 				<!-- 20230704测试要求第一个也能删除 -->
-				<view class="con_removeBtn" @click="removeArriveStation(index)" v-if="!item.flag">
+				<view class="con_removeBtn" @click="removeArriveStation(index)" v-if="!item.flag && index != 0">
 					<u-icon name="close-circle-fill" color="#FF6067" size="48"></u-icon>
 				</view>
 				<view class="con_keyVal">
@@ -1132,7 +1132,29 @@
 						});
 						return false;
 					}
-
+					let msg = ''
+					try {
+						gt.arriveStationList.forEach((item, index)=> {
+							if(gt.$u.test.isEmpty(item.company)) {
+								throw msg = `第${index+1}个网点的到站公司不能为空`
+							}
+							if(gt.$u.test.isEmpty(item.manage)) {
+								throw msg = `第${index+1}个网点的专线经理不能为空`
+							}
+							if(gt.$u.test.isEmpty(item.mobile)) {
+								throw msg = `第${index+1}个网点的到站电话不能为空`
+							}
+							if(gt.$u.test.isEmpty(item.address)) {
+								throw msg = `第${index+1}个网点的到站地址不能为空`
+							}
+						})
+					} catch(err) {
+						gt.$refs.uToast.show({
+							title: msg,
+							type: 'error',
+						});
+						return false;
+					}
 					// gt.step++;
 					// return false;
 
@@ -1452,12 +1474,12 @@
 
 					.con_keyNunUnit {
 						display: flex;
-
+						height: 80rpx;
 						margin: 22rpx 24rpx;
 
 						.con_key {
 							display: flex;
-
+							white-space: nowrap;
 							.con_required {
 								font-size: 28rpx;
 								font-family: PingFangSC-Medium, PingFang SC;

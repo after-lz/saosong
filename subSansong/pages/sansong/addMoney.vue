@@ -100,7 +100,7 @@
 					value: 1,
 				}],
 				otherFeeType: '',
-
+				flag: false
 			}
 		},
 		onLoad(options) {
@@ -138,11 +138,14 @@
 			},
 			submitForm(){
 				let gt = this;
+				if(gt.flag) return
+				gt.flag = true
 				if (!gt.$u.test.amount(gt.money)) {
 					gt.$refs.uToast.show({
 						title: '费用不能为空',
 						type: 'error',
 					});
+					gt.flag = false
 					return false;
 				}
 				
@@ -157,6 +160,7 @@
 				console.log(data);
 				// return false;
 				gt.gtRequest.post(url,data).then(res=>{
+					gt.flag = false
 					gt.$refs.uToast.show({
 						title: '增加成功',
 						type: 'success',
