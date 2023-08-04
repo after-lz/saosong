@@ -1007,11 +1007,11 @@
 											style="margin-left: 40rpx;font-size: 28rpx;font-family: PingFangSC-Regular, PingFang SC;font-weight: 400;color: #909399;line-height: 40rpx;">{{$u.timeFormat(item.create_time, 'mm-dd hh:MM:ss')}}</text>
 									</view>
 								</view>
-								<view class="con_line_time" v-if="item.company_contact">
+								<view class="con_line_time">
 									<view class="con_line">
 										<u-line length="84rpx" color="#E5E5E5" direction="col" margin="16rpx"></u-line>
 									</view>
-									<view class="con_time">
+									<view class="con_time" v-if="item.company_contact">
 										<text>操作人:{{item.company_contact}}</text>
 									</view>
 								</view>

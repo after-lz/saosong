@@ -593,7 +593,8 @@
 		},
 		onLoad() {
 			let gt = this;
-			gt.innerAudioContext = uni.createInnerAudioContext();
+			// gt.innerAudioContext = uni.createInnerAudioContext();
+			gt.innerAudioContext = uni.getBackgroundAudioManager();
 			// console.log(gt.$gtWSS.socketTask);
 			var mobile = uni.getStorageSync('mobile');
 			gt.mobile = mobile;
@@ -677,6 +678,9 @@
 						var orderInfo = orderInfo.order_info;
 						if (orderInfo.logistics_id == gt.logistics_id) {
 							gt.innerAudioContext.stop();
+							gt.innerAudioContext.title = '暂无';
+							gt.innerAudioContext.singer = '暂无';
+							gt.innerAudioContext.coverImgUrl = "";
 							gt.innerAudioContext.src = 'https://baohusan-uisource.oss-cn-shanghai.aliyuncs.com/mp-transport/index/seizeOrderSuccess.mp3';
 							gt.innerAudioContext.play();
 							gt.$refs.uToast.show({
@@ -995,8 +999,10 @@
 							gt.gtRequest.post(url, data).then(res => {
 								gt.orderSn = item.deliver_sn;
 								gt.seizeShow = true;
-								// const innerAudioContext = uni.createInnerAudioContext();
 								gt.innerAudioContext.stop();
+								gt.innerAudioContext.title = '暂无';
+								gt.innerAudioContext.singer = '暂无';
+								gt.innerAudioContext.coverImgUrl = "";
 								gt.innerAudioContext.src = 'https://baohusan-uisource.oss-cn-shanghai.aliyuncs.com/mp-transport/index/receiveOrderSuccess.mp3';
 								gt.innerAudioContext.play();
 							});

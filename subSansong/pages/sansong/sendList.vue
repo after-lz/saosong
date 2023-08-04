@@ -76,7 +76,7 @@
 							<!-- <view class="con_btn">
 								<text>调整</text>
 							</view> -->
-							<view class="con_btn" @click="confirmArrive(item)" v-if="item.status == 0">
+							<view class="con_btn" @click.stop="confirmArrive(item)" v-if="item.status == 0">
 								<text>确认到达</text>
 							</view>
 						</view>
@@ -154,7 +154,6 @@
 			},
 			confirmArrive(item) {
 				let gt = this;
-
 				var url = "/logistics/upwaybill/waybil_confirm_arrival";
 				var data = {
 					waybill_sn: item.waybill_sn,

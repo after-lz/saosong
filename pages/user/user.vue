@@ -5,11 +5,12 @@
 		</view>
 		<view class="con_headBackground"></view>
 		<view class="con_baseInfo" :style="'margin-top:' + (headHeight + 140) + 'rpx'">
-			<view class="con_headImg">
-				<image v-if="userInfo.nickname" :src="userInfo.headerpic" mode="widthFix"></image>
-				<image v-else :src="gtCommon.getOssImg('user/defaultHeadImg.png')" mode="widthFix"></image>
+			<view class="con_headImg" @click="goUser">
+				<!-- <image :src="userInfo.headerpic" :src="userInfo.headerpic" mode="widthFix"></image>
+				<image v-else :src="gtCommon.getOssImg('user/defaultHeadImg.png')" mode="widthFix"></image> -->
+				<u-avatar size="large" :src="gtCommon.getOssImg('user/defaultHeadImg.png') && userInfo.headerpic"></u-avatar>
 			</view>
-			<view class="con_name_mobile">
+			<view class="con_name_mobile" @click="goUser">
 				<view class="con_name u-line-1">
 					<text v-if="userInfo.nickname">{{userInfo.nickname}}</text>
 					<text style="color:#252222;line-height: 108rpx;" @click="goLogin" v-else>请先登录</text>
@@ -243,9 +244,9 @@
 			gt.headHeight = menuButtonInfo.top + menuButtonInfo.height;
 			// #endif
 		},
-		onShow() {
+		async onShow() {
 			let gt = this;
-			gt.getUserInfo();
+			await gt.getUserInfo();
 		},
 		methods: {
 			goLogin() {
@@ -279,6 +280,11 @@
 				}
 				
 			},
+			goUser() {
+				uni.navigateTo({
+					url: '../../subUser/pages/user/personalInformation'
+				})
+			},
 			goSetting() {
 				let gt = this;
 				
@@ -308,6 +314,7 @@
 					var url = "/logistics/user/get_user_info";
 
 					gt.gtRequest.post(url).then(res => {
+						uni.setStorageSync('user_info', res.user_info);
 						gt.userInfo = res.user_info;
 						if(res.logistics_info){
 							gt.logisticsInfo = res.logistics_info;
@@ -447,11 +454,11 @@
 				display: flex;
 
 				.con_headImg {
-					width: 108rpx;
-					height: 108rpx;
+					// width: 108rpx;
+					// height: 108rpx;
 					margin-left: 16rpx;
-					border-radius: 50%;
-					overflow: hidden;
+					// border-radius: 50%;
+					// overflow: hidden;
 				}
 
 				.con_name_mobile {

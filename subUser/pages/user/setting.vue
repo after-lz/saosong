@@ -5,7 +5,7 @@
 			<u-toast ref="uToast" />
 		</view>
 		<view class="con_list">
-			<view class="con_item">
+			<view class="con_item" @click="goPersonal">
 				<view class="con_text">
 					<text>个人信息</text>
 				</view>
@@ -16,7 +16,7 @@
 			<view class="con_line">
 				<u-line length="718rpx" color="#f2f2f2" margin="0 16rpx"></u-line>
 			</view>
-			<view class="con_item">
+			<view class="con_item" @click="goAccount">
 				<view class="con_text">
 					<text>账号安全</text>
 				</view>
@@ -27,7 +27,7 @@
 			<view class="con_line">
 				<u-line length="718rpx" color="#f2f2f2" margin="0 16rpx"></u-line>
 			</view>
-			<view class="con_item">
+			<view class="con_item" @click="goMessage">
 				<view class="con_text">
 					<text>消息设置</text>
 				</view>
@@ -38,7 +38,7 @@
 			<view class="con_line">
 				<u-line length="718rpx" color="#f2f2f2" margin="0 16rpx"></u-line>
 			</view>
-			<view class="con_item">
+			<view class="con_item" @click="goOrder">
 				<view class="con_text">
 					<text>新订单设置</text>
 				</view>
@@ -80,25 +80,40 @@
 			let gt = this;
 			// #ifdef MP-WEIXIN
 			var res = uni.getAccountInfoSync();
-			console.log(res);
-			
 			gt.appId = res.miniProgram.appId;
 			gt.envVersion = res.miniProgram.envVersion;
 			gt.version = res.miniProgram.version;
 			// #endif
-			
 		},
 		methods: {
+			goPersonal() {
+				uni.navigateTo({
+					url: './personalInformation'
+				})
+			},
+			goAccount() {
+				uni.navigateTo({
+					url: './accountSecurity'
+				})
+			},
+			goMessage() {
+				uni.navigateTo({
+					url: './messageSetting'
+				})
+			},
+			goOrder() {
+				uni.navigateTo({
+					url: './NewOrderSetting'
+				})
+			},
 			checkUpdate() {
 				const updateManager = uni.getUpdateManager();
 				// console.log(updateManager);
-
 				// updateManager.applyUpdate(function(res) {
 				// 	console.log(res);
 				// 	// 请求完新版本信息的回调
 				// 	//    console.log('update',res.hasUpdate);
 				// })
-
 				updateManager.onCheckForUpdate(function(res) {
 					// 请求完新版本信息的回调
 					console.log('update', res.hasUpdate);
@@ -109,7 +124,6 @@
 						})
 					}
 				});
-
 				updateManager.onUpdateReady(function(res) {
 					uni.showModal({
 						title: '更新提示',
@@ -121,9 +135,7 @@
 							}
 						}
 					});
-
 				});
-
 				// updateManager.onUpdateFailed(function(res) {
 				// 	// 新的版本下载失败
 				// 	//    console.log('新的版本下载失败');
@@ -142,14 +154,11 @@
 							uni.removeStorageSync('mobile');
 							uni.removeStorageSync('openId');
 							uni.removeStorageSync('audioStatus');
-
 							uni.removeStorageSync('token_d');
 							uni.removeStorageSync('tokenValid_d');
 							uni.removeStorageSync('token');
 							uni.removeStorageSync('tokenValid');
-							
 							gt.gtWSS.completeClose();
-
 							gt.$refs.uToast.show({
 								title: '退出成功',
 								type: 'success',
@@ -158,7 +167,6 @@
 						}
 					}
 				})
-
 			},
 		}
 	}

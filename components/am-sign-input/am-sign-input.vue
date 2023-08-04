@@ -72,7 +72,8 @@
 				selectColor: 'black',
 				lineColor: '#1A1A1A', // 颜色
 				lineSize: 5, // 笔记倍数
-				showImg: ""
+				showImg: "",
+				flag: false
 			};
 		},
 
@@ -121,6 +122,8 @@
 				this.startX = temX
 				this.startY = temY
 				this.ctx.draw(true)
+				// 防止用户没签字
+				this.flag = true
 			},
 			/**
 			 * 重写
@@ -144,6 +147,12 @@
 			//完成
 			subCanvas() {
 				let that = this
+				if(!that.flag) {
+					return uni.showToast({
+						title: '请签字',
+						icon: "error"
+					})
+				}
 				uni.canvasToTempFilePath({
 					canvasId: that.canvasId,
 					fileType: 'png',
@@ -222,11 +231,13 @@
 				this.ctx.setFillStyle(color);
 				this.ctx.fill(); //设置填充
 				this.ctx.draw(); //开画
+				this.flag = false
 			},
 
 			deleteImg() {
 				this.showImg = ""
 				this.$emit('delSign');
+				this.flag = false
 			}
 		}
 	};

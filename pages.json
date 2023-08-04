@@ -3,7 +3,8 @@
 	"easycom": {
 		"^u-(.*)": "@/static/uview/components/u-$1/u-$1.vue"
 	},
-	"pages": [{
+	"pages": [
+		{
 			"path": "pages/index/index",
 			"style": {
 				"navigationBarTitleText": "专线货源",
@@ -11,7 +12,6 @@
 				// "navigationStyle": "custom",
 				// "navigationBarTextStyle": "black"
 			}
-
 		},
 		{
 			"path": "pages/login/login",
@@ -20,7 +20,6 @@
 				"enablePullDownRefresh": false,
 				"navigationStyle": "custom"
 			}
-
 		},
 		{
 			"path": "pages/order/order",
@@ -28,394 +27,425 @@
 				"navigationBarTitleText": "订单",
 				"enablePullDownRefresh": true
 			}
-
-		}, {
+		},
+		{
 			"path": "pages/sansong/sansong",
 			"style": {
 				"navigationBarTitleText": "",
 				"enablePullDownRefresh": false,
 				"navigationStyle": "custom"
 			}
-
-		}, {
+		},
+		{
 			"path": "pages/message/message",
 			"style": {
 				"navigationBarTitleText": "",
 				"enablePullDownRefresh": false
 			}
-
-		}, {
+		},
+		{
 			"path": "pages/user/user",
 			"style": {
 				"navigationBarTitleText": "",
 				"enablePullDownRefresh": false,
 				"navigationStyle": "custom"
 			}
-
-		}, {
+		},
+		{
 			"path": "pages/index/historyList",
 			"style": {
 				"navigationBarTitleText": "历史记录",
 				"enablePullDownRefresh": false
 			}
-
-		}, {
+		},
+		{
 			"path": "pages/order/orderInfo",
 			"style": {
 				"navigationBarTitleText": "订单详情",
 				"enablePullDownRefresh": false
 			}
-
-		}, {
+		},
+		{
 			"path": "pages/test/test",
 			"style": {
 				"navigationBarTitleText": "test",
 				"enablePullDownRefresh": false
 			}
-
-		}, {
+		},
+		{
 			"path": "pages/login/companyAuth",
 			"style": {
 				"navigationBarTitleText": "企业认证",
 				"enablePullDownRefresh": false
 			}
-
-		}, {
+		},
+		{
 			"path": "pages/login/peopleAuth",
 			"style": {
-				"navigationBarTitleText": "",
+				"navigationBarTitleText": "实名认证",
 				"enablePullDownRefresh": false
 			}
-
-		}, {
+		},
+		{
 			"path": "pages/index/orderInfo",
 			"style": {
 				"navigationBarTitleText": "",
 				"enablePullDownRefresh": false
 			}
-
-		}, {
+		},
+		{
 			"path": "pages/index/billDetail",
 			"style": {
 				"navigationBarTitleText": "费用明细",
 				"enablePullDownRefresh": false
 			}
-
-		}, {
+		},
+		{
 			"path": "pages/login/mobileLogin",
 			"style": {
 				"navigationBarTitleText": "",
 				"enablePullDownRefresh": false
 			}
-
-		}, {
+		},
+		{
 			"path": "pages/test/mapOrder",
 			"style": {
 				"navigationBarTitleText": "订单详情",
 				"enablePullDownRefresh": false
 			}
-
-		}, {
+		},
+		{
 			"path": "pages/sansong/empty",
 			"style": {
 				"navigationBarTitleText": "暂无数据",
 				"enablePullDownRefresh": false
 			}
-
-		}, {
+		},
+		{
 			"path": "pages/login/licence",
 			"style": {
 				"navigationBarTitleText": "",
 				"enablePullDownRefresh": false
 			}
-
-		}, {
+		},
+		{
 			"path": "pages/order/billDetail",
 			"style": {
 				"navigationBarTitleText": "费用明细",
 				"enablePullDownRefresh": false
 			}
-
+		},
+		{
+			"path": "pages/user/empty",
+			"style": {
+				"navigationBarTitleText": "暂无数据",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/order/search",
+			"style": {
+				"navigationBarTitleText": "订单",
+				"enablePullDownRefresh": false
+			}
 		}
-	    ,{
-            "path" : "pages/user/empty",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "暂无数据",
-                "enablePullDownRefresh": false
-            }
-        }
-        ,{
-            "path" : "pages/order/search",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "订单",
-                "enablePullDownRefresh": false
-            }
-            
-        }
-    ],
-
-	"subPackages": [{
-
-		"root": "subSansong",
-		"pages": [{
-			"path": "pages/sansong/loadSend",
-			"style": {
-				"navigationBarTitleText": "装车发货",
-				"enablePullDownRefresh": false
-			}
-
-		}, {
-			"path": "pages/sansong/companyManage",
-			"style": {
-				"navigationBarTitleText": "企业管理",
-				"enablePullDownRefresh": false
-			}
-
-		}, {
-			"path": "pages/sansong/lineManage",
-			"style": {
-				"navigationBarTitleText": "专线管理",
-				"enablePullDownRefresh": false
-			}
-
-		}, {
-			"path": "pages/sansong/lineAdd",
-			"style": {
-				"navigationBarTitleText": "添加专线",
-				"enablePullDownRefresh": false
-			}
-
-		}, {
-			"path": "pages/sansong/companyJoin",
-			"style": {
-				"navigationBarTitleText": "企业入驻",
-				"enablePullDownRefresh": false
-			}
-
-		}, {
-			"path": "pages/sansong/ticketManage",
-			"style": {
-				"navigationBarTitleText": "发券管理",
-				"enablePullDownRefresh": false
-			}
-		},  {
-			"path": "pages/sansong/useInfo",
-			"style": {
-				"navigationBarTitleText": "使用明细",
-				"enablePullDownRefresh": false
-			}
-		},  {
-			"path": "pages/sansong/instantCoupon",
-			"style": {
-				"navigationBarTitleText": "发券",
-				"enablePullDownRefresh": false
-			}
-		},{
-			"path": "pages/sansong/companyImg",
-			"style": {
-				"navigationBarTitleText": "公司照片",
-				"enablePullDownRefresh": false
-			}
-
-		}, {
-			"path": "pages/sansong/companyInfo",
-			"style": {
-				"navigationBarTitleText": "公司详情",
-				"enablePullDownRefresh": false
-			}
-
-		}, {
-			"path": "pages/sansong/shipPickup",
-			"style": {
-				"navigationBarTitleText": "发货/取货",
-				"enablePullDownRefresh": false
-			}
-
-		}, {
-			"path": "pages/sansong/confirmArrive",
-			"style": {
-				"navigationBarTitleText": "确认到达",
-				"enablePullDownRefresh": false
-			}
-
-		}, {
-			"path": "pages/sansong/upArrive",
-			"style": {
-				"navigationBarTitleText": "上游来货",
-				"enablePullDownRefresh": true
-			}
-
-		}, {
-			"path": "pages/sansong/companyCooperate",
-			"style": {
-				"navigationBarTitleText": "合作企业",
-				"enablePullDownRefresh": false
-			}
-
-		}, {
-			"path": "pages/sansong/licenceImg",
-			"style": {
-				"navigationBarTitleText": "营业执照",
-				"enablePullDownRefresh": false
-			}
-
-		}, {
-			"path": "pages/sansong/insure",
-			"style": {
-				"navigationBarTitleText": "运输保单",
-				"enablePullDownRefresh": false
-			}
-
-		}, {
-			"path": "pages/sansong/sign",
-			"style": {
-				"navigationBarTitleText": "签收",
-				"enablePullDownRefresh": false
-			}
-
-		}, {
-			"path": "pages/sansong/receipt",
-			"style": {
-				"navigationBarTitleText": "上传回单",
-				"enablePullDownRefresh": false
-			}
-
-		}, {
-			"path": "pages/sansong/addMoney",
-			"style": {
-				"navigationBarTitleText": "增加费用",
-				"enablePullDownRefresh": false
-			}
-
-		}, {
-			"path": "pages/sansong/sendList",
-			"style": {
-				"navigationBarTitleText": "装车记录",
-				"enablePullDownRefresh": true
-			}
-
-		}, {
-			"path": "pages/sansong/sendInfo",
-			"style": {
-				"navigationBarTitleText": "运单详情",
-				"enablePullDownRefresh": false
-			}
-
-		}, {
-			"path": "pages/sansong/waybillList",
-			"style": {
-				"navigationBarTitleText": "运单查询",
-				"enablePullDownRefresh": false
-			}
-
-		}, {
-			"path": "pages/sansong/addCooperate",
-			"style": {
-				"navigationBarTitleText": "添加企业",
-				"enablePullDownRefresh": false
-			}
-
-		}, {
-			"path": "pages/sansong/transportScope",
-			"style": {
-				"navigationBarTitleText": "运输范围",
-				"enablePullDownRefresh": false
-			}
-
-		}    ,{
-                    "path" : "pages/sansong/adjustSend",
-                    "style" :                                                                                    
-                {
-                    "navigationBarTitleText": "调整运单",
-                    "enablePullDownRefresh": false
-                }
-                
-                }
-            ]
-	}, {
-		"root": "subUser",
-		"pages": [{
-			"path": "pages/user/addBankCardPerson",
-			"style": {
-				"navigationBarTitleText": "增加银行卡",
-				"enablePullDownRefresh": false
-			}
-		}, {
-			"path": "pages/user/wallet",
-			"style": {
-				"navigationBarTitleText": "余额",
-				"enablePullDownRefresh": false
-			}
-
-		}, {
-			"path": "pages/user/charge",
-			"style": {
-				"navigationBarTitleText": "充值",
-				"enablePullDownRefresh": false
-			}
-
-		}, {
-			"path": "pages/user/moneyList",
-			"style": {
-				"navigationBarTitleText": "余额明细",
-				"enablePullDownRefresh": false
-			}
-
-		}, {
-			"path": "pages/user/addBankCardCompany",
-			"style": {
-				"navigationBarTitleText": "增加企业账户",
-				"enablePullDownRefresh": false
-			}
-
-		}, {
-			"path": "pages/user/withdrawal",
-			"style": {
-				"navigationBarTitleText": "提现",
-				"enablePullDownRefresh": false
-			}
-
-		}, {
-			"path": "pages/user/bankList",
-			"style": {
-				"navigationBarTitleText": "银行卡",
-				"enablePullDownRefresh": false
-			}
-
-		}, {
-			"path": "pages/user/withdrawalList",
-			"style": {
-				"navigationBarTitleText": "提现记录",
-				"enablePullDownRefresh": false
-			}
-
-		}, {
-			"path": "pages/user/withdrawalDetail",
-			"style": {
-				"navigationBarTitleText": "提现详情",
-				"enablePullDownRefresh": false
-			}
-
-		}    ,{
-                    "path" : "pages/user/setting",
-                    "style" :                                                                                    
-                {
-                    "navigationBarTitleText": "设置",
-                    "enablePullDownRefresh": false
-                }
-                
-                }
-                ,{
-                    "path" : "pages/user/qrcode",
-                    "style" :                                                                                    
-                {
-                    "navigationBarTitleText": "",
-                    "enablePullDownRefresh": false
-                }
-                
-                },
+	],
+	"subPackages": [
+		{
+			"root": "subSansong",
+			"pages": [
+				{
+					"path": "pages/sansong/loadSend",
+					"style": {
+						"navigationBarTitleText": "装车发货",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "pages/sansong/companyManage",
+					"style": {
+						"navigationBarTitleText": "企业管理",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "pages/sansong/lineManage",
+					"style": {
+						"navigationBarTitleText": "专线管理",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "pages/sansong/lineAdd",
+					"style": {
+						"navigationBarTitleText": "添加专线",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "pages/sansong/companyJoin",
+					"style": {
+						"navigationBarTitleText": "企业入驻",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "pages/sansong/ticketManage",
+					"style": {
+						"navigationBarTitleText": "发券管理",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "pages/sansong/useInfo",
+					"style": {
+						"navigationBarTitleText": "使用明细",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "pages/sansong/instantCoupon",
+					"style": {
+						"navigationBarTitleText": "发券",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "pages/sansong/companyImg",
+					"style": {
+						"navigationBarTitleText": "公司照片",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "pages/sansong/companyInfo",
+					"style": {
+						"navigationBarTitleText": "公司详情",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "pages/sansong/shipPickup",
+					"style": {
+						"navigationBarTitleText": "发货/取货",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "pages/sansong/confirmArrive",
+					"style": {
+						"navigationBarTitleText": "确认到达",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "pages/sansong/upArrive",
+					"style": {
+						"navigationBarTitleText": "上游来货",
+						"enablePullDownRefresh": true
+					}
+				},
+				{
+					"path": "pages/sansong/companyCooperate",
+					"style": {
+						"navigationBarTitleText": "合作企业",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "pages/sansong/licenceImg",
+					"style": {
+						"navigationBarTitleText": "营业执照",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "pages/sansong/insure",
+					"style": {
+						"navigationBarTitleText": "运输保单",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "pages/sansong/sign",
+					"style": {
+						"navigationBarTitleText": "签收",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "pages/sansong/receipt",
+					"style": {
+						"navigationBarTitleText": "上传回单",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "pages/sansong/addMoney",
+					"style": {
+						"navigationBarTitleText": "增加费用",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "pages/sansong/sendList",
+					"style": {
+						"navigationBarTitleText": "装车记录",
+						"enablePullDownRefresh": true
+					}
+				},
+				{
+					"path": "pages/sansong/sendInfo",
+					"style": {
+						"navigationBarTitleText": "运单详情",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "pages/sansong/waybillList",
+					"style": {
+						"navigationBarTitleText": "运单查询",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "pages/sansong/addCooperate",
+					"style": {
+						"navigationBarTitleText": "添加企业",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "pages/sansong/transportScope",
+					"style": {
+						"navigationBarTitleText": "运输范围",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "pages/sansong/adjustSend",
+					"style": {
+						"navigationBarTitleText": "调整运单",
+						"enablePullDownRefresh": false
+					}
+				}
+			]
+		}, 
+		{
+			"root": "subUser",
+			"pages": [
+				{
+					"path": "pages/user/addBankCardPerson",
+					"style": {
+						"navigationBarTitleText": "增加银行卡",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "pages/user/wallet",
+					"style": {
+						"navigationBarTitleText": "余额",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "pages/user/charge",
+					"style": {
+						"navigationBarTitleText": "充值",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "pages/user/moneyList",
+					"style": {
+						"navigationBarTitleText": "余额明细",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "pages/user/addBankCardCompany",
+					"style": {
+						"navigationBarTitleText": "增加企业账户",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "pages/user/withdrawal",
+					"style": {
+						"navigationBarTitleText": "提现",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "pages/user/bankList",
+					"style": {
+						"navigationBarTitleText": "银行卡",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "pages/user/withdrawalList",
+					"style": {
+						"navigationBarTitleText": "提现记录",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "pages/user/withdrawalDetail",
+					"style": {
+						"navigationBarTitleText": "提现详情",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "pages/user/setting",
+					"style": {
+						"navigationBarTitleText": "设置",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "pages/user/personalInformation",
+					"style": {
+						"navigationBarTitleText": "个人信息",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "pages/user/accountSecurity",
+					"style": {
+						"navigationBarTitleText": "账号",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "pages/user/messageSetting",
+					"style": {
+						"navigationBarTitleText": "消息设置",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "pages/user/NewOrderSetting",
+					"style": {
+						"navigationBarTitleText": "新订单设置",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "pages/user/editNickName",
+					"style": {
+						"navigationBarTitleText": "修改名字",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "pages/user/qrcode",
+					"style": {
+						"navigationBarTitleText": "",
+						"enablePullDownRefresh": false
+					}
+				},
 				{
 					"path": "pages/user/packet",
 					"style": {
@@ -444,13 +474,15 @@
 						"enablePullDownRefresh": false
 					}
 				}
-            ]
-	}],
+			]
+		}
+	],
 	"tabBar": {
 		"backgroundColor": "#f7f7f7",
 		"color": "#909399",
 		"selectedColor": "#485EF4",
-		"list": [{
+		"list": [
+			{
 				"iconPath": "./static/tabbar/index.png",
 				"selectedIconPath": "static/tabbar/indexSelected.png",
 				"pagePath": "pages/index/index",
@@ -467,7 +499,8 @@
 				"selectedIconPath": "static/tabbar/sansongSelected.png",
 				"pagePath": "pages/sansong/sansong",
 				"text": "伞送"
-			}, {
+			},
+			{
 				"iconPath": "static/tabbar/message.png",
 				"selectedIconPath": "static/tabbar/messageSelected.png",
 				"pagePath": "pages/message/message",

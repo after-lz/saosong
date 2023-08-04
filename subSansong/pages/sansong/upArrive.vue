@@ -89,7 +89,7 @@
 									<view class="con_time">
 										<text>发车时间：{{gtCommon.formateTime(item.create_time,'MM月DD日 HH:mm')}}</text>
 									</view>
-									<view class="con_btn" @click="confirmArrive(item)">
+									<view class="con_btn" @click.stop="confirmArrive(item)">
 										<text>确认到达</text>
 									</view>
 								</view>

@@ -21,7 +21,8 @@
 							<image :src="gtCommon.getOssImg('user/task01.png')"></image>
 							完成企业入驻信息，得红包
 						</view>
-						<view class="btn bg_red" @click="goNext(1)">领取</view>
+						<view class="btn bg_red" v-if="is_company_approve">已完成</view>
+						<view class="btn bg_red" @click="goNext(1)" v-else>领取</view>
 					</template>
 					<template v-if="item.type === 2">
 						<view class="item_msg">
@@ -69,12 +70,14 @@
 					zhuanyueeSwitch: 0, // 是否可以转余额
 					ruleStr: '' // 规则
 				},
-				token: ''
+				token: '',
+				is_company_approve: false
 			}
 		},
 		onLoad() {
 			let gt = this
 			gt.token = gt.gtRequest.getToken()
+			gt.is_company_approve = uni.getStorageSync("companyInfo").is_company_approve
 		},
 		mounted() {
 			let gt = this

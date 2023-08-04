@@ -41,8 +41,8 @@ let ws = {
 	completeClose,
 	setWsUrl
 }
-const innerAudioContext = uni.createInnerAudioContext();
-
+// const innerAudioContext = uni.createInnerAudioContext();
+const innerAudioContext = uni.getBackgroundAudioManager();
 let companyInfo = uni.getStorageSync('companyInfo');
 
 let logisticsId = companyInfo.logistics_id;
@@ -96,6 +96,9 @@ function init(wsUrl) {
 			// var orderInfo = obj.data;
 			// orderInfo = orderInfo.order_info;
 			innerAudioContext.stop();
+			innerAudioContext.title = '暂无';
+			innerAudioContext.singer = '暂无';
+			innerAudioContext.coverImgUrl = "";
 			// innerAudioContext.autoplay = true;
 			innerAudioContext.src = 'https://baohusan-uisource.oss-cn-shanghai.aliyuncs.com/mp-transport/index/new_order.mp3';
 			innerAudioContext.play();

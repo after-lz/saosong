@@ -232,7 +232,7 @@
 			</view>
 			<view class="con_order">
 
-				<u-popup v-model="orderShow" mode="bottom">
+				<u-popup v-model="orderShow" mode="bottom" height="1000" border-radius="14">
 					<view class="con_screen">
 						<view class="con_time">
 
@@ -461,6 +461,7 @@
 				if (choseItem) {
 					choseItem.selected = true
 					gt.orderStr = '已选1单'
+					gt.orderNum = 1
 				}
 			}
 		},
@@ -924,7 +925,8 @@
 						background: #F3F4F5;
 
 						.con_scrollView {
-							height: calc(100vh - 136rpx);
+							// height: calc(100vh - 136rpx);
+							height: calc(1000rpx - 136rpx);
 							padding: 10rpx 0;
 
 							.con_item {

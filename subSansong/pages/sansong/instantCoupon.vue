@@ -31,7 +31,7 @@
 			</u-form-item> -->
 		</u-form>
 		<u-button @click="submit" class="btn" type="primary">确认发券</u-button>
-		<u-calendar v-model="show" mode="range" max-date="9999-12-31" @change="change"></u-calendar>
+		<u-calendar v-model="show" mode="range" :min-year="minYear" :min-date="minDate" max-date="9999-12-31" @change="change"></u-calendar>
 		<u-toast ref="uToast" />
 	</view>
 </template>
@@ -87,13 +87,26 @@
 					}],
 				},
 				time: '',
-				show: false
+				show: false,
+				minYear: '',
+				minDate: ''
 			}
 		},
 		// 必须要在onReady生命周期，因为onLoad生命周期组件可能尚未创建完毕
 		onReady() {
 			let gt = this
 			gt.$refs.uForm.setRules(gt.rules)
+		},
+		onLoad() {
+			let gt = this
+			let now = new Date()
+			let year = now.getFullYear()
+			let month = now.getMonth() + 1
+			let day = now.getDate()
+			if(+month < 10) month = '0' + month
+			if(+day < 10) day = '0' + day
+			gt.minYear = year
+			gt.minDate = year + '-' + month + '-' + day
 		},
 		computed: {
 			money() {

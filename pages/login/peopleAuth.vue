@@ -54,7 +54,7 @@
 			<text>提交认证</text>
 		</view>
 
-		<view class="con_skipBtn" @click="skip">
+		<view class="con_skipBtn" @click="skip" v-if="!flag">
 			<text>跳过</text>
 		</view>
 	</view>
@@ -71,7 +71,12 @@
 			return {
 				name: '',
 				idSn: '',
+				flag: ''
 			}
+		},
+		onLoad(option) {
+			let gt = this
+			gt.flag = option.flag
 		},
 		methods: {
 			getAuthInfo() {
