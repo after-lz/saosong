@@ -2,9 +2,9 @@
 <script>
 	export default {
 		onLaunch: function(options) {
-			uni.setInnerAudioOption({
-				obeyMuteSwitch: false
-			});
+			// uni.setInnerAudioOption({
+			// 	obeyMuteSwitch: false
+			// });
 			uni.loadFontFace({
 				global: true,
 				family: 'PingFangSC-Medium',
@@ -22,7 +22,7 @@
 			var environment = '';
 			uni.setStorageSync('scene', options.scene);
 			// uni.setStorageSync('environment', 'dev');
-			uni.setStorageSync('environment', 'prod');
+			// uni.setStorageSync('environment', 'prod');
 			
 			
 			// #ifdef MP-WEIXIN
@@ -56,32 +56,32 @@
 			var envVersion = res.miniProgram.envVersion;
 			var version = res.miniProgram.version;
 			var apiDomain = '';
-			console.log(envVersion)
 			if (envVersion == 'release') {
 				// console.log('正式版生产环境');
 				apiDomain = 'https://saasdemo.sansongkeji.com';
 				// apiDomain = "http://test.sansongkeji.com";
 				uni.setStorageSync('environment', 'prod');
 			} 
-			// else {
-				// environment = uni.getStorageSync('environment');
-				// if (environment == 'prod') {
+			else {
+				environment = uni.getStorageSync('environment');
+				if (environment == 'prod') {
 					// console.log('开发版生产环境');
-					// apiDomain = 'https://saasdemo.sansongkeji.com';
+					apiDomain = 'https://saasdemo.sansongkeji.com';
 					// apiDomain = "http://test.sansongkeji.com";
 					// uni.setStorageSync('environment', 'prod');
-				// } else {
+				} else {
 					// console.log('开发版开发环境');
-					// apiDomain = 'https://saasdemo.sansongkeji.com';
+					apiDomain = 'https://saasdemo.sansongkeji.com';
 					// apiDomain = "http://test.sansongkeji.com";
 					// uni.setStorageSync('environment', 'dev');
-				// }
-			// }
+				}
+			}
 			if (envVersion == 'develop') {
 				// console.log('测试版生产环境');
-				// apiDomain = 'https://saasdemo.sansongkeji.com';
-				apiDomain = "http://test.sansongkeji.com";
-				uni.setStorageSync('environment', 'dev');
+				apiDomain = 'https://saasdemo.sansongkeji.com';
+				// apiDomain = "http://test.sansongkeji.com";
+				uni.setStorageSync('environment', 'prod');
+				// uni.setStorageSync('environment', 'dev');
 			}
 			// #endif
 			

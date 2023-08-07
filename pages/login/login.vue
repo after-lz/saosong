@@ -232,6 +232,7 @@
 						} else {
 							//其他失败情况，手动关闭授权页
 							aLiSDKModule.quitLoginPage()
+							gt.type = 2;
 						}
 					},
 					clickResult => {

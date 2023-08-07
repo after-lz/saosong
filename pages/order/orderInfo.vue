@@ -842,9 +842,13 @@
 								</view>
 								<view class="con_list">
 									<view class="con_item" v-for="(item,index) in signImgList" :key="index">
-										<image :src="item.img_path+'?x-oss-process=style/sansong_app'" mode="widthFix"
+										<!-- <image :src="item.img_path+'?x-oss-process=style/sansong_app'" mode="widthFix"
 											@click="gtCommon.previewImg(item.img_path + '?x-oss-process=style/sansong_app')">
-										</image>
+										</image> -->
+										<view @click="gtCommon.previewImg(item.img_path + '?x-oss-process=style/sansong_app')"
+											style="width: 100%; height: 100%; background-size: cover; background-repeat: no-repeat; background-position: center center;"
+											:style="{'background-image': `url(${item.img_path}?x-oss-process=style/sansong_app)`}"
+										></view>
 									</view>
 								</view>
 							</view>

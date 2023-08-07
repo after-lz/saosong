@@ -269,8 +269,8 @@
 					</u-checkbox-group>
 				</view>
 				<view class="con_btn" @click="submitForm">
-					<text v-if="parkId">立即入驻</text>
-					<text v-else>保存修改</text>
+					<text v-if="flag">保存修改</text>
+					<text v-else >立即入驻</text>
 				</view>
 			</view>
 		</view>
@@ -308,7 +308,7 @@
 
 				agreement: false,
 
-
+				flag: false,
 				provinceCityAreaList: [],
 				pca: '',
 				areaShow: false,
@@ -400,7 +400,7 @@
 						gt.lat = companyInfo.latitude;
 
 						gt.parkId = companyInfo.park_id;
-
+						gt.flag = companyInfo.park_id
 						if (companyInfo.park_id) {
 							gt.parkStr = companyInfo.park_name;
 							for (var i = 0; i < gt.parkList.length; i++) {

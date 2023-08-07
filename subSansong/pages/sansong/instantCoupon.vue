@@ -89,7 +89,8 @@
 				time: '',
 				show: false,
 				minYear: '',
-				minDate: ''
+				minDate: '',
+				flag: false
 			}
 		},
 		// 必须要在onReady生命周期，因为onLoad生命周期组件可能尚未创建完毕
@@ -133,6 +134,8 @@
 			},
 			submit() {
 				let gt = this
+				if(gt.flag) return
+				gt.flag = true
 				gt.$refs.uForm.validate(valid => {
 					if (valid) {
 						gt.gtRequest.post('/logistics/coupon/distribute', gt.form).then(res => {
@@ -141,12 +144,16 @@
 								type: 'success'
 							})
 							setTimeout(()=> {
+								gt.flag = false
 								uni.navigateBack({
 									delta: 1
 								})
 							}, 2000)
+						}).catch(()=> {
+							gt.flag = false
 						})
 					} else {
+						gt.flag = false
 						console.log('验证失败');
 					}
 				})

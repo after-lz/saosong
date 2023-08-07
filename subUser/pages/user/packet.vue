@@ -29,7 +29,8 @@
 							<image :src="gtCommon.getOssImg('user/task02.png')"></image>
 							发布专线，得红包
 						</view>
-						<view class="btn" @click="goNext(2)">去发布</view>
+						<view class="btn" v-if="flag">已完成</view>
+						<view class="btn" @click="goNext(2)" v-else>去发布</view>
 					</template>
 					<template v-if="item.type === 3">
 						<view class="item_msg">
@@ -71,13 +72,21 @@
 					ruleStr: '' // 规则
 				},
 				token: '',
-				is_company_approve: false
+				is_company_approve: false,
+				flag: false
 			}
 		},
 		onLoad() {
 			let gt = this
 			gt.token = gt.gtRequest.getToken()
 			gt.is_company_approve = uni.getStorageSync("companyInfo").is_company_approve
+			// 是否有专线
+			gt.gtRequest.post("/logistics/specialline/get_special_line_list", {
+				page: 1,
+				limit: 9999
+			}).then(res => {
+				gt.flag = res.list.length
+			})
 		},
 		mounted() {
 			let gt = this

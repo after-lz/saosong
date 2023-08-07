@@ -70,10 +70,10 @@
 								</view>
 								<view class="con_keyVal">
 									<view class="con_text">
-										<text>发站公司：{{item.start_line_info.company_name}}</text>
+										<text>发站公司：{{''&&item.start_line_info.company_name}}</text>
 									</view>
 									<view class="con_text">
-										<text>联系电话：{{item.start_line_info.line_mobile}}</text>
+										<text>联系电话：{{''&&item.start_line_info.line_mobile}}</text>
 									</view>
 									<view class="con_text">
 										<text>到站公司：{{item.outlets_name}}</text>
@@ -147,10 +147,10 @@
 								</view>
 								<view class="con_keyVal">
 									<view class="con_text">
-										<text>发站公司：{{item.start_line_info.company_name}}</text>
+										<text>发站公司：{{''&&item.start_line_info.company_name}}</text>
 									</view>
 									<view class="con_text">
-										<text>联系电话：{{item.start_line_info.line_mobile}}</text>
+										<text>联系电话：{{''&&item.start_line_info.line_mobile}}</text>
 									</view>
 									<view class="con_text">
 										<text>到站公司：{{item.outlets_name}}</text>
