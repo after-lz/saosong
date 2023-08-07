@@ -121,9 +121,8 @@
 					url: apiDomain + "/logistics/Companywallet/apply_zhuanyuee",
 					data: params,
 					method: 'GET',
-					success: function(res) {
-						console.log(res)	
-						if(res.code == 1) {
+					success: function(res) {	
+						if(res.data.code == 1) {
 							uni.showToast({
 								title: res.msg
 							})
@@ -135,7 +134,6 @@
 						}
 					},
 					fail: function(res) {
-						console.log(res)
 						uni.showToast({
 							title: '转余额失败',
 							icon: 'error'
