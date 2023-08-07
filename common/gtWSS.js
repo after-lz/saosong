@@ -8,7 +8,7 @@ let heartBeatInterval = null
 //心跳时发送的消息文本
 let heartBeatText = "gtPING"
 //最大重连次数
-let reconnectTimes = 10
+let reconnectTimes = 15
 let reconnectInterval = null
 //重连间隔，单位毫秒
 let reconnectDelay = 3000
@@ -51,9 +51,9 @@ function setWsUrl(wsUrl){
 	ws.wsUrl = wsUrl;
 }
 
-function init(wsUrl) {
+function init() {
 	socketTask = uni.connectSocket({
-		url: wsUrl,
+		url: ws.wsUrl,
 		complete: () => {}
 	})
 	console.log(socketTask);

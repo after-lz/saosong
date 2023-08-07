@@ -613,6 +613,8 @@
 				title: '专线货源',
 			});
 			if (gt.mobile) {
+				let ws_url = uni.getStorageSync('environment') == 'prod' ? 'wss://saasdemo.sansongkeji.com:3021' : 'wss://test.sansongkeji.com:8021'
+				gt.gtWSS.setWsUrl(ws_url);
 				gt.gtonMessage();
 			}
 			gt.listenStatus = uni.getStorageSync('listenStatus');

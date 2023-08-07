@@ -137,7 +137,8 @@
 							uni.setStorageSync('companyInfo', r.company_info);
 						});
 					}
-					
+					let ws_url = uni.getStorageSync('environment') == 'prod' ? 'wss://saasdemo.sansongkeji.com:3021' : 'wss://test.sansongkeji.com:8021'
+					gt.gtWSS.setWsUrl(ws_url);
 					gt.gtWSS.init();
 					
 					if (rs.user.is_approve == 0) {

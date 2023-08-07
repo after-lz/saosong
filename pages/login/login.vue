@@ -3,10 +3,8 @@
 		<view class="con_toast">
 			<u-toast ref="uToast" />
 		</view>
-
 		<!-- #ifdef MP-WEIXIN -->
 		<view class="con_type1" v-if="type == 1">
-
 			<view class="con_logo">
 				<image :src="gtCommon.getOssImg('login/logo.png')" mode="widthFix"></image>
 			</view>
@@ -35,12 +33,8 @@
 					<text>并授权伞送获得本机号码</text>
 				</u-checkbox>
 			</view>
-
-
-
 		</view>
 		<!-- #endif -->
-
 		<view class="con_type2" v-if="type == 2">
 			<view class="con_title">
 				<text>手机号登录</text>
@@ -69,7 +63,6 @@
 					<text v-else>{{second}}s后重发</text>
 				</view>
 			</view>
-
 			<view class="con_loginBtn" :style="agree ? '' : 'background:#A3AEF9'" @click="submitForm">
 				<text>登录</text>
 			</view>
@@ -83,11 +76,7 @@
 					<text>并授权伞送获得本机号码</text>
 				</u-checkbox>
 			</view>
-
 		</view>
-
-
-
 		<!-- #ifdef APP-PLUS -->
 		<view class="con_type_3">
 			<!-- <text>手机号一键登录</text> -->
@@ -99,11 +88,10 @@
 <script>
 	import gtCommon from "../../common/gtCommon.js";
 	// #ifdef APP-PLUS
-
 	var aLiSDKModule = uni.requireNativePlugin('AliCloud-NirvanaPns')
-	console.log(101, aLiSDKModule);
+	// console.log(101, aLiSDKModule);
 	let platform = uni.getSystemInfoSync().platform
-	console.log(platform);
+	// console.log(platform);
 	// sdkInfo 是从阿里云控制台获取的秘钥
 	if(platform == 'android'){
 		var sdkInfo = 'XWWadiXN9QMYtCvhf1VpPHn8M/n6Sbi6ccumZdQ/DlLOQ6efO2q0x079orWTgxjz+911RkUFkGMrIY+WtUA5Njs4iAHds+HsU1HYNLTSOhnzBb9OsWeRjJGNrhr6H4iXwjDdyNyMV5QYyoFlBlui7+53D1n7lsyvrZwqGbua8zzbB2zf4xLZlMZhi26w6rbdK5iKwCC9lSUjM5lM7QOeNLiJqRZqWpuUfUyVVtsrpxNwk8ksOGLByWGu3Frg6/Iv9VAQEE7mv3PE0Bv0tGxTI+GFgt7smrfsDm7H36lImGapbB+P7jTela731ykDFhP4';
@@ -116,18 +104,12 @@
 	export default {
 		data() {
 			return {
-				// agree: false,
-				// licencesObj: {},
-
 				type: 1,
-
 				mobile: '',
 				code: '',
 				second: 60,
 				agree: false,
 				licencesObj: {},
-
-
 				authUiConfig: {
 					uiConfig: {
 						setNavHidden: true,
@@ -153,12 +135,9 @@
 		},
 		onLoad() {
 			let gt = this;
-
-			
 			gt.licencesObj = uni.getStorageSync('licencesObj');
 		},
 		onShow(){
-			
 			// #ifdef APP-PLUS
 			let gt = this;
 			// gt.goMobileLogin();
@@ -167,35 +146,30 @@
 			// #endif
 		},
 		methods: {
-
 			getLoginToken_ali() {
 				// 这里我是用了一个按钮触发这个方法，你也可以选择页面加载后就执行。
 				let gt = this;
-				console.log('authUiConfig:', gt.authUiConfig);
-
+				// console.log('authUiConfig:', gt.authUiConfig);
 				aLiSDKModule.accelerateLoginPage(5000, result => {
 					if ("600000" == result.resultCode) {
 						console.log("加速成功")
 					}
 				})
-				aLiSDKModule.getLoginToken(
-					5000,
-
+				aLiSDKModule.getLoginToken(5000,
 					gt.authUiConfig,
 					tokenResult => {
-						console.log(tokenResult, 'tokenResult');
+						// console.log(tokenResult, 'tokenResult');
 						if ("600001" == tokenResult.resultCode) {
-							console.log("授权页拉起成功")
+							// console.log("授权页拉起成功")
 						} else if ("600000" == tokenResult.resultCode) {
-							console.log("获取Token成功，接下来拿着结果里面的Token去服务端换取手机号码，SDK服务到此结束")
-							
+							// console.log("获取Token成功，接下来拿着结果里面的Token去服务端换取手机号码，SDK服务到此结束")
 							var url = "/api/aliyun/get_mobile";
 							var data = {
 								platform:'logistics',
 								accessToken:tokenResult.token
 							};
 							gt.gtRequest.post(url,data).then(res=>{
-								console.log(res);
+								// console.log(res);
 								var url = "/api/applogin/login_post";
 								var data = {
 									platform: 'logistics',
@@ -203,83 +177,56 @@
 									mobile: res.mobile,
 								};
 								gt.gtRequest.post(url, data).then(rs => {
-										// console.log(rs);
-										
-										
-										//手动关闭授权页
-										aLiSDKModule.quitLoginPage()
-										
-										
-								
-										var tokenStr = 'token_d';
-										var tokenValidStr = 'tokenValid_d';
-								
-										var environment = uni.getStorageSync('environment');
-								
-										if (environment == 'prod') {
-											tokenStr = 'token';
-											tokenValidStr = 'tokenValid';
-										}
-								
-										uni.setStorageSync(tokenStr, rs.user.login_token);
-								
-								
-										uni.setStorageSync('mobile', rs.user.mobile);
-										uni.setStorageSync('userAuth', rs.user.is_approve);
-										uni.setStorageSync('companyAuth', rs.user.is_company_approve);
-										// uni.setStorageSync('token', rs.user.login_token);
-										uni.setStorageSync('userInfo', rs.user);
-								
-										var url = "/logistics/company/get_company_info";
-								
-										gt.gtRequest.post(url).then(r => {
-											uni.setStorageSync('companyInfo', r.company_info);
+									// console.log(rs);
+									//手动关闭授权页
+									aLiSDKModule.quitLoginPage()
+									var tokenStr = 'token_d';
+									var tokenValidStr = 'tokenValid_d';
+									var environment = uni.getStorageSync('environment');
+									if (environment == 'prod') {
+										tokenStr = 'token';
+										tokenValidStr = 'tokenValid';
+									}
+									uni.setStorageSync(tokenStr, rs.user.login_token);
+									uni.setStorageSync('mobile', rs.user.mobile);
+									uni.setStorageSync('userAuth', rs.user.is_approve);
+									uni.setStorageSync('companyAuth', rs.user.is_company_approve);
+									// uni.setStorageSync('token', rs.user.login_token);
+									uni.setStorageSync('userInfo', rs.user);
+									var url = "/logistics/company/get_company_info";
+									gt.gtRequest.post(url).then(r => {
+										uni.setStorageSync('companyInfo', r.company_info);
+									});
+									let ws_url = uni.getStorageSync('environment') == 'prod' ? 'wss://saasdemo.sansongkeji.com:3021' : 'wss://test.sansongkeji.com:8021'
+									gt.gtWSS.setWsUrl(ws_url);
+									gt.gtWSS.init();
+									if (rs.user.is_approve == 0) {
+										gt.$refs.uToast.show({
+											title: '登录成功！',
+											type: 'success',
+											url: 'pages/login/peopleAuth',
 										});
-								
-								
-										var environment = uni.getStorageSync('environment');
-										var url = '';
-										if (environment == 'prod') {
-											url = 'wss://saasdemo.sansongkeji.com:3021';
-										} else {
-											url = 'wss://test.sansongkeji.com:8021';
-										}
-										
-										gt.gtWSS.setWsUrl(url);
-										gt.gtWSS.init(url);
-								
-								
-										if (rs.user.is_approve == 0) {
+									} else {
+										if (rs.user.is_company_approve == 0) {
 											gt.$refs.uToast.show({
 												title: '登录成功！',
 												type: 'success',
-												url: 'pages/login/peopleAuth',
+												url: 'pages/login/companyAuth',
 											});
 										} else {
-											if (rs.user.is_company_approve == 0) {
-												gt.$refs.uToast.show({
-													title: '登录成功！',
-													type: 'success',
-													url: 'pages/login/companyAuth',
-												});
-											} else {
-												gt.$refs.uToast.show({
-													title: '登录成功！',
-													type: 'success',
-												});
-												var pages = getCurrentPages();
-								
-												console.log(pages);
-												uni.reLaunch({
-													url: pages[0].$page.fullPath
-												});
-											}
-								
+											gt.$refs.uToast.show({
+												title: '登录成功！',
+												type: 'success',
+											});
+											var pages = getCurrentPages();
+											// console.log(pages);
+											uni.reLaunch({
+												url: pages[0].$page.fullPath
+											});
 										}
-									});
-								
-							});
-
+									}
+								})
+							})
 						} else if ("600007" == tokenResult.resultCode) {
 							gt.type = 2;
 						} else {
@@ -290,23 +237,22 @@
 					clickResult => {
 						switch (clickResult.resultCode) {
 							case "700000":
-								console.log("用户点击返回按钮")
+								// console.log("用户点击返回按钮")
 								break
 							case "700001":
-								console.log("用户切换其他登录方式")
+								// console.log("用户切换其他登录方式")
 								gt.type = 2;
 								aLiSDKModule.quitLoginPage()
 								break
 							case "700002":
-								console.log("用户点击登录按钮")
+								// console.log("用户点击登录按钮")
 								// gt.showAgreeTip();
-								
 								break
 							case "700003":
-								console.log("用户点击checkBox")
+								// console.log("用户点击checkBox")
 								break
 							case "700004":
-								console.log("用户点击协议")
+								// console.log("用户点击协议")
 								break
 						}
 					},
@@ -316,8 +262,7 @@
 				)
 			},
 			showAgreeTip() {
-				console.log('showAgreeTip');
-
+				// console.log('showAgreeTip');
 				let gt = this;
 				if (!gt.agree) {
 					uni.showModal({
@@ -327,7 +272,7 @@
 						cancelText: '不同意',
 						confirmText: '我同意',
 						success(res) {
-							console.log(res);
+							// console.log(res);
 							if (res.confirm) {
 								gt.agree = true;
 							}
@@ -337,12 +282,10 @@
 				}
 			},
 			getPhoneNumberCode(e) {
-				console.log(e)
-
+				// console.log(e)
 				let gt = this;
 				if (e.detail.errMsg == 'getPhoneNumber:ok') {
 					var code = e.detail.code;
-
 					var url = "/api/wechat/get_miniprogram_phone";
 					var data = {
 						platform: 'logistics',
@@ -350,59 +293,38 @@
 					};
 					gt.gtRequest.post(url, data).then(res => {
 						// console.log(res);
-
 						var url = "/api/applogin/login_post";
 						var data = {
 							platform: 'logistics',
 							login_type: 1,
 							mobile: res.result.phone_info.phoneNumber,
 						};
-
 						// #ifdef MP-WEIXIN
 						data.openid = uni.getStorageSync('openId');
 						// #endif
 						gt.gtRequest.post(url, data).then(rs => {
 							// console.log(rs);
-
 							var tokenStr = 'token_d';
 							var tokenValidStr = 'tokenValid_d';
-
 							var environment = uni.getStorageSync('environment');
-
 							if (environment == 'prod') {
 								tokenStr = 'token';
 								tokenValidStr = 'tokenValid';
 							}
-
 							uni.setStorageSync(tokenStr, rs.user.login_token);
-
-
 							uni.setStorageSync('mobile', rs.user.mobile);
 							uni.setStorageSync('userAuth', rs.user.is_approve);
 							uni.setStorageSync('companyAuth', rs.user.is_company_approve);
 							// uni.setStorageSync('token', rs.user.login_token);
 							uni.setStorageSync('userInfo', rs.user);
-
 							var url = "/logistics/company/get_company_info";
-
 							gt.gtRequest.post(url).then(r => {
 								uni.setStorageSync('companyInfo', r.company_info);
 							});
-
-
-							var environment = uni.getStorageSync('environment');
-							var url = '';
-							if (environment == 'prod') {
-								url = 'wss://saasdemo.sansongkeji.com:3021';
-							} else {
-								url = 'wss://test.sansongkeji.com:8021';
-							}
-							
-							gt.gtWSS.setWsUrl(url);
-							gt.gtWSS.init(url);
-							console.log("gt****",gt);
-
-
+							let ws_url = uni.getStorageSync('environment') == 'prod' ? 'wss://saasdemo.sansongkeji.com:3021' : 'wss://test.sansongkeji.com:8021'
+							gt.gtWSS.setWsUrl(ws_url);
+							gt.gtWSS.init();
+							// console.log("gt****",gt);
 							if (rs.user.is_approve == 0) {
 								gt.$refs.uToast.show({
 									title: '登录成功！',
@@ -422,16 +344,14 @@
 										type: 'success',
 									});
 									var pages = getCurrentPages();
-
-									console.log(pages);
+									// console.log(pages);
 									uni.reLaunch({
 										url: pages[0].$page.fullPath
 									});
 								}
-
 							}
-						});
-					});
+						})
+					})
 				}
 			},
 			goMobileLogin() {
@@ -439,19 +359,14 @@
 				// 	url: './mobileLogin',
 				// });
 				// return false;
-
 				let gt = this;
 				gt.type = 2;
 			},
-
 			sendCode() {
 				let gt = this;
 				if (gt.second != 60) {
 					return false;
 				}
-
-
-
 				if (!gt.$u.test.mobile(gt.mobile)) {
 					gt.$refs.uToast.show({
 						title: '手机号格式不正确！',
@@ -459,7 +374,6 @@
 					});
 					return false;
 				}
-
 				var url = "/api/applogin/get_verify_code";
 				var data = {
 					type: 1,
@@ -481,7 +395,6 @@
 			},
 			submitForm() {
 				let gt = this;
-
 				if (!gt.agree) {
 					uni.showModal({
 						title: '请先同意协议',
@@ -512,7 +425,6 @@
 					});
 					return false;
 				}
-
 				var url = "/api/applogin/login_post";
 				var data = {
 					platform: 'logistics',
@@ -526,42 +438,28 @@
 				gt.gtRequest.post(url, data).then(rs => {
 					var tokenStr = 'token_d';
 					var tokenValidStr = 'tokenValid_d';
-
 					var environment = uni.getStorageSync('environment');
-
 					if (environment == 'prod') {
 						tokenStr = 'token';
 						tokenValidStr = 'tokenValid';
 					}
-
 					uni.setStorageSync(tokenStr, rs.user.login_token);
 					// uni.setStorageSync(tokenStr, rs.user.unid);
-
-
 					uni.setStorageSync('mobile', rs.user.mobile);
 					uni.setStorageSync('userAuth', rs.user.is_approve);
 					uni.setStorageSync('companyAuth', rs.user.is_company_approve);
 					// uni.setStorageSync('token', rs.user.login_token);
 					uni.setStorageSync('userInfo', rs.user);
-
 					if (rs.user.logistics_id) {
 						var url = "/logistics/company/get_company_info";
-
 						gt.gtRequest.post(url).then(r => {
 							uni.setStorageSync('companyInfo', r.company_info);
 						});
 					}
-					var environment = uni.getStorageSync('environment');
-					var url = '';
-					if (environment == 'prod') {
-						url = 'wss://saasdemo.sansongkeji.com:3021';
-					} else {
-						url = 'wss://test.sansongkeji.com:8021';
-					}
-					gt.gtWSS.setWsUrl(url);
-					gt.gtWSS.init(url);
-					console.log("gt.gtWSS",gt.gtWSS)
-
+					let ws_url = uni.getStorageSync('environment') == 'prod' ? 'wss://saasdemo.sansongkeji.com:3021' : 'wss://test.sansongkeji.com:8021'
+					gt.gtWSS.setWsUrl(ws_url);
+					gt.gtWSS.init();
+					// console.log("gt.gtWSS",gt.gtWSS)
 					if (rs.user.is_approve == 0) {
 						gt.$refs.uToast.show({
 							title: '登录成功！',
@@ -581,14 +479,13 @@
 								type: 'success',
 							});
 							var pages = getCurrentPages();
-
-							console.log(pages);
+							// console.log(pages);
 							uni.reLaunch({
 								url: pages[0].$page.fullPath
 							});
 						}
 					}
-				});
+				})
 			},
 		}
 	}

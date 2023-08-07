@@ -615,6 +615,8 @@
 			let gt = this;
 			// clearInterval(gt.t);
 			gt.getDataInfo();
+			let ws_url = uni.getStorageSync('environment') == 'prod' ? 'wss://saasdemo.sansongkeji.com:3021' : 'wss://test.sansongkeji.com:8021'
+			gt.gtWSS.setWsUrl(ws_url);
 			gt.onMessage();
 		},
 		onUnload() {

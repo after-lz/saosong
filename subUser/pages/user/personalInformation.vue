@@ -214,7 +214,7 @@
 				cmr.captureImage(function(p) {
 					plus.io.resolveLocalFileSystemURL(p, function (entry) {
 					    //通过临时路径，获得文件系统中的文件对象entry
-					    // entry.file(function (file) {
+					    entry.file(function (file) {
 					        // 可通过entry对象的file方法，获取文件数据对象（该文件数据对象仍无法直接使用）
 					   //      axios({
 					   //          method: 'get',
@@ -223,11 +223,11 @@
 					   //      }).then(re => {
 					   //          let blob = re.data
 								gt.aa = true
-								gt.content = JSON.stringify(entry)
+								gt.content = JSON.stringify(file)
 					   //          const uploadFile = new FormData()
 								// uploadFile.append('file', blob)
 								// gt.content += JSON.stringify(uploadFile)
-								gt.gtRequest.upload(entry.toRemoteURL()).then(async rs => {
+								gt.gtRequest.upload(file).then(async rs => {
 									await gt.updateUserInfo({
 										update_type: 'headerpic',
 										value: rs.src
