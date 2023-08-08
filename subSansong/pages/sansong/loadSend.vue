@@ -25,7 +25,7 @@
 				<view class="con_item">
 					<view class="con_key">
 						<view class="con_required">
-							<text></text>
+							<text>*</text>
 						</view>
 						<view class="con_text">
 							<text>司机姓名</text>
@@ -41,7 +41,7 @@
 				<view class="con_item">
 					<view class="con_key">
 						<view class="con_required">
-							<text></text>
+							<text>*</text>
 						</view>
 						<view class="con_text">
 							<text>司机电话</text>

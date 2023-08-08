@@ -1,7 +1,7 @@
 {
 	"name": "APFaceDetectPlugin",
 	"id": "AP-FaceDetectModule",
-	"version": "1.2.8",
+	"version": "1.2.7",
 	"description": "阿里云金融级实人认证SDK",
 	"_dp_type": "nativeplugin",
 	"_dp_nativeplugin": {
@@ -17,8 +17,8 @@
             "dependencies": [
 				"com.squareup.okhttp3:okhttp:3.11.0",
  				"com.squareup.okio:okio:1.14.0",
-                "com.aliyun.dpa:oss-android-sdk:+",
-                "com.alibaba:fastjson:1.2.83_noneautotype"
+                 "com.aliyun.dpa:oss-android-sdk:+",
+                 "com.alibaba:fastjson:1.2.62"
             ],
             "compileOptions": { 
                 "sourceCompatibility": "1.8",

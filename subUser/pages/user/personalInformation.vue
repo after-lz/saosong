@@ -101,13 +101,11 @@
 				   :allArea="false" @gtPCASelect="gtPCASelect"></gtPCA>
 		</u-popup>
 		<u-toast ref="uToast" />
-		<u-modal v-model="aa" :content="content"></u-modal>
 	</view>
 </template>
 
 <script>
 	import gtPCA from "@/components/gt-pca/gt-pca.vue"
-	// import axios from "axios"
 	export default {
 		components: { gtPCA },
 		data() {
@@ -141,9 +139,7 @@
 						cityName: '',
 					}],
 				],
-				flag: false,
-				aa: false,
-				content: ''
+				flag: false
 			}
 		},
 		onLoad() {
@@ -216,27 +212,15 @@
 					    //通过临时路径，获得文件系统中的文件对象entry
 					    entry.file(function (file) {
 					        // 可通过entry对象的file方法，获取文件数据对象（该文件数据对象仍无法直接使用）
-					   //      axios({
-					   //          method: 'get',
-					   //          url: entry.toRemoteURL(),
-					   //          responseType: 'blob',
-					   //      }).then(re => {
-					   //          let blob = re.data
-								gt.aa = true
-								gt.content = JSON.stringify(file)
-					   //          const uploadFile = new FormData()
-								// uploadFile.append('file', blob)
-								// gt.content += JSON.stringify(uploadFile)
-								gt.gtRequest.upload(file).then(async rs => {
-									await gt.updateUserInfo({
-										update_type: 'headerpic',
-										value: rs.src
-									})
-									gt.userInfo.headerpic = rs.src
-									gt.updateStorage()
+							// file.name
+							gt.gtRequest.upload({path: entry.toLocalURL()}).then(async rs => {
+								await gt.updateUserInfo({
+									update_type: 'headerpic',
+									value: rs.src
 								})
-					        // })
-					        // file.close()
+								gt.userInfo.headerpic = rs.src
+								gt.updateStorage()
+							})
 					    })
 					})
 				},

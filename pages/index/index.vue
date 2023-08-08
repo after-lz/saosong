@@ -1124,6 +1124,10 @@
 						margin: 16rpx 8rpx;
 					}
 				}
+				.u-tabs-item {
+					font-size: 32rpx !important;
+					padding: 0 40rpx !important;
+				}
 				.con_tabSwiper {
 					width: 300rpx;
 				}

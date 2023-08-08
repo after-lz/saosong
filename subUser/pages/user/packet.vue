@@ -21,7 +21,7 @@
 							<image :src="gtCommon.getOssImg('user/task01.png')"></image>
 							完成企业入驻信息，得红包
 						</view>
-						<view class="btn bg_red" v-if="is_company_approve">已完成</view>
+						<view class="btn bg_red" v-if="is_company_approve">已领取</view>
 						<view class="btn bg_red" @click="goNext(1)" v-else>领取</view>
 					</template>
 					<template v-if="item.type === 2">
@@ -123,8 +123,9 @@
 					method: 'GET',
 					success: function(res) {	
 						if(res.data.code == 1) {
+							gt.getList()
 							uni.showToast({
-								title: res.msg
+								title: res.data.msg
 							})
 						} else {
 							uni.showToast({

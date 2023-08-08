@@ -33,7 +33,7 @@
 					@change="movableViewChange">
 					<view class="con_orderInfo">
 			<!-- #endif -->
-						<scroll-view :scroll-y="scrollY" style="width:750rpx;height: 100vh;background: #f3f4f5;">
+						<scroll-view :scroll-y="scrollY" class="scroll">
 
 							<view class="con_label_btn">
 
@@ -874,94 +874,93 @@
 								<text>《货物运输协议》</text>
 							</view>
 
-							<view class="con_btns">
-								<view class="con_list" v-if="dataInfo.status == 5">
-									<!-- <view class="con_item" @click="clickBtn('cancelOrder')">
-										<view class="con_text">
-											<text>取消订单</text>
-										</view>
-									</view> -->
-									<view class="con_item" @click="clickBtn('addMoney')"
-										v-if="dataInfo.pay_status != 0 || dataInfo.pay_method == 2">
-										<view class="con_text">
-											<text>增加费用</text>
-										</view>
+						</scroll-view>
+						<view class="con_btns">
+							<view class="con_list" v-if="dataInfo.status == 5">
+								<!-- <view class="con_item" @click="clickBtn('cancelOrder')">
+									<view class="con_text">
+										<text>取消订单</text>
 									</view>
-									<view class="con_item" @click="clickBtn('confirmCollect')">
-										<view class="con_text">
-											<text>确认揽收</text>
-										</view>
-									</view>
-									<view class="con_item" @click="clickBtn('offlineCollection')"
-										v-if="dataInfo.no_pay_total > 0">
-										<view class="con_text">
-											<text>我已现金收款</text>
-										</view>
+								</view> -->
+								<view class="con_item" @click="clickBtn('addMoney')"
+									v-if="dataInfo.pay_status != 0 || dataInfo.pay_method == 2">
+									<view class="con_text">
+										<text>增加费用</text>
 									</view>
 								</view>
-
-								<view class="con_list" v-if="dataInfo.status == 7">
-
-									<view class="con_item" @click="clickBtn('addMoney')"
-										v-if="dataInfo.pay_status != 0 || dataInfo.pay_method == 2">
-										<view class="con_text">
-											<text>增加费用</text>
-										</view>
-									</view>
-									<view class="con_item" @click="clickBtn('confirmStart')">
-										<view class="con_text">
-											<text>确认发车</text>
-										</view>
+								<view class="con_item" @click="clickBtn('confirmCollect')">
+									<view class="con_text">
+										<text>确认揽收</text>
 									</view>
 								</view>
-								<view class="con_list" v-if="dataInfo.status == 9">
-									<view class="con_item" @click="clickBtn('goSendInfo')">
-										<view class="con_text">
-											<text>查看运单</text>
-										</view>
-									</view>
-									<view class="con_item" @click="clickBtn('addMoney')"
-										v-if="dataInfo.pay_status != 0 || dataInfo.pay_method == 2">
-										<view class="con_text">
-											<text>增加费用</text>
-										</view>
-									</view>
-									<!-- 2023年06月17日，应后台要求，单订单到达停用 -->
-									<!-- <view class="con_item" @click="clickBtn('confirmArrive')">
-										<view class="con_text">
-											<text>确认到达</text>
-										</view>
-									</view> -->
-								</view>
-								<view class="con_list" v-if="dataInfo.status == 11">
-									<view class="con_item" @click="clickBtn('addMoney')">
-										<view class="con_text">
-											<text>增加费用</text>
-										</view>
-									</view>
-									<view class="con_item" @click="clickBtn('offlineCollection')"
-										v-if="dataInfo.no_pay_total > 0">
-										<view class="con_text">
-											<text>我已现金收款</text>
-										</view>
-									</view>
-									<view class="con_item" @click="clickBtn('confirmSign')">
-										<view class="con_text">
-											<text>签收</text>
-										</view>
-									</view>
-								</view>
-								<view class="con_list" v-if="dataInfo.status == 13">
-
-									<view class="con_item" @click="clickBtn('uploadReceipt')">
-										<view class="con_text">
-											<text>上传回单</text>
-										</view>
+								<view class="con_item" @click="clickBtn('offlineCollection')"
+									v-if="dataInfo.no_pay_total > 0">
+									<view class="con_text">
+										<text>我已现金收款</text>
 									</view>
 								</view>
 							</view>
-
-						</scroll-view>
+						
+							<view class="con_list" v-if="dataInfo.status == 7">
+						
+								<view class="con_item" @click="clickBtn('addMoney')"
+									v-if="dataInfo.pay_status != 0 || dataInfo.pay_method == 2">
+									<view class="con_text">
+										<text>增加费用</text>
+									</view>
+								</view>
+								<view class="con_item" @click="clickBtn('confirmStart')">
+									<view class="con_text">
+										<text>确认发车</text>
+									</view>
+								</view>
+							</view>
+							<view class="con_list" v-if="dataInfo.status == 9">
+								<view class="con_item" @click="clickBtn('goSendInfo')">
+									<view class="con_text">
+										<text>查看运单</text>
+									</view>
+								</view>
+								<view class="con_item" @click="clickBtn('addMoney')"
+									v-if="dataInfo.pay_status != 0 || dataInfo.pay_method == 2">
+									<view class="con_text">
+										<text>增加费用</text>
+									</view>
+								</view>
+								<!-- 2023年06月17日，应后台要求，单订单到达停用 -->
+								<!-- <view class="con_item" @click="clickBtn('confirmArrive')">
+									<view class="con_text">
+										<text>确认到达</text>
+									</view>
+								</view> -->
+							</view>
+							<view class="con_list" v-if="dataInfo.status == 11">
+								<view class="con_item" @click="clickBtn('addMoney')">
+									<view class="con_text">
+										<text>增加费用</text>
+									</view>
+								</view>
+								<view class="con_item" @click="clickBtn('offlineCollection')"
+									v-if="dataInfo.no_pay_total > 0">
+									<view class="con_text">
+										<text>我已现金收款</text>
+									</view>
+								</view>
+								<view class="con_item" @click="clickBtn('confirmSign')">
+									<view class="con_text">
+										<text>签收</text>
+									</view>
+								</view>
+							</view>
+							<view class="con_list" v-if="dataInfo.status == 13">
+						
+								<view class="con_item" @click="clickBtn('uploadReceipt')">
+									<view class="con_text">
+										<text>上传回单</text>
+									</view>
+								</view>
+							</view>
+						</view>
 			<!-- #ifdef MP-WEIXIN -->
 					</view>
 				</movable-view>
@@ -2676,35 +2675,7 @@
 									line-height: 40rpx;
 									text-align: center;
 									margin-top: 40rpx;
-									margin-bottom: 40rpx;
-								}
-
-								.con_btns {
-
-
-									.con_list {
-										display: flex;
-										justify-content: flex-end;
-										width: 750rpx;
-										height: 112rpx;
-										background: #FFFFFF;
-										padding-right: 20rpx
-									}
-
-									.con_item {
-										height: 72rpx;
-										border-radius: 10rpx;
-										border: 2rpx solid #000000;
-										font-size: 32rpx;
-										font-family: PingFangSC-Regular, PingFang SC;
-										font-weight: 400;
-										color: #000000;
-										line-height: 72rpx;
-										margin: 20rpx 8rpx;
-										padding: 0 10rpx;
-										min-width: 120rpx;
-										text-align: center;
-									}
+									padding-bottom: 40rpx;
 								}
 
 							}
@@ -2715,7 +2686,38 @@
 				}
 				// #endif
 			}
-
+			.scroll {
+				width:750rpx;
+				height: calc(100vh - 112rpx);
+				background: #f3f4f5;
+			}
+			.con_btns {
+				position: sticky;
+			
+				.con_list {
+					display: flex;
+					justify-content: flex-end;
+					width: 750rpx;
+					height: 112rpx;
+					background: #FFFFFF;
+					padding-right: 20rpx
+				}
+			
+				.con_item {
+					height: 72rpx;
+					border-radius: 10rpx;
+					border: 2rpx solid #000000;
+					font-size: 32rpx;
+					font-family: PingFangSC-Regular, PingFang SC;
+					font-weight: 400;
+					color: #000000;
+					line-height: 72rpx;
+					margin: 20rpx 8rpx;
+					padding: 0 10rpx;
+					min-width: 120rpx;
+					text-align: center;
+				}
+			}
 			.con_popup {
 				.con_close {
 					position: absolute;

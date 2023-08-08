@@ -61,20 +61,20 @@
 </template>
 
 <script>
-	// #ifdef APP-PLUS
-	const n = uni.requireNativePlugin('AP-FaceDetectModule');
-	console.log(n);
-	// #endif
-	
 	export default {
 		data() {
 			return {
 				name: '',
 				idSn: '',
-				flag: ''
+				flag: '',
+				n: null,
+				gt: null
 			}
 		},
 		onLoad(option) {
+			// #ifdef APP-PLUS
+			gt.n = uni.requireNativePlugin('AP-FaceDetectModule');
+			// #endif
 			let gt = this
 			gt.flag = option.flag
 		},
@@ -135,12 +135,11 @@
 					cardno: gt.idSn,
 				};
 				gt.gtRequest.post(url, data).then(res => {
-
+					// gt.getMetaInfo()
+					// gt.verifyC()
 					uni.setStorageSync('userAuth', 1);
-
 					var pages = getCurrentPages();
 					var url = pages[0].$page.fullPath;
-
 					gt.$refs.uToast.show({
 						title: '提交成功',
 						type: 'success',
@@ -148,7 +147,6 @@
 						isTab:true,
 					});
 					return false;
-
 				});
 			},
 			skip() {
@@ -158,7 +156,26 @@
 					url: pages[0].$page.fullPath
 				});
 			},
-
+			verifyC() {
+				let gt = this
+			    gt.n.verify(
+			        {
+			            certifyId: gt.certify
+			        },
+			        function(t) {
+			            uni.showToast({
+			                title: '返回的内容' + t,
+			                icon: 'none'
+			            });
+			        }
+			    );
+			},
+			//获取环境参数接口。
+			getMetaInfo() {
+				let gt = this
+			    gt.t = gt.n.getMetaInfo()
+				console.debug(gt.t)
+			},
 		}
 	}
 </script>
