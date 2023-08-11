@@ -263,8 +263,14 @@
 			}
 		},
 		methods: {
-			init() {
+			init(list) {
 				let gt = this;
+				if(list) {
+					gt.pcaList = list
+					gt.provinceList = []
+					gt.cityList = []
+					gt.areaList = []
+				}
 				var provinceList = gt.pcaList;
 				for (var i = 0; i < provinceList.length; i++) {
 					var provinceItem = {

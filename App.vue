@@ -78,10 +78,10 @@
 			}
 			if (envVersion == 'develop') {
 				// console.log('测试版生产环境');
-				apiDomain = 'https://saasdemo.sansongkeji.com';
-				// apiDomain = "http://test.sansongkeji.com";
-				uni.setStorageSync('environment', 'prod');
-				// uni.setStorageSync('environment', 'dev');
+				// apiDomain = 'https://saasdemo.sansongkeji.com';
+				apiDomain = "http://test.sansongkeji.com";
+				// uni.setStorageSync('environment', 'prod');
+				uni.setStorageSync('environment', 'dev');
 			}
 			// #endif
 			
@@ -178,6 +178,13 @@
 			// #endif
 			
 			var system = uni.getSystemInfoSync();
+			var mobile = uni.getStorageSync('mobile');
+			if (mobile) {
+				console.log("App")
+				let ws_url = uni.getStorageSync('environment') == 'prod' ? 'wss://saasdemo.sansongkeji.com:3021' : 'wss://test.sansongkeji.com:8021'
+				gt.gtWSS.setWsUrl(ws_url);
+				gt.gtWSS.init();
+			}
 		},
 		onShow: function(options) {
 			let gt = this;
@@ -214,12 +221,13 @@
 			// #endif
 			
 			
-			var mobile = uni.getStorageSync('mobile');
-			if (mobile) {
-				let ws_url = uni.getStorageSync('environment') == 'prod' ? 'wss://saasdemo.sansongkeji.com:3021' : 'wss://test.sansongkeji.com:8021'
-				gt.gtWSS.setWsUrl(ws_url);
-				gt.gtWSS.init();
-			}
+			// var mobile = uni.getStorageSync('mobile');
+			// if (mobile) {
+			// 	console.log("App")
+			// 	let ws_url = uni.getStorageSync('environment') == 'prod' ? 'wss://saasdemo.sansongkeji.com:3021' : 'wss://test.sansongkeji.com:8021'
+			// 	gt.gtWSS.setWsUrl(ws_url);
+			// 	gt.gtWSS.init();
+			// }
 		},
 		onHide: function() {
 			// 0'=>'创建订单货物图片

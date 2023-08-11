@@ -921,12 +921,12 @@
 				.con_order {
 
 					.con_list {
-						margin-bottom: 136rpx;
+						margin-bottom: 124rpx;
 						background: #F3F4F5;
 
 						.con_scrollView {
 							// height: calc(100vh - 136rpx);
-							height: calc(1000rpx - 136rpx);
+							height: calc(1000rpx - 144rpx);
 							padding: 10rpx 0;
 
 							.con_item {
@@ -1178,7 +1178,7 @@
 						display: flex;
 						position: absolute;
 						bottom: 0;
-						height: 136rpx;
+						height: 124rpx;
 
 						.con_icon {
 							width: 32rpx;

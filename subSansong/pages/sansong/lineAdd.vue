@@ -74,7 +74,6 @@
 					</u-radio-group>
 				</view>
 			</view>
-
 			<view class="con_title">
 				<text>到站信息</text>
 			</view>
@@ -520,8 +519,6 @@
 			</view>
 		</view>
 
-
-
 		<view class="con_nextSaveBtn" @click="nextSave">
 			<text v-if="step == 1">下一步</text>
 			<text v-if="step == 2">保存</text>
@@ -550,8 +547,8 @@
 						<view class="close" @click="confirm(false, 'GTPCAShowE')">取消</view>
 						<view class="ok" @click="confirm(true, 'GTPCAShowE')">确认</view>
 					</view>
-					<gtPCA :pcaList="provinceCityAreaList" :height="height" :show="GTPCAShowE" :selectedList="toPca"
-						:allArea="true" @gtPCASelect="gtPCASelect"></gtPCA>
+					<gtPCA :pcaList="provinceCityAreaList1" :height="height" :show="GTPCAShowE" :selectedList="toPca"
+						:allArea="true" @gtPCASelect="gtPCASelect" ref="gtPCA"></gtPCA>
 				</u-popup>
 			</view>
 			<view class="con_GTPCA">
@@ -565,8 +562,6 @@
 				</u-popup>
 			</view>
 		</view>
-
-
 	</view>
 </template>
 
@@ -581,12 +576,8 @@
 			return {
 				id: 0,
 				startArea: '',
-
 				step: 1,
-
 				height: '',
-
-
 				fromPca: [
 					[{
 						cityName: '',
@@ -597,9 +588,7 @@
 					[{
 						cityName: '',
 					}],
-
 				],
-
 				toPca: [
 					[{
 						cityName: '',
@@ -611,7 +600,6 @@
 						cityName: '',
 					}],
 				],
-
 				arrivePca: [
 					[{
 						cityName: '',
@@ -623,25 +611,13 @@
 						cityName: '',
 					}],
 				],
-
-
 				GTPCAShowS: false,
 				GTPCAShowE: false,
 				fromTo: 's',
-
 				GTPCAShow: false,
-
-
-
-
-
-
-
-
 				manageName: '',
 				manageMobile: '',
 				lineType: 1,
-
 				arriveStationList: [{
 					id: '',
 					company: '',
@@ -660,11 +636,7 @@
 				}],
 				num: 0,
 				break: false,
-
-
-
 				quotationSwitch: true,
-
 				minDay1: '',
 				maxDay1: '',
 				price1_1: '',
@@ -677,29 +649,25 @@
 				price3_2: '',
 				price6_2: '',
 				price10_2: '',
-
 				th_status: true,
 				th_price: '',
 				sh_status: true,
 				sh_price: '',
-
-
 				// provinceCityAreaList: [],
 				areaShow: false,
 				provinceIndex: 0,
 				cityIndex: 0,
 				areaIndex: 0,
 				currentItemArriveStation: 0,
-
 				arriveStationArr: [],
 				isEdit: false,
 				isAdd: false,
-				flag: false
+				flag: false,
+				provinceCityAreaList1: []
 			}
 		},
-		onLoad(options) {
+		async onLoad(options) {
 			let gt = this;
-
 			// var list = uni.getStorage('pcaList')
 			uni.getStorage({
 				key: 'pcaList',
@@ -707,23 +675,19 @@
 					gt.provinceCityAreaList = res.data;
 					if (options.startArea) {
 						var startArea = JSON.parse(options.startArea)
-						console.log(startArea)
 						gt.getStartArea(startArea)
 						gt.isAdd = startArea.isAdd
 					}
 				},
-
 			});
 			if (options.id) {
 				gt.id = options.id;
-				gt.getDataInfo();
+				await gt.getDataInfo();
 			}
 			gt.isEdit = options.isEdit
 		},
 		methods: {
-
 			manageMobileInput(res) {
-				console.log(res);
 				let gt = this;
 				gt.manageMobile = res;
 			},
@@ -758,9 +722,7 @@
 							address: '',
 							lng: '',
 							lat: '',
-							pca: gt.toPca[0][0].cityName + '-' + gt.toPca[1][0].cityName + '-' + gt.toPca[2][0]
-								.cityName,
-
+							pca: gt.toPca[0][0].cityName + '-' + gt.toPca[1][0].cityName + '-' + gt.toPca[2][0].cityName,
 							provinceStr: gt.toPca[0][0].cityName,
 							// provinceCode: '',
 							cityStr: gt.toPca[1][0].cityName,
@@ -779,13 +741,13 @@
 					}
 				}
 			},
-			getDataInfo() {
+			async getDataInfo() {
 				let gt = this;
 				var url = "/logistics/specialline/get_special_line_info";
 				var data = {
 					line_id: gt.id,
 				};
-				gt.gtRequest.post(url, data).then(res => {
+				await gt.gtRequest.post(url, data).then(res => {
 					var info = res.info;
 					gt.break = false;
 					var fromPca = [];
@@ -921,7 +883,6 @@
 				let gt = this;
 				var fromPca = [];
 				var provinceItem = find(gt.provinceCityAreaList, ['city_name', startArea.start_province])
-				console.log(gt.provinceCityAreaList)
 				if (provinceItem) {
 					fromPca.push([{
 						cityCode: provinceItem.city_code,
@@ -952,7 +913,6 @@
 					}
 				}
 				gt.fromPca = fromPca;
-				console.log(gt.fromPca)
 			},
 			confirm(type, that) {
 				let gt = this
@@ -962,13 +922,22 @@
 			showGTPCA(str) {
 				let gt = this;
 				gt.height = '600rpx';
-				if((gt.isAdd && str == 's') || gt.isEdit) return;
+				if(str == 's' && (gt.isAdd || gt.isEdit)) return;
+				if(gt.isEdit && str == 'e') {
+					let editProvince = gt.provinceCityAreaList.filter(item=> item.city_code == gt.toPca[0][0].cityCode)
+					editProvince[0].children = editProvince[0].children.filter(item=> item.city_code == gt.toPca[1][0].cityCode)
+					gt.provinceCityAreaList1 = [editProvince[0]]
+				} else {
+					gt.provinceCityAreaList1 = JSON.parse(JSON.stringify(gt.provinceCityAreaList))
+				}
 				gt.fromTo = str;
 				gt.allArea = str == 's' ? false : true;
 				gt.GTPCAShowS = str == 'e' ? false : true;
 				gt.GTPCAShowE = str == 's' ? false : true;
+				setTimeout(()=> {
+					gt.$refs.gtPCA.init(gt.provinceCityAreaList1)
+				}, 0)
 			},
-
 			addArriveStation() {
 				let gt = this;
 				var arriveStationItem = {
@@ -1009,15 +978,10 @@
 			},
 			showGTPCA2(index, type) {
 				if(type) return
-				console.log(index);
 				let gt = this;
 				gt.currentItemArriveStation = index;
-
 				gt.GTPCAShow = true;
-
-
 				// if (gt.arriveStationList[index].areaStr) {
-
 				// 	var provinceList = gt.provinceCityAreaList;
 				// 	for (var i = 0; i < provinceList.length; i++) {
 				// 		if (provinceList[i].city_name == gt.arriveStationList[index].provinceStr) {
@@ -1047,23 +1011,17 @@
 				// gt.areaShow = true;
 			},
 			confirmArea(e) {
-				console.log(e);
 				let gt = this;
 				if(!gt.flag) return
 				var index = gt.currentItemArriveStation;
-
 				var arr = JSON.parse(e);
-				console.log(arr);
 				if (arr[0][0]) {
 					gt.arriveStationList[index].provinceStr = arr[0][0].cityName;
 					gt.arriveStationList[index].cityStr = arr[1][0].cityName;
 					gt.arriveStationList[index].areaStr = arr[2][0].cityName;
-					gt.arriveStationList[index].pca = arr[0][0].cityName + '-' + arr[1][0].cityName + '-' + arr[2][
-						0
-					].cityName;
+					gt.arriveStationList[index].pca = arr[0][0].cityName + '-' + arr[1][0].cityName + '-' + arr[2][0].cityName;
 				}
 			},
-
 			chooseAddress(index) {
 				let gt = this;
 				if (gt.arriveStationList[index].lng) {
@@ -1076,7 +1034,6 @@
 								gt.arriveStationList[index].lat = res.latitude;
 								gt.arriveStationList[index].lng = res.longitude;
 							}
-
 						}
 					});
 				} else {
@@ -1087,11 +1044,9 @@
 								gt.arriveStationList[index].lat = res.latitude;
 								gt.arriveStationList[index].lng = res.longitude;
 							}
-
 						}
 					});
 				}
-
 			},
 			async nextSave() {
 				let gt = this;
@@ -1117,7 +1072,6 @@
 						});
 						return false;
 					}
-
 					if (gt.$u.test.isEmpty(gt.manageMobile)) {
 						gt.$refs.uToast.show({
 							title: '经理手机不能为空！',
@@ -1157,11 +1111,8 @@
 					}
 					// gt.step++;
 					// return false;
-
 					var url = "/logistics/specialline/add_outlets";
 					gt.break = false;
-
-
 					for (var i = 0; i < gt.arriveStationList.length; i++) {
 						if (gt.break) {
 							break;
@@ -1188,7 +1139,6 @@
 								type: 'error',
 							});
 							return false;
-
 						});
 					}
 					if (gt.num == gt.arriveStationList.length) {
@@ -1198,32 +1148,24 @@
 							duration: 300
 						});
 					}
-
-
 				} else {
 					// gt.step--;
-
 					if (gt.id) {
 						var url = "/logistics/specialline/edit_special_line";
 					} else {
 						var url = "/logistics/specialline/add_special_line";
 					}
-
-
 					var price1 = '{"P1":"' + gt.price1_1 + '","P3":"' + gt.price3_1 + '","P6":"' + gt
 						.price6_1 +
 						'","P10":"' + gt.price10_1 + '"}';
 					var price2 = '{"P1":"' + gt.price1_2 + '","P3":"' + gt.price3_2 + '","P6":"' + gt
 						.price6_2 +
 						'","P10":"' + gt.price10_2 + '"}';
-
-
 					var toArea = '';
 					for (var i = 0; i < gt.toPca[2].length; i++) {
 						toArea += gt.toPca[2][i].cityName + ','
 					}
 					// toArea = 
-
 					var data = {
 						line_contact: gt.manageName,
 						line_mobile: gt.manageMobile,
@@ -1247,7 +1189,6 @@
 						price_show_status: gt.quotationSwitch ? 1 : 0,
 						line_type: gt.lineType,
 					};
-
 					if (gt.id) {
 						data.line_id = gt.id;
 					}

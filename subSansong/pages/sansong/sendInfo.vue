@@ -177,9 +177,9 @@
 		
 		<view class="con_btns" v-if="dataInfo.waybill_info">
 			<view class="con_list">
-				<!-- <view class="con_item" @click="goAdjust">
+				<view class="con_item" @click="goAdjust">
 					<text>调整运单</text>
-				</view> -->
+				</view>
 				<!-- <view class="con_item">
 					<text>导出</text>
 				</view> -->
@@ -261,6 +261,10 @@
 		background: $gtBackgroundColor;
 
 		.gt_content {
+			image {
+				width: 100%;
+				height: 100% !important;
+			}
 			.con_driverInfo {
 				width: 718rpx;
 				background: #FFFFFF;
@@ -282,6 +286,7 @@
 								font-weight: 400;
 								color: #909399;
 								line-height: 48rpx;
+								white-space: nowrap;
 							}
 
 							.con_btn {
@@ -334,12 +339,15 @@
 							font-weight: 400;
 							color: #000000;
 							line-height: 40rpx;
+							white-space: nowrap;
 						}
 					}
 
 					.con_val {
 						display: flex;
-
+						.con_textItem {
+							white-space: pre-wrap;
+						}
 						.con_text {
 							// .con_textItem {
 							font-size: 28rpx;
@@ -348,6 +356,7 @@
 							color: #000000;
 							line-height: 48rpx;
 							text-align: right;
+							white-space: nowrap;
 							// }
 
 						}
@@ -490,6 +499,7 @@
 								color: #000000;
 								line-height: 44rpx;
 								margin-left: 24rpx;
+								white-space: nowrap;
 							}
 						}
 

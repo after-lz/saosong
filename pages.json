@@ -440,6 +440,27 @@
 					}
 				},
 				{
+					"path": "pages/user/changeMobile",
+					"style": {
+						"navigationBarTitleText": "更换手机号码",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "pages/user/confirmMobile",
+					"style": {
+						"navigationBarTitleText": "更换手机号码",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "pages/user/applyCancellation",
+					"style": {
+						"navigationBarTitleText": "申请注销",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
 					"path": "pages/user/qrcode",
 					"style": {
 						"navigationBarTitleText": "",
