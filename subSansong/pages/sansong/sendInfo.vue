@@ -175,7 +175,7 @@
 			</view>
 		</view>
 		
-		<view class="con_btns" v-if="dataInfo.waybill_info">
+		<view class="con_btns" v-if="dataInfo.waybill_info.status == 0">
 			<view class="con_list">
 				<view class="con_item" @click="goAdjust">
 					<text>调整运单</text>
@@ -183,7 +183,7 @@
 				<!-- <view class="con_item">
 					<text>导出</text>
 				</view> -->
-				<view class="con_item" @click="confirmArrive" v-if="dataInfo.waybill_info.status == 0">
+				<view class="con_item" @click="confirmArrive">
 					<text>确认到达</text>
 				</view>
 			</view>

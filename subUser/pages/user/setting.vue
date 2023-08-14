@@ -53,8 +53,6 @@
 					<text>关于伞送</text>
 				</view>
 				<view class="con_icon">
-					<text v-if="version">V{{version}} </text>
-					<text v-else>{{envVersion}}</text>
 					<u-icon name="arrow-right" color="#000"></u-icon>
 				</view>
 			</view>
@@ -69,22 +67,6 @@
 
 <script>
 	export default {
-		data() {
-			return {
-				appId: '',
-				envVersion: '',
-				version: '',
-			}
-		},
-		onLoad() {
-			let gt = this;
-			// #ifdef MP-WEIXIN
-			var res = uni.getAccountInfoSync();
-			gt.appId = res.miniProgram.appId;
-			gt.envVersion = res.miniProgram.envVersion;
-			gt.version = res.miniProgram.version;
-			// #endif
-		},
 		methods: {
 			goPersonal() {
 				uni.navigateTo({
@@ -107,39 +89,10 @@
 				})
 			},
 			checkUpdate() {
-				const updateManager = uni.getUpdateManager();
-				// console.log(updateManager);
-				// updateManager.applyUpdate(function(res) {
-				// 	console.log(res);
-				// 	// 请求完新版本信息的回调
-				// 	//    console.log('update',res.hasUpdate);
-				// })
-				updateManager.onCheckForUpdate(function(res) {
-					// 请求完新版本信息的回调
-					console.log('update', res.hasUpdate);
-					if (res.hasUpdate == false) {
-						uni.showModal({
-							title: '已经是最新版了',
-							showCancel: false,
-						})
-					}
-				});
-				updateManager.onUpdateReady(function(res) {
-					uni.showModal({
-						title: '更新提示',
-						content: '新版本已经准备好，是否重启应用？',
-						success(res) {
-							if (res.confirm) {
-								// 新的版本已经下载好，调用 applyUpdate 应用新版本并重启
-								updateManager.applyUpdate();
-							}
-						}
-					});
-				});
-				// updateManager.onUpdateFailed(function(res) {
-				// 	// 新的版本下载失败
-				// 	//    console.log('新的版本下载失败');
-				// });
+				uni.navigateTo({
+					url: './updateManager'
+				})
+				return false
 			},
 			logout() {
 				let gt = this;
@@ -213,7 +166,6 @@
 				text-align: center;
 				margin-top: 30rpx;
 				margin-left: 16rpx;
-
 				position: absolute;
 				bottom: 160rpx;
 			}

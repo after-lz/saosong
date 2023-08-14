@@ -73,7 +73,7 @@
 		},
 		onLoad(option) {
 			// #ifdef APP-PLUS
-			gt.n = uni.requireNativePlugin('AP-FaceDetectModule');
+			// gt.n = uni.requireNativePlugin('AP-FaceDetectModule');
 			// #endif
 			let gt = this
 			gt.flag = option.flag

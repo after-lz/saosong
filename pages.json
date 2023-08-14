@@ -428,7 +428,7 @@
 				{
 					"path": "pages/user/NewOrderSetting",
 					"style": {
-						"navigationBarTitleText": "新订单设置",
+						"navigationBarTitleText": "新订单通知",
 						"enablePullDownRefresh": false
 					}
 				},
@@ -457,6 +457,20 @@
 					"path": "pages/user/applyCancellation",
 					"style": {
 						"navigationBarTitleText": "申请注销",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "pages/user/updateManager",
+					"style": {
+						"navigationBarTitleText": "关于伞送",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "pages/user/privacyAndProtocol",
+					"style": {
+						"navigationBarTitleText": "隐私和用户协议",
 						"enablePullDownRefresh": false
 					}
 				},
