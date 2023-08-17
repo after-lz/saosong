@@ -21,15 +21,15 @@
 							<image :src="gtCommon.getOssImg('user/task01.png')"></image>
 							完成企业入驻信息，得红包
 						</view>
-						<view class="btn bg_red" v-if="is_company_approve">已领取</view>
-						<view class="btn bg_red" @click="goNext(1)" v-else>领取</view>
+						<view class="btn bg_red" v-if="is_company_approve">已完成</view>
+						<view class="btn" @click="goNext(1)" v-else>领取</view>
 					</template>
 					<template v-if="item.type === 2">
 						<view class="item_msg">
 							<image :src="gtCommon.getOssImg('user/task02.png')"></image>
 							发布专线，得红包
 						</view>
-						<view class="btn" v-if="flag">已完成</view>
+						<view class="btn bg_red" v-if="flag">已完成</view>
 						<view class="btn" @click="goNext(2)" v-else>去发布</view>
 					</template>
 					<template v-if="item.type === 3">
