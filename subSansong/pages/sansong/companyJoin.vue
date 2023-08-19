@@ -329,8 +329,10 @@
 
 			var list = uni.getStorageSync('pcaList')
 			gt.provinceCityAreaList = list;
-			gt.licencesObj = uni.getStorageSync('licencesObj');
-
+			// gt.licencesObj = uni.getStorageSync('licencesObj');
+			gt.licencesObj = {
+				company_settled_xieyi_url: 'https://saasdemo.sansongkeji.com/adminsite/#/agreement/enter'
+			}
 		},
 
 		onShow() {

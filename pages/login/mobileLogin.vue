@@ -15,7 +15,6 @@
 				code: '',
 				second: 60,
 				agree: false,
-				licencesObj: {},
 			}
 		},
 		onLoad() {

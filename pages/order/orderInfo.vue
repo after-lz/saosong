@@ -1088,7 +1088,6 @@
 
 				trajectoryShow: false,
 
-				licencesObj: {},
 				
 				yunshu_xieyi_url:'https://saasdemo.sansongkeji.com/adminsite/#/agreement/transportation'
 				// yunshu_xieyi_url:'https://baidu.com'
@@ -1096,7 +1095,6 @@
 		},
 		onLoad(options) {
 			let gt = this;
-			gt.licencesObj = uni.getStorageSync('licencesObj');
 			gt.orderSn = options.orderSn;
 			// if(options.intoFrom){
 			// 	gt.intoFrom = options.intoFrom;

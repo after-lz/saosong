@@ -2,6 +2,12 @@
 <script>
 	export default {
 		onLaunch: function(options) {
+			let token = uni.getStorageSync('userInfo')
+			if(!token.login_token){
+				uni.reLaunch({
+					url: "/pages/login/login"
+				})
+			}
 			// uni.setInnerAudioOption({
 			// 	obeyMuteSwitch: false
 			// });
@@ -137,17 +143,17 @@
 			// #endif
 
 
-			var url = "/logistics/app/get_global_data";
-			uni.request({
-				url: apiDomain + url,
-				method: 'POST',
-				success: (res) => {
-					if (res.statusCode == 200) {
-						var data = res.data.data;
-						uni.setStorageSync('licencesObj', data.xieyi)
-					}
-				}
-			})
+			// var url = "/logistics/app/get_global_data";
+			// uni.request({
+			// 	url: apiDomain + url,
+			// 	method: 'POST',
+			// 	success: (res) => {
+			// 		if (res.statusCode == 200) {
+			// 			var data = res.data.data;
+			// 			uni.setStorageSync('licencesObj', data.xieyi)
+			// 		}
+			// 	}
+			// })
 			
 			// #ifdef MP-WEIXIN
 				var openId = uni.getStorageSync('openId');

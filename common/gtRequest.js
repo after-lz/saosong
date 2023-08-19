@@ -61,21 +61,21 @@ function post(url, data = {}, rejectStatus = false) {
 		if (url != '/api/wechat/get_miniprogram_phone' && url != '/api/applogin/login_post' && url !=
 			'/api/applogin/get_verify_code' && url != '/api/appgobal/get_ad_data' && url !=
 			'/api/aliyun/get_mobile') {
-			if (token == '') {
-				clearTimeout(t);
-				uni.showModal({
-					title: '请您先登录',
-					showCancel: true,
-					success(res) {
-						if (res.confirm) {
-							uni.navTo('/pages/login/login');
-						}
-					}
-				})
-				return false;
-			} else {
+			// if (token == '') {
+			// 	clearTimeout(t);
+			// 	uni.showModal({
+			// 		title: '请您先登录',
+			// 		showCancel: true,
+			// 		success(res) {
+			// 			if (res.confirm) {
+			// 				uni.navTo('/pages/login/login');
+			// 			}
+			// 		}
+			// 	})
+			// 	return false;
+			// } else {
 				data.login_token = token;
-			}
+			// }
 		}
 
 
