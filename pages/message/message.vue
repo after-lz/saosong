@@ -1,7 +1,7 @@
 <template>
 	<view class="gt_content">
 		<view class="gt_title">
-			<view class="gt_title_name">清除未读</view>
+			<view class="gt_title_name" @click="clearUnread">清除未读</view>
 			<view class="gt_title_swiper">
 				<u-tabs-swiper ref="uTabs" :list="tabs" :current="current" @change="tabsChange" :is-scroll="false"
 					swiperWidth="750" height="80"></u-tabs-swiper>
@@ -9,7 +9,7 @@
 		</view>
 		<swiper :current="swiperCurrent" @animationfinish="animationfinish" class="main">
 			<swiper-item class="swiper-item" id="message">
-				<scroll-view scroll-y @scrolltolower="onreachBottom">
+				<scroll-view scroll-y>
 					<view class="card" @click="goDetail(1)">
 						<view class="card_left">
 							<image :src="gtCommon.getOssImg('message/message01.png')" mode="widthFix" class="msgImg"></image>
@@ -75,12 +75,13 @@
 				</scroll-view>
 			</swiper-item>
 			<swiper-item class="swiper-item" id="circle">
-				<scroll-view scroll-y @scrolltolower="onreachBottom">
-					<view class="con_empty">
+				<!-- <scroll-view scroll-y @scrolltolower="onreachBottom" style="height: 100%;"> -->
+					<circle></circle>
+					<!-- <view class="con_empty">
 						<u-empty text="暂无数据" color="#000" :src="gtCommon.getOssImg('index/empty.png')" icon-size="550"
 							margin-top="200" font-size="32"></u-empty>
-					</view>
-				</scroll-view>
+					</view> -->
+				<!-- </scroll-view> -->
 			</swiper-item>
 		</swiper>
 		
@@ -88,7 +89,9 @@
 </template>
 
 <script>
+	import circle from "./circle.vue";
 	export default {
+		components: { circle },
 		data() {
 			return {
 				tabs: [{name: '消息'}, {name: '圈子'}],
@@ -105,7 +108,6 @@
 		onShow() {
 			let gt = this
 			gt.getList()
-			
 		},
 		methods: {
 			getList() {
@@ -129,6 +131,16 @@
 			},
 			onreachBottom() {
 				
+			},
+			clearUnread() {
+				let gt = this
+				gt.gtRequest.post('/api/applogin/lots_read_message', {
+					platform: 'logistics'
+				}).then(res => {
+					gt.list.type_1.num = 0
+					gt.list.type_2.num = 0
+					gt.list.type_3.num = 0
+				})
 			},
 			goDetail(type) {
 				switch (type){
@@ -224,7 +236,7 @@
 				}
 			}
 			.main {
-				height: calc(100vh - 260rpx);
+				height: calc(100vh - 200rpx);
 				margin-top: 190rpx;
 				.swiper-item {
 					overflow: auto;

@@ -37,6 +37,7 @@
 				limit: 20,
 				isEnd: false
 			}
+			gt.readMsg()
 			gt.getList()
 		},
 		methods: {
@@ -45,6 +46,13 @@
 				gt.gtRequest.post('/api/applogin/get_message_list', gt.params).then(res => {
 					gt.list = [...gt.list, ...res.list]
 					gt.status = +res.now_page >= res.total_page ? 'nomore' : 'loading'
+				})
+			},
+			readMsg() {
+				let gt = this
+				gt.gtRequest.post('/api/applogin/type_read_message', {
+					platform: 'logistics',
+					type: 1
 				})
 			},
 			loadingMore() {

@@ -129,8 +129,8 @@
 			change(e) {
 				let gt = this
 				gt.time = e.startDate + '~' + e.endDate
-				gt.form.date_from = e.startDate.replace(/-/, '/')
-				gt.form.date_end = e.endDate.replace(/-/, '/')
+				gt.form.date_from = e.startDate
+				gt.form.date_end = e.endDate
 			},
 			submit() {
 				let gt = this
