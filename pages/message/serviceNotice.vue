@@ -2,7 +2,7 @@
 	<view class="gt_content">
 		<scroll-view scroll-y @scrolltolower="loadingMore" class="content">
 			<template v-if="list.length">
-				<view class="card" v-for="item in list" :key="item.about_id">
+				<view class="card" v-for="item in list" :key="item.id">
 					<view class="card_time">{{ formatDate(item.create_time) }}</view>
 					<view class="card_content">
 						<view class="card_title">{{ item.title }}</view>

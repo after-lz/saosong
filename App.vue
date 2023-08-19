@@ -2,15 +2,13 @@
 <script>
 	export default {
 		onLaunch: function(options) {
-			let token = uni.getStorageSync('userInfo')
-			if(!token.login_token){
-				uni.reLaunch({
+			let userAuth = uni.getStorageSync('userAuth')
+			let companyAuth = uni.getStorageSync('companyAuth')
+			if(!userAuth && !companyAuth){
+				uni.navigateTo({
 					url: "/pages/login/login"
 				})
 			}
-			// uni.setInnerAudioOption({
-			// 	obeyMuteSwitch: false
-			// });
 			uni.loadFontFace({
 				global: true,
 				family: 'PingFangSC-Medium',
@@ -58,45 +56,28 @@
 
 			// #ifdef MP-WEIXIN
 			var res = uni.getAccountInfoSync();
-			var appId = res.miniProgram.appId;
 			var envVersion = res.miniProgram.envVersion;
-			var version = res.miniProgram.version;
 			var apiDomain = '';
 			if (envVersion == 'release') {
 				// console.log('正式版生产环境');
 				apiDomain = 'https://saasdemo.sansongkeji.com';
-				// apiDomain = "http://test.sansongkeji.com";
 				uni.setStorageSync('environment', 'prod');
-			} 
-			else {
-				environment = uni.getStorageSync('environment');
-				if (environment == 'prod') {
-					// console.log('开发版生产环境');
-					apiDomain = 'https://saasdemo.sansongkeji.com';
-					// apiDomain = "http://test.sansongkeji.com";
-					// uni.setStorageSync('environment', 'prod');
-				} else {
-					// console.log('开发版开发环境');
-					apiDomain = 'https://saasdemo.sansongkeji.com';
-					// apiDomain = "http://test.sansongkeji.com";
-					// uni.setStorageSync('environment', 'dev');
-				}
 			}
 			if (envVersion == 'develop') {
 				// console.log('测试版生产环境');
 				// apiDomain = 'https://saasdemo.sansongkeji.com';
-				apiDomain = "http://test.sansongkeji.com";
 				// uni.setStorageSync('environment', 'prod');
+				apiDomain = "http://test.sansongkeji.com";
 				uni.setStorageSync('environment', 'dev');
 			}
 			// #endif
 			
 			
 			// #ifdef APP-PLUS
-			// var apiDomain = 'http://test.sansongkeji.com';
-			// uni.setStorageSync('environment', 'dev');
-			var apiDomain = 'https://saasdemo.sansongkeji.com';
-			uni.setStorageSync('environment', 'prod');
+			var apiDomain = 'http://test.sansongkeji.com';
+			uni.setStorageSync('environment', 'dev');
+			// var apiDomain = 'https://saasdemo.sansongkeji.com';
+			// uni.setStorageSync('environment', 'prod');
 			// #endif
 
 			var apiDomainStorage = uni.getStorageSync('apiDomain');
@@ -186,7 +167,6 @@
 			var system = uni.getSystemInfoSync();
 			var mobile = uni.getStorageSync('mobile');
 			if (mobile) {
-				console.log("App")
 				let ws_url = uni.getStorageSync('environment') == 'prod' ? 'wss://saasdemo.sansongkeji.com:3021' : 'wss://test.sansongkeji.com:8021'
 				gt.gtWSS.setWsUrl(ws_url);
 				gt.gtWSS.init();

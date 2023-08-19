@@ -206,15 +206,6 @@
 									let ws_url = uni.getStorageSync('environment') == 'prod' ? 'wss://saasdemo.sansongkeji.com:3021' : 'wss://test.sansongkeji.com:8021'
 									gt.gtWSS.setWsUrl(ws_url);
 									gt.gtWSS.init();
-									gt.$refs.uToast.show({
-										title: '登录成功！',
-										type: 'success',
-									});
-									setTimeout(()=> {
-										uni.switchTab({
-											url: '/pages/user/user'
-										});
-									}, 1000)
 									// if (rs.user.is_approve == 0) {
 									// 	gt.$refs.uToast.show({
 									// 		title: '登录成功！',
@@ -222,23 +213,22 @@
 									// 		url: 'pages/login/peopleAuth',
 									// 	});
 									// } else {
-									// 	if (rs.user.is_company_approve == 0) {
-									// 		gt.$refs.uToast.show({
-									// 			title: '登录成功！',
-									// 			type: 'success',
-									// 			url: 'pages/login/companyAuth',
-									// 		});
-									// 	} else {
-									// 		gt.$refs.uToast.show({
-									// 			title: '登录成功！',
-									// 			type: 'success',
-									// 		});
-									// 		var pages = getCurrentPages();
-									// 		// console.log(pages);
-									// 		uni.reLaunch({
-									// 			url: pages[0].$page.fullPath
-									// 		});
-									// 	}
+										if (rs.user.is_company_approve == 0 || rs.user.is_company_approve == null) {
+											gt.$refs.uToast.show({
+												title: '登录成功！',
+												type: 'success',
+												url: 'pages/login/companyAuth',
+											});
+										} else {
+											gt.$refs.uToast.show({
+												title: '登录成功！',
+												type: 'success',
+											});
+											var pages = getCurrentPages();
+											uni.reLaunch({
+												url: pages[0].$page.fullPath
+											});
+										}
 									// }
 								})
 							})
@@ -336,15 +326,6 @@
 							let ws_url = uni.getStorageSync('environment') == 'prod' ? 'wss://saasdemo.sansongkeji.com:3021' : 'wss://test.sansongkeji.com:8021'
 							gt.gtWSS.setWsUrl(ws_url);
 							gt.gtWSS.init();
-							gt.$refs.uToast.show({
-								title: '登录成功！',
-								type: 'success',
-							});
-							setTimeout(()=> {
-								uni.switchTab({
-									url: '/pages/user/user'
-								});
-							}, 1000)
 							// if (rs.user.is_approve == 0) {
 							// 	gt.$refs.uToast.show({
 							// 		title: '登录成功！',
@@ -352,23 +333,22 @@
 							// 		url: 'pages/login/peopleAuth',
 							// 	});
 							// } else {
-							// 	if (rs.user.is_company_approve == 0) {
-							// 		gt.$refs.uToast.show({
-							// 			title: '登录成功！',
-							// 			type: 'success',
-							// 			url: 'pages/login/companyAuth',
-							// 		});
-							// 	} else {
-							// 		gt.$refs.uToast.show({
-							// 			title: '登录成功！',
-							// 			type: 'success',
-							// 		});
-							// 		var pages = getCurrentPages();
-							// 		// console.log(pages);
-							// 		uni.reLaunch({
-							// 			url: pages[0].$page.fullPath
-							// 		});
-							// 	}
+								if (rs.user.is_company_approve == 0 || rs.user.is_company_approve == null) {
+									gt.$refs.uToast.show({
+										title: '登录成功！',
+										type: 'success',
+										url: 'pages/login/companyAuth',
+									});
+								} else {
+									gt.$refs.uToast.show({
+										title: '登录成功！',
+										type: 'success',
+									});
+									var pages = getCurrentPages();
+									uni.reLaunch({
+										url: pages[0].$page.fullPath
+									});
+								}
 							// }
 						})
 					})
@@ -476,15 +456,6 @@
 					let ws_url = uni.getStorageSync('environment') == 'prod' ? 'wss://saasdemo.sansongkeji.com:3021' : 'wss://test.sansongkeji.com:8021'
 					gt.gtWSS.setWsUrl(ws_url);
 					gt.gtWSS.init();
-					gt.$refs.uToast.show({
-						title: '登录成功！',
-						type: 'success',
-					});
-					setTimeout(()=> {
-						uni.switchTab({
-							url: '/pages/user/user'
-						});
-					}, 1000)
 					// if (rs.user.is_approve == 0) {
 					// 	gt.$refs.uToast.show({
 					// 		title: '登录成功！',
@@ -492,23 +463,22 @@
 					// 		url: 'pages/login/peopleAuth',
 					// 	});
 					// } else {
-					// 	if (rs.user.is_company_approve == 0) {
-					// 		gt.$refs.uToast.show({
-					// 			title: '登录成功！',
-					// 			type: 'success',
-					// 			url: 'pages/login/companyAuth',
-					// 		});
-					// 	} else {
-					// 		gt.$refs.uToast.show({
-					// 			title: '登录成功！',
-					// 			type: 'success',
-					// 		});
-					// 		var pages = getCurrentPages();
-					// 		// console.log(pages);
-					// 		uni.reLaunch({
-					// 			url: pages[0].$page.fullPath
-					// 		});
-					// 	}
+						if (rs.user.is_company_approve == 0 || rs.user.is_company_approve == null) {
+							gt.$refs.uToast.show({
+								title: '登录成功！',
+								type: 'success',
+								url: 'pages/login/companyAuth',
+							});
+						} else {
+							gt.$refs.uToast.show({
+								title: '登录成功！',
+								type: 'success',
+							});
+							var pages = getCurrentPages();
+							uni.reLaunch({
+								url: pages[0].$page.fullPath
+							});
+						}
 					// }
 				})
 			},
