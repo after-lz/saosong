@@ -292,6 +292,56 @@ function getMoneyStatus(orderInfo,from="index") {
 	}
 }
 
+function debounce(func, wait=1000, immediate) {
+    var timeout, result;
+    function debounced () {
+        var context = this, args = arguments;
+        if (timeout)  clearTimeout(timeout);
+        if (immediate) {
+            var callNow = !timeout;
+            timeout = setTimeout(function() {
+                result = func.apply(context, args)
+            }, wait);
+            if (callNow) result = func.apply(context, args);
+        } else {
+            timeout = setTimeout(function() {
+                result = func.apply(context, args)
+            }, wait);
+        }
+        return result;
+    }
+    debounced.cancel = function(){
+        cleatTimeout(timeout);
+        timeout = null;
+    }
+    return debounced;
+}
+
+function judgeTime(time) {
+	let startTime = String(time).length === 10 ? time * 1000 : time
+	let nowTime = +new Date(),
+	    Day = 24 * 60 * 60 * 1000,
+	    Hours = 60 * 60 * 1000,
+	    Minutes = 60 * 1000,
+	    diffDay = parseInt((nowTime - startTime) / Day),
+	    diffHours = parseInt((nowTime - startTime) / Hours),
+	    diffMinutes = Math.floor((nowTime - startTime) / Minutes)
+	if(diffDay != 0 && diffDay < 7) {
+	    return diffDay + "天前"
+	}    
+	else if(diffDay == 0 && diffHours != 0) {
+	    return diffHours + "小时前"
+	}
+	else if(diffDay == 0 && diffHours == 0 && diffMinutes != 0) {
+	    return diffMinutes + "分钟前"
+	} 
+	else if (diffDay == 0 && diffHours == 0 && diffMinutes == 0) {
+	    return "刚刚"
+	} 
+	else {
+	    return formateTime(time)
+	}
+}
 
 module.exports.getOssImg = getOssImg;
 module.exports.formateTime = formateTime;
@@ -312,3 +362,5 @@ module.exports.copyStr = copyStr;
 module.exports.previewImg = previewImg;
 module.exports.goLicence = goLicence;
 module.exports.getMoneyStatus = getMoneyStatus;
+module.exports.debounce = debounce;
+module.exports.judgeTime = judgeTime;

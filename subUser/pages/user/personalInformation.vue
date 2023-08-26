@@ -186,7 +186,7 @@
 		methods: {
 			photograph() {
 				let gt = this
-				// // #ifdef MP-WEIXIN
+				// #ifdef MP-WEIXIN
 				uni.chooseImage({
 					count: 1, //默认9
 					sizeType: ['original', 'compressed'], //可以指定是原图还是压缩图，默认二者都有, 

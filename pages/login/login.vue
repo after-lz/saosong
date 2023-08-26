@@ -214,11 +214,24 @@
 									// 	});
 									// } else {
 										if (rs.user.is_company_approve == 0 || rs.user.is_company_approve == null) {
-											gt.$refs.uToast.show({
-												title: '登录成功！',
-												type: 'success',
-												url: 'pages/login/companyAuth',
-											});
+											gt.gtRequest.post("/logistics/company/get_company_approve_info").then(res => {
+												if(Object.prototype.toString.call(res.company_approve_info) === '[object Array]' || res.company_approve_info.status) {
+													gt.$refs.uToast.show({
+														title: '登录成功！',
+														type: 'success',
+														url: 'pages/login/companyAuth',
+													});
+												} else {
+													gt.$refs.uToast.show({
+														title: '登录成功！',
+														type: 'success',
+													});
+													var pages = getCurrentPages();
+													uni.reLaunch({
+														url: pages[0].$page.fullPath
+													});
+												}
+											})
 										} else {
 											gt.$refs.uToast.show({
 												title: '登录成功！',
@@ -334,11 +347,24 @@
 							// 	});
 							// } else {
 								if (rs.user.is_company_approve == 0 || rs.user.is_company_approve == null) {
-									gt.$refs.uToast.show({
-										title: '登录成功！',
-										type: 'success',
-										url: 'pages/login/companyAuth',
-									});
+									gt.gtRequest.post("/logistics/company/get_company_approve_info").then(res => {
+										if(Object.prototype.toString.call(res.company_approve_info) === '[object Array]'|| res.company_approve_info.status) {
+											gt.$refs.uToast.show({
+												title: '登录成功！',
+												type: 'success',
+												url: 'pages/login/companyAuth',
+											});
+										} else {
+											gt.$refs.uToast.show({
+												title: '登录成功！',
+												type: 'success',
+											});
+											var pages = getCurrentPages();
+											uni.reLaunch({
+												url: pages[0].$page.fullPath
+											});
+										}
+									})
 								} else {
 									gt.$refs.uToast.show({
 										title: '登录成功！',
@@ -464,11 +490,24 @@
 					// 	});
 					// } else {
 						if (rs.user.is_company_approve == 0 || rs.user.is_company_approve == null) {
-							gt.$refs.uToast.show({
-								title: '登录成功！',
-								type: 'success',
-								url: 'pages/login/companyAuth',
-							});
+							gt.gtRequest.post("/logistics/company/get_company_approve_info").then(res => {
+								if(Object.prototype.toString.call(res.company_approve_info) === '[object Array]' || res.company_approve_info.status) {
+									gt.$refs.uToast.show({
+										title: '登录成功！',
+										type: 'success',
+										url: 'pages/login/companyAuth',
+									});
+								} else {
+									gt.$refs.uToast.show({
+										title: '登录成功！',
+										type: 'success',
+									});
+									var pages = getCurrentPages();
+									uni.reLaunch({
+										url: pages[0].$page.fullPath
+									});
+								}
+							})
 						} else {
 							gt.$refs.uToast.show({
 								title: '登录成功！',

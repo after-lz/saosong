@@ -111,12 +111,19 @@
 							uni.removeStorageSync('tokenValid_d');
 							uni.removeStorageSync('token');
 							uni.removeStorageSync('tokenValid');
+							uni.removeStorageSync('user_info');
+							uni.removeStorageSync('checkStatus');
 							gt.gtWSS.completeClose();
 							gt.$refs.uToast.show({
 								title: '退出成功',
 								type: 'success',
-								url: '/pages/login/login',
+								// url: '/pages/login/login',
 							})
+							setTimeout(()=> {
+								uni.reLaunch({
+									url: "/pages/login/login"
+								})
+							}, 1000)
 						}
 					}
 				})

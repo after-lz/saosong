@@ -178,7 +178,7 @@ function upload(file) {
 			upload_file: 'customer',
 			type: 'app',
 			login_token: '',
-			sign: '',
+			sign: file.sign,
 		};
 		// console.log(data);
 

@@ -2,9 +2,10 @@
 <script>
 	export default {
 		onLaunch: function(options) {
-			let userAuth = uni.getStorageSync('userAuth')
-			let companyAuth = uni.getStorageSync('companyAuth')
-			if(!userAuth && !companyAuth){
+			var userAuth = uni.getStorageSync('userAuth')
+			var companyAuth = uni.getStorageSync('companyAuth')
+			var checkStatus = uni.getStorageSync('checkStatus')
+			if(!userAuth && !companyAuth && (checkStatus === '' || checkStatus === 2)) {
 				uni.navigateTo({
 					url: "/pages/login/login"
 				})
@@ -74,10 +75,10 @@
 			
 			
 			// #ifdef APP-PLUS
-			var apiDomain = 'http://test.sansongkeji.com';
-			uni.setStorageSync('environment', 'dev');
-			// var apiDomain = 'https://saasdemo.sansongkeji.com';
-			// uni.setStorageSync('environment', 'prod');
+			// var apiDomain = 'http://test.sansongkeji.com';
+			// uni.setStorageSync('environment', 'dev');
+			var apiDomain = 'https://saasdemo.sansongkeji.com';
+			uni.setStorageSync('environment', 'prod');
 			// #endif
 
 			var apiDomainStorage = uni.getStorageSync('apiDomain');
@@ -135,6 +136,7 @@
 			// 		}
 			// 	}
 			// })
+			
 			
 			// #ifdef MP-WEIXIN
 				var openId = uni.getStorageSync('openId');

@@ -508,7 +508,7 @@
 					name: '专线信息'
 				}],
 				currentTab: 0,
-
+				logistics_id: '',
 				companyImgs: [],
 				companyName: '',
 				authStatus: 0,
@@ -536,10 +536,11 @@
 				over: false
 			}
 		},
-		onLoad() {
+		onLoad(option) {
 			let gt = this;
+			gt.logistics_id = option.logistics_id ? option.logistics_id : uni.getStorageSync("companyInfo").logistics_id
 			gt.params = {
-				logistics_id: uni.getStorageSync("companyInfo").logistics_id,
+				logistics_id: gt.logistics_id,
 				page: 1,
 				limit: 10
 			}
@@ -585,13 +586,14 @@
 			},
 			getCompanyInfo() {
 				let gt = this;
-				var url = "/logistics/company/get_company_info";
-
-				gt.gtRequest.post(url).then(res => {
+				// var url = "/logistics/company/get_company_info";
+				var url = "/logistics/company/get_company_infother";
+				gt.gtRequest.post(url, {
+					logistics_id: gt.logistics_id
+				}).then(res => {
 					var imgList = [];
 					res.company_imgs_all.map(item => {
 						item = item + '?x-oss-process=style/sansong_app';
-						console.log(item);
 						imgList.push(item);
 					});
 

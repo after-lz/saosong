@@ -1,15 +1,19 @@
 <template>
 	<view class="gt_content">
 		<view class="gt_title">
-			<view class="gt_title_name" @click="clearUnread">清除未读</view>
+			<view class="gt_title_name" @click="clearUnread" :style="{'display': current === 0 ? '': 'none'}">清除未读</view>
+			<view class="gt_title_name" @click="circleMsg" :style="{'display': current === 1 ? '': 'none'}">
+				<u-icon name="bell" size="36"></u-icon>
+			</view>
 			<view class="gt_title_swiper">
 				<u-tabs-swiper ref="uTabs" :list="tabs" :current="current" @change="tabsChange" :is-scroll="false"
 					swiperWidth="750" height="80"></u-tabs-swiper>
 			</view>
 		</view>
-		<swiper :current="swiperCurrent" @animationfinish="animationfinish" class="main">
-			<swiper-item class="swiper-item" id="message">
+		<swiper :current="current" @animationfinish="animationfinish" class="main">
+			<swiper-item class="swiper-item" id="message" catchtouchmove="stopTouchMove">
 				<scroll-view scroll-y>
+					<view class="line"></view>
 					<view class="card" @click="goDetail(1)">
 						<view class="card_left">
 							<image :src="gtCommon.getOssImg('message/message01.png')" mode="widthFix" class="msgImg"></image>
@@ -74,29 +78,21 @@
 					</view>
 				</scroll-view>
 			</swiper-item>
-			<swiper-item class="swiper-item" id="circle">
-				<!-- <scroll-view scroll-y @scrolltolower="onreachBottom" style="height: 100%;"> -->
-					<circle></circle>
-					<!-- <view class="con_empty">
-						<u-empty text="暂无数据" color="#000" :src="gtCommon.getOssImg('index/empty.png')" icon-size="550"
-							margin-top="200" font-size="32"></u-empty>
-					</view> -->
-				<!-- </scroll-view> -->
+			<swiper-item class="swiper-item circle" id="circle" catchtouchmove="stopTouchMove">
+				<circle-box ref="circleBox"></circle-box>
 			</swiper-item>
 		</swiper>
-		
 	</view>
 </template>
 
 <script>
-	import circle from "./circle.vue";
+	import CircleBox from './circleBox.vue'
 	export default {
-		components: { circle },
+		components: { CircleBox },
 		data() {
 			return {
 				tabs: [{name: '消息'}, {name: '圈子'}],
 				current: 0,
-				swiperCurrent: 0,
 				offset: [0, 0],
 				list: {
 					type_1: {},
@@ -105,11 +101,17 @@
 				}
 			}
 		},
-		onShow() {
+		onLoad() {
 			let gt = this
 			gt.getList()
 		},
 		methods: {
+			refreshCircle() {
+				let gt = this
+				gt.$nextTick(()=> {
+					gt.$refs.circleBox.showFn()
+				})
+			},
 			getList() {
 				let gt = this
 				gt.gtRequest.post('/api/applogin/get_message_num', {
@@ -120,17 +122,13 @@
 			},
 			tabsChange(index) {
 				let gt = this
-				gt.swiperCurrent = index
+				gt.current = index
 			},
 			animationfinish(e) {
 				let gt = this
 				let current = e.detail.current
 				gt.$refs.uTabs.setFinishCurrent(current)
-				gt.swiperCurrent = current
 				gt.current = current
-			},
-			onreachBottom() {
-				
 			},
 			clearUnread() {
 				let gt = this
@@ -140,6 +138,11 @@
 					gt.list.type_1.num = 0
 					gt.list.type_2.num = 0
 					gt.list.type_3.num = 0
+				})
+			},
+			circleMsg() {
+				uni.navigateTo({
+					url: './circleMsg'
 				})
 			},
 			goDetail(type) {
@@ -206,6 +209,9 @@
 					default:
 						return ''
 				}
+			},
+			stopTouchMove() {
+				return false
 			}
 		}
 	}
@@ -226,6 +232,7 @@
 				z-index: 999;
 				background-color: #fff;
 				.gt_title_name {
+					width: 120rpx;
 					height: 80rpx;
 					line-height: 80rpx;
 					margin-left: 24rpx;
@@ -236,8 +243,11 @@
 				}
 			}
 			.main {
-				height: calc(100vh - 200rpx);
-				margin-top: 190rpx;
+				height: calc(100vh - 170rpx);
+				margin-top: 170rpx;
+				.line {
+					height: 20rpx;
+				}
 				.swiper-item {
 					overflow: auto;
 					.card {
@@ -277,10 +287,6 @@
 						}
 					}
 				}
-			}
-			.con_empty {
-				width: 750rpx;
-				text-align: center;
 			}
 		}
 	}

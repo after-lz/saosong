@@ -634,6 +634,7 @@
 				if(gt.companyAuth) return
 				gt.gtRequest.post("/logistics/company/get_company_approve_info").then(res => {
 					gt.checkStatus = res.company_approve_info.status
+					uni.setStorageSync('checkStatus', res.company_approve_info.status)
 				})
 			}
 		},
