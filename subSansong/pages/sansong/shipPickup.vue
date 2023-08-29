@@ -11,7 +11,14 @@
 		</view>
 		<view class="con_btn">
 			<view class="saveLocation" @click="saveImage">保存至本地</view>
+			<!-- #ifdef MP-WEIXIN -->
+			<view class="printLabel">
+				<button open-type="share" class="share">分享好友</button>
+			</view>
+			<!-- #endif -->
+			<!-- #ifdef APP-PLUS -->
 			<view class="printLabel" @click="share">分享好友</view>
+			<!-- #endif -->
 		</view>
 	</view>
 </template>
@@ -67,6 +74,16 @@
 						console.log("fail:" + JSON.stringify(err));
 					}
 				});
+			},
+		},
+		onShareAppMessage(res) {
+			let gt = this;
+			if (res.from === 'button') {// 来自页面内分享按钮
+				console.log(res.target)
+			}
+			return {
+			  title: '扫一扫发货/取货',
+			  path: '/subSansong/pages/sansong/shipPickup'
 			}
 		}
 	}
@@ -101,6 +118,7 @@
 			}
 			.con_btn {
 				display: flex;
+				align-items: center;
 				color: #909399;
 				margin-top: 100rpx;
 				.saveLocation {
@@ -113,6 +131,11 @@
 					flex: 1;
 					font-size: 32rpx;
 					text-align: center;
+				}
+				.share {
+					display: contents;
+					color: #909399;
+					font-size: 32rpx;
 				}
 			}
 		}
