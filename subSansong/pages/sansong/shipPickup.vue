@@ -4,10 +4,14 @@
 			<text>扫一扫发货/取货</text>
 		</view>
 		<view class="con_qrcode">
-			<image :src="apiDomain + url + text" mode="widthFix"></image>
+			<image :src="url" mode="widthFix"></image>
 		</view>
 		<view class="con_companyName">
 			<text>{{companyName}}</text>
+		</view>
+		<view class="con_btn">
+			<view class="saveLocation" @click="saveImage">保存至本地</view>
+			<view class="printLabel" @click="share">分享好友</view>
 		</view>
 	</view>
 </template>
@@ -17,8 +21,8 @@
 		data() {
 			return {
 				apiDomain:'',
-				url:'/api/qrcode/qrcode?text=',
-				text:'123',
+				url:'',
+				text:'',
 				companyName:'',
 			}
 		},
@@ -26,12 +30,44 @@
 			let gt = this;
 			var apiDomain = uni.getStorageSync('apiDomain');
 			gt.apiDomain = apiDomain;
-			
 			var companyInfo = uni.getStorageSync('companyInfo');
 			gt.companyName= companyInfo.company_name;
+			gt.text = companyInfo.logistics_id
+			gt.url = apiDomain + '/api/qrcode/qrcode?text=https://saasdemo.sansongkeji.com/order?logistics_id=' + gt.text
 		},
 		methods: {
-			
+			saveImage() {
+				let gt = this;
+				uni.downloadFile({
+				    url: gt.url,
+				    success(res) {
+				        uni.saveImageToPhotosAlbum({
+				            filePath: res.tempFilePath,
+				            success(res) {
+				                uni.showToast({
+				                	title: '已保存到相册',
+				                	duration: 2000
+				                })
+				            }
+				        })
+				    }
+				})
+			},
+			share() {
+				let gt = this;
+				uni.share({
+					provider: "weixin",
+					scene: "WXSceneSession",
+					type: 2,
+					imageUrl: gt.url,
+					success: function (res) {
+						console.log("success:" + JSON.stringify(res));
+					},
+					fail: function (err) {
+						console.log("fail:" + JSON.stringify(err));
+					}
+				});
+			}
 		}
 	}
 </script>
@@ -54,7 +90,6 @@
 				margin-top: 20rpx;
 				margin-left: 135rpx;
 			}
-			
 			.con_companyName{
 				font-size: 32rpx;
 				font-family: PingFangSC-Medium, PingFang SC;
@@ -63,6 +98,22 @@
 				line-height: 44rpx;
 				text-align: center;
 				margin-top: 20rpx;
+			}
+			.con_btn {
+				display: flex;
+				color: #909399;
+				margin-top: 100rpx;
+				.saveLocation {
+					flex: 1;
+					border-right: 2rpx solid #e5e5e5;
+					font-size: 32rpx;
+					text-align: center;
+				}
+				.printLabel {
+					flex: 1;
+					font-size: 32rpx;
+					text-align: center;
+				}
 			}
 		}
 	}

@@ -1,5 +1,6 @@
 <template>
-	<u-popup v-model="show" mode="bottom" :mask='false' :closeable="true" :safe-area-inset-bottom='true' :duration="0" @close='close' :height="height">
+	<u-popup v-model="show" mode="bottom" :mask='false' :closeable="true" :safe-area-inset-bottom='true' :duration="0" @close='close' :height="height"
+	:mask-close-able='false'>
 		<view class="input_box" :style="{ bottom: height+'px' }">
 			<textarea v-model.trim="val" class="box_input" placeholder="评论" :focus='input_focus'
 				:adjust-position="false" :show-confirm-bar="false" :fixed="true" :cursor-spacing="0" 
@@ -17,12 +18,14 @@
 				show: false,
 				val: '',
 				input_focus: false,
-				height: '0'
+				height: '0',
+				flag: false
 			}
 		},
 		methods: {
-			open() {
+			open(type) {
 				let gt = this
+				gt.flag = type
 				gt.val = ''
 				gt.show = true
 				gt.$nextTick(()=> {
@@ -37,17 +40,18 @@
 			},
 			send() {
 				let gt = this
-				if(gt.val === '') return false
+				if(gt.val === '') return gt.close()
 				gt.$emit("submit", gt.val)
 				gt.close()
 			},
 			focusFn(e) {
 				let gt = this
+				let num = gt.flag ? 0 : 50
 				// #ifdef MP-WEIXIN
-				gt.height = (e.detail.height - 60 > 0) ? (e.detail.height - 60 + '') : '0'
+				gt.height = (e.detail.height - 10 - num > 0) ? (e.detail.height - 10 - num + '') : '0'
 				// #endif
 				// #ifdef APP-PLUS
-				gt.height = (e.detail.height - 100 > 0) ? (e.detail.height - 100 + '') : '0'
+				gt.height = (e.detail.height - 50 - num > 0) ? (e.detail.height - 50 - num + '') : '0'
 				// #endif
 			}
 		}

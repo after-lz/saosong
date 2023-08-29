@@ -6,36 +6,34 @@
 		<scroll-view scroll-y @scrolltolower="loadingMore" :class="unid ? 'scrollView1' : 'scrollView'">
 			<template v-if="list.length">
 				<view class="userInfo">
-					<view class="user_info">
-						<view class="userInfo_name" @click="viewCompany">{{ companyInfo.company_name }}</view>
-						<u-avatar :src="companyInfo.company_pic" :size="160" @click="viewCompany"></u-avatar>
+					<view class="user_info" @click="viewCompany()">
+						<view class="userInfo_name">{{ companyInfo.company_name }}</view>
+						<u-avatar :src="companyInfo.company_pic" :size="160"></u-avatar>
 					</view>
 				</view>
 				<view class="content">
-					<view class="card_" v-for="item in list" :key="item.circle_id">
+					<view class="card_" v-for="item in list" :key="item.id">
 						<view class="card_port">
 							<u-avatar :src="item.headerpic" :size="80" @click="viewCompany(item)"></u-avatar>
 						</view>
 						<view class="card_content" @click.stop="viewDetail(item)">
 							<view class="card_head">
-								<view class="company_name" @click.stop="viewCompany(item)">{{ item.company_name }}</view>
-								<view class="company_detail" v-if="companyInfo.logistics_id == item.logistics_id"
-										@click.stop="goCompanyDetail(item)">公司详情</view>
+								<view class="company_name" @click.stop="viewCompany(item)">{{ item.company_name || item.nickname }}</view>
+								<view class="company_detail" v-if="item.role" @click.stop="goCompanyDetail(item)">公司详情</view>
 							</view>
 							<view class="card_info">
 								{{ item.words }}
 							</view>
-							<view class="cover" v-if="item.cover">
-								<u-image :src="item.cover" mode="widthFix" lazy-load @click.stop="playVideo(item.resource[0])"></u-image>
+							<view class="cover" v-if="item.cover" @click.stop="playVideo(item.resource[0])">
+								<u-image :src="item.cover" mode="widthFix" lazy-load></u-image>
 								<u-icon name="play-circle" size="60" color='#FFF' class="playIcon"></u-icon>
 							</view>
 							<view class="imgList" v-else>
-								<template v-if="item.resource.length > 1">
-									<view v-for="s in item.resource" :key="s" class="image" :style="{'backgroundImage': `url(${s})`}"
-										@click.stop="gtCommon.previewImg(s)"></view>
-								</template>
-								<view class="cover" v-else>
-									<u-image :src="item.resource[0]" mode="widthFix" lazy-load @click.stop="gtCommon.previewImg(item.resource[0])"></u-image>
+								<view class="imgList" v-if="item.resource.length > 1" @click.stop="previewImage(item.resource)">
+									<view v-for="s in item.resource" :key="s" class="image" :style="{'backgroundImage': `url(${s})`}"></view>
+								</view>
+								<view class="cover" v-else @click.stop="gtCommon.previewImg(item.resource[0])">
+									<u-image :src="item.resource[0]" mode="widthFix" lazy-load></u-image>
 								</view>
 							</view>
 							<view class="location" v-if="item.location">{{ item.location }}</view>
@@ -57,12 +55,13 @@
 							</view>
 							<view class="likes" v-if="item.agreeList.length">
 								<u-icon name="thumb-up" color="#485EF4" size="36"></u-icon>
-								<text class="likeName" v-for="n in item.agreeList" :key="n.create_time" @click.stop="viewCompany(n, true)">{{ n.name }}</text>
+								<text class="likeName" v-for="n in item.agreeList" :key="n.create_time"
+										@click.stop="viewCompany(n)">{{ n.name }}</text>
 							</view>
 							<view class="comments" v-if="item.judgeList.length">
 								<view class="comments_item" v-for="n in item.judgeList" :key="n.create_time" @longpress.stop="longtap(n, $event)">
-									<text class="likeName">{{ n.name }}</text>
-									<text>{{ n.words }}</text>
+									<text class="likeName" @click.stop="viewCompany(n)">{{ n.name }}</text>
+									<text @click.stop="()=> {return false}">{{ n.words }}</text>
 								</view>
 							</view>
 						</view>
@@ -81,7 +80,8 @@
 		<view class="shade" v-show="showShade" @click.stop="hidePop">
 			<view class="pop" :style="popStyle" :class="{'show': showPop}">
 				<view @click="copyComment">复制</view>
-				<view @click="delComment">删除</view>
+				<view @click="delComment"
+					:style="{display: longpressData.logistics_id == companyInfo.logistics_id ? '' : 'none'}">删除</view>
 			</view>
 		</view>
 		<!-- 评论 -->
@@ -146,7 +146,7 @@
 					gt.params = {
 						page: 1,
 						limit: 10,
-						keyword_role: 1
+						// keyword_role: 1
 					}
 				}
 				gt.list = []
@@ -159,7 +159,7 @@
 				let gt = this
 				gt.gtRequest.post('/logistics/circle/list', gt.params).then(res => {
 					res.list.forEach(obj=> {
-						// 评论排序反了
+						obj.agreeList.reverse()
 						obj.judgeList.reverse()
 					})
 					gt.list = [...gt.list, ...res.list]
@@ -172,6 +172,11 @@
 				++gt.params.page
 				gt.getList_circle()
 			},
+			previewImage(path) {
+				uni.previewImage({
+					urls: path
+				})
+			},
 			playVideo(src) {
 				let gt = this
 				gt.videoSrc = src
@@ -179,7 +184,9 @@
 			},
 			/* 查看圈子详情 */
 			viewDetail(record) {
-				console.log(record)
+				uni.navigateTo({
+					url: './viewCircleDetail?id=' + record.id + '&logistics_id=' + record.logistics_id + '&role=' + record.role
+				})
 			},
 			/* 查看公司详情 */
 			goCompanyDetail(record) {
@@ -188,29 +195,43 @@
 				})
 			},
 			/* 查看公司主页 */
-			async viewCompany(record, type) {
+			async viewCompany(record) {
 				let gt = this
-				if(type) {
-					await gt.gtRequest.post('/logistics/company/get_company_infother', {
-						logistics_id: record.logistics_id
-					}).then(res => {
-						record.company_name = res.company_info.company_name
-						record.company_address = res.company_info.address
-					})
-				}
+				let params = {}
 				if(record) {
-					uni.navigateTo({
-						url: "./viewCompany?keyword_unid=" + record.unid + '&headerpic=' + record.headerpic
-						 + '&nickname=' + (record.nickname || record.name) + '&company_name=' + record.company_name
-						 + '&company_address=' + record.company_address + '&logistics_id=' + record.logistics_id
-					})
+					if(record.logistics_id) {
+						await gt.gtRequest.post('/logistics/company/get_company_infother', {
+							logistics_id: record.logistics_id
+						}).then(res => {
+							params = {
+								unid: record.unid,
+								headerpic: record.headerpic,
+								nickname: record.name || record.nickname,
+								company_name: record.company_name || res.company_info.company_name,
+								company_address: res.company_info.address,
+								logistics_id: record.logistics_id
+							}
+						})
+					} else {
+						params = {
+							unid: record.unid,
+							nickname: record.name || record.nickname,
+							headerpic: record.headerpic
+						}
+					}
 				} else {
-					uni.navigateTo({
-						url: "./viewCompany?keyword_unid=" + gt.userInfo.login_token + '&headerpic=' + gt.companyInfo.company_pic
-						 + '&nickname=' + gt.userInfo.nickname + '&company_name=' + gt.companyInfo.company_name
-						 + '&company_address=' + gt.companyInfo.address + '&logistics_id=' + gt.companyInfo.logistics_id
-					})
+					params = {
+						unid: gt.userInfo.login_token,
+						headerpic: gt.companyInfo.company_pic,
+						nickname: gt.userInfo.nickname,
+						company_name: gt.companyInfo.company_name,
+						company_address: gt.companyInfo.address,
+						logistics_id: gt.companyInfo.logistics_id
+					}
 				}
+				uni.navigateTo({
+					url: "./viewCompany?params=" + encodeURIComponent(JSON.stringify(params))
+				})
 			},
 			/* 删除圈子 */
 			delCircle(record) {
@@ -221,9 +242,9 @@
 			del_confirm() {
 				let gt = this
 				gt.gtRequest.post('/logistics/circle/delCircle', {
-					circle_id: gt.longpressData.circle_id
+					circle_id: gt.longpressData.id
 				}).then(res => {
-					gt.list = gt.list.filter(item=> item.circle_id !== gt.longpressData.circle_id)
+					gt.list = gt.list.filter(item=> item.id !== gt.longpressData.id)
 					gt.modal_show = false
 					gt.$refs.uToast.show({
 						title: '删除成功！'
@@ -244,15 +265,16 @@
 						url = '/logistics/circle/agree'
 					}
 					gt.gtRequest.post(url, {
-						circle_id: gt.longpressData.circle_id
+						circle_id: gt.longpressData.id
 					}).then(res=> {
 						gt.longpressData.is_agreed = !gt.longpressData.is_agreed
 						if(gt.longpressData.is_agreed) {
 							// 点赞
 							gt.longpressData.agreeList.push({
-								circle_id: gt.longpressData.circle_id,
+								circle_id: gt.longpressData.id,
 								logistics_id: gt.companyInfo.logistics_id,
-								name: gt.companyInfo.company_name
+								name: gt.companyInfo.company_name,
+								headerpic: gt.companyInfo.company_pic
 							})
 							++gt.longpressData.agreeCount
 						} else {
@@ -273,7 +295,7 @@
 			submitNote(val) {
 				let gt = this
 				gt.gtRequest.post('/logistics/circle/judge', {
-					circle_id: gt.longpressData.circle_id,
+					circle_id: gt.longpressData.id,
 					words: val
 				}).then(res => {
 					gt.$refs.uToast.show({
@@ -288,10 +310,6 @@
 				let gt = this
 				uni.setClipboardData({
 					data: gt.longpressData.words,
-				})
-				gt.$refs.uToast.show({
-					title: '复制成功！',
-					type: 'success'
 				})
 				gt.hidePop()
 			},
@@ -314,14 +332,16 @@
 			},
 			updateComment() {
 				let gt = this
+				console.debug(gt.longpressData.circle_id,  gt.longpressData.id,)
 				// 更新当前这条圈子的评论列表
 				gt.gtRequest.post('/logistics/circle/judgeList', {
-					circle_id: gt.longpressData.circle_id,
+					circle_id: gt.longpressData.circle_id || gt.longpressData.id,
 					page: 1,
 					limit: 999
 				}).then(res => {
 					gt.list.forEach(item=> {
-						if(item.circle_id === gt.longpressData.circle_id) {
+						if(item.id === gt.longpressData.circle_id || item.id === gt.longpressData.id) {
+							item.judgeCount = res.list.length
 							item.judgeList = res.list.reverse()
 						}
 					})
@@ -376,6 +396,7 @@
 				if(type) {
 					uni.chooseVideo({
 						sourceType: ['camera', 'album'],
+						maxDuration: 30,
 						success: function (res) {
 							uni.navigateTo({
 								url: './publishCircle?type=1&fileList=' + res.tempFilePath

@@ -117,13 +117,8 @@
 							gt.$refs.uToast.show({
 								title: '退出成功',
 								type: 'success',
-								// url: '/pages/login/login',
+								url: '/pages/login/login'
 							})
-							setTimeout(()=> {
-								uni.reLaunch({
-									url: "/pages/login/login"
-								})
-							}, 1000)
 						}
 					}
 				})

@@ -40,7 +40,7 @@
 			"path": "pages/message/message",
 			"style": {
 				"navigationBarTitleText": "",
-				"enablePullDownRefresh": true,
+				"enablePullDownRefresh": false,
 				"navigationStyle": "custom"
 			}
 		},
@@ -111,6 +111,13 @@
 				        ]
 				    }
 				}
+			}
+		},
+		{
+			"path": "pages/message/viewCircleDetail",
+			"style": {
+				"navigationBarTitleText": "详情",
+				"enablePullDownRefresh": false
 			}
 		},
 		{

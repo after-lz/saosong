@@ -6,14 +6,16 @@
 				<view class="nickname">
 					{{ nickname }}
 				</view>
-				<view class="company_name">
-					<text>公司：</text>
-					<text>{{ company_name }}</text>
-				</view>
-				<view class="company_address">
-					<text>地址：</text>
-					<text>{{ company_address }}</text>
-				</view>
+				<template v-if="logistics_id">
+					<view class="company_name">
+						<text>公司：</text>
+						<text>{{ company_name }}</text>
+					</view>
+					<view class="company_address">
+						<text>地址：</text>
+						<text>{{ company_address }}</text>
+					</view>
+				</template>
 			</view>
 		</view>
 		<view class="main">
@@ -26,7 +28,7 @@
 					<u-icon name="arrow-right" color="#000"></u-icon>
 				</view>
 			</view>
-			<view class="row" @click="goCompanyDetail" v-if="logistics_id == userId">
+			<view class="row" @click="goCompanyDetail" v-if="logistics_id">
 				<view class="row_name">公司详情</view>
 				<view class="row_icon">
 					<u-icon name="arrow-right" color="#000"></u-icon>
@@ -40,7 +42,6 @@
 	export default {
 		data() {
 			return {
-				userId: '',
 				unid: '',
 				headerpic: '',
 				company_name: '',
@@ -52,13 +53,17 @@
 		},
 		onLoad(option) {
 			let gt = this
-			gt.userId = uni.getStorageSync('companyInfo').logistics_id
-			gt.unid = option.keyword_unid
-			gt.headerpic = option.headerpic
-			gt.company_name = option.company_name
-			gt.company_address = option.company_address
-			gt.nickname = option.nickname
-			gt.logistics_id = option.logistics_id
+			let params = JSON.parse(decodeURIComponent(option.params))
+			gt.unid = params.unid
+			gt.nickname = params.nickname
+			gt.headerpic = params.headerpic
+			gt.company_name = params.company_name
+			gt.company_address = params.company_address
+			gt.logistics_id = params.logistics_id
+		},
+		onShow() {
+			let gt = this
+			gt.list = []
 			gt.getList()
 		},
 		methods: {

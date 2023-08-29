@@ -10,7 +10,7 @@
 					swiperWidth="750" height="80"></u-tabs-swiper>
 			</view>
 		</view>
-		<swiper :current="current" @animationfinish="animationfinish" class="main">
+		<swiper :current="current" @animationfinish="animationfinish" :disable-touch="true" class="main">
 			<swiper-item class="swiper-item" id="message" catchtouchmove="stopTouchMove">
 				<scroll-view scroll-y>
 					<view class="line"></view>
@@ -101,9 +101,10 @@
 				}
 			}
 		},
-		onLoad() {
+		onShow() {
 			let gt = this
 			gt.getList()
+			gt.refreshCircle()
 		},
 		methods: {
 			refreshCircle() {

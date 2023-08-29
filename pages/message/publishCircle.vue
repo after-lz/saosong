@@ -20,7 +20,7 @@
 				<view class="upload_item" v-if="cover">
 					<view class="img" :style="{ backgroundImage: `url(${cover})` }" @click="videoPlay(fileList[0].url)"></view>
 					<u-icon name="close-circle-fill" color="#ff6166" size="32" class="icon1" @click="del(0)"></u-icon>
-					<u-icon name="play-circle" size="60" color='#fff' class="playIcon"></u-icon>
+					<u-icon name="play-circle" size="60" color='#fff' class="playIcon" @click="videoPlay(fileList[0].url)"></u-icon>
 				</view>
 				<view class="upload_item" @click='uploadFile' v-if="type === -1">
 					<view class="none">
@@ -42,7 +42,8 @@
 			</view>
 		</view>
 		<view class="footer">
-			<u-button type="primary" @click="submit" :disabled="!value.length || !fileList.length || $refs.uUpload.lists.some(item=> !item.progress)">发布</u-button>
+			<u-button type="primary" @click="submit"
+					:disabled="!value.length || !fileList.length || (type === 0 && $refs.uUpload.lists.some(a=> !a.progress))">发布</u-button>
 		</view>
 		<u-toast ref="uToast" />
 		<choose-media :show.sync='show' @chooseMedia='chooseMedia'></choose-media>
@@ -124,6 +125,7 @@
 						// if(i !== -1) gt.$refs.uUpload.lists.splice(i, 1)
 						for (let i = 0; i < gt.$refs.uUpload.lists.length; i++) {
 							if(gt.$refs.uUpload.lists[i].url === str) {
+								// console.log(gt.$refs.uUpload.lists, gt.fileList)
 								gt.$refs.uUpload.lists.splice(i, 1)
 								break
 							}
@@ -153,6 +155,7 @@
 				if(type) {
 					uni.chooseVideo({
 						sourceType: ['camera', 'album'],
+						maxDuration: 30,
 						success: function (res) {
 							gt.uploadVdieoPath(res.tempFilePath)
 						}
@@ -249,18 +252,18 @@
 					gt.$refs.uToast.show({
 					    title: "发布成功",
 					    type: "success",
-					    // back: true
+					    back: true
 					})
-					setTimeout(()=> {
-						uni.switchTab({
-							url: './message',
-							success() {
-								let pages = getCurrentPages()
-								let beforePage = pages[0]
-								beforePage.$vm.refreshCircle()
-							}
-						})
-					}, 1500)
+					// setTimeout(()=> {
+					// 	uni.switchTab({
+					// 		url: './message',
+					// 		success() {
+					// 			let pages = getCurrentPages()
+					// 			let beforePage = pages[0]
+					// 			beforePage.$vm.refreshCircle()
+					// 		}
+					// 	})
+					// }, 1500)
 				})
 			}
 		}
