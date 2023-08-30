@@ -1,6 +1,5 @@
 <template>
 	<view class="gt_content">
-
 		<view class="con_toast">
 			<u-toast ref="uToast" />
 		</view>
@@ -13,18 +12,20 @@
 					<text>￥</text>
 				</view>
 				<view class="con_input">
-					<u-input v-model="money" type="digit" placeholder="请输入提现金额" height="40" />
+					<u-input v-model.number="money" type="digit" placeholder="最低提现金额20元" height="40" />
 				</view>
 			</view>
 			<view class="con_line">
 				<u-line length="640rpx" color="#F2F2F2" margin="24rpx 0"></u-line>
 			</view>
+			<view class="warning" v-if="money > totalMoney">
+				<text>输入金额超出零钱余额</text>
+			</view>
 			<view class="con_tip">
 				<text>可提现金额为{{totalMoney}}元</text>
-				<text @click="allWithdrawal">全部提现</text>
+				<text @click="allWithdrawal" v-if="totalMoney >= 20">全部提现</text>
 			</view>
 		</view>
-
 		<view class="con_card">
 			<view class="con_title">
 				<text>收款账户</text>
@@ -42,30 +43,41 @@
 					<view class="con_account">
 						<text v-if="withdrawalMethod == 1">微信账户</text>
 						<text v-if="withdrawalMethod == 2">支付宝账户</text>
-						<text v-if="withdrawalMethod == 3">{{bankNameNum}}</text>
+						<text v-if="withdrawalMethod == 3">{{bankNameNum||'请选择'}}</text>
 					</view>
 				</view>
 				<view class="con_more">
 					<u-icon name="arrow-right" color="#000" size="24"></u-icon>
 				</view>
-
 			</view>
 			<view class="con_line">
 				<u-line length="640rpx" color="#F2F2F2" margin="24rpx 0"></u-line>
 			</view>
 			<view class="con_tip">
-				<text>预计7天到账，实际到账时间可以收款银行时间为准，如遇周末和节假日会顺延至下一个工作日</text>
+				<text>预计次日到账，实际到账时间可以收款银行时间为准，如遇周末和节假日会顺延至下一个工作日</text>
 			</view>
 		</view>
-
-		<view class="con_btn" @click="submitWithdrawal">
+		<view class="footer">
+			<view class="left">
+				<view class="left_item">
+					<text>服务费：￥</text>
+					<text v-if="money >= 20">{{ serviceCharge }}</text>
+				</view>
+				<view class="left_item">
+					<text>预计到账：￥</text>
+					<text v-if="money >= 20">{{ money - serviceCharge || '' }}</text>
+				</view>
+			</view>
+			<view class="right">
+				<u-button type="primary" :disabled="_disabled" @click="submitWithdrawal">立即提现</u-button>
+			</view>
+		</view>
+		<!-- <view class="con_btn" @click="submitWithdrawal">
 			<text>确认提现</text>
 		</view>
-
 		<view class="con_tex" @click="goWithdrawalList">
 			<text>提现记录</text>
-		</view>
-
+		</view> -->
 		<view class="con_popup">
 			<view class="con_method">
 				<u-popup v-model="methodShow" mode="bottom" height="330" border-radius="24rpx 24rpx 0 0">
@@ -103,25 +115,19 @@
 						<view class="con_line">
 							<u-line length="750rpx" color="#EFEFEF"></u-line>
 						</view> -->
-
 						<!-- <view class="con_methodItem">
 							<view class="con_text">
 								<text>取消</text>
 							</view>
 						</view> -->
 					</view>
-
-
-
 				</u-popup>
 			</view>
 		</view>
-
 		<view class="con_select">
 			<u-select v-model="bankListShow" :list="bankList" label-name="bankNameNum" value-name="bank_id"
 				@confirm="bankCardConfirm"></u-select>
 		</view>
-
 	</view>
 </template>
 
@@ -129,29 +135,34 @@
 	export default {
 		data() {
 			return {
-				money: '',
+				money: undefined,
 				totalMoney: 0,
-
-				withdrawalMethod: 1,
+				withdrawalMethod: 3,
 				bankNameNum: '',
 				bankCardId: 0,
-
 				openId: '',
-
 				bankList: [],
-
 				methodShow: false,
 				bankListShow: false,
-
 			}
 		},
 		onLoad(options) {
 			let gt = this;
 			// var openId = uni.getStorageSync('openId');
 			// gt.openId = openId;
-			gt.totalMoney = options.totalMoney;
-
+			gt.totalMoney = JSON.parse(options.totalMoney);
 			gt.getBankList();
+		},
+		computed: {
+			_disabled() {
+				let gt = this
+				return !gt.money || gt.money < 20 || gt.totalMoney < 20 || gt.money > gt.totalMoney || !gt.bankCardId
+			},
+			serviceCharge() {
+				let gt = this
+				let min = gt.money * 0.001 >= 1 ? gt.money * 0.001 : 1
+				return gt.money * 0.01 + min
+			}
 		},
 		methods: {
 			getBankList() {
@@ -168,7 +179,6 @@
 					}
 					gt.bankList = res.list;
 				});
-
 			},
 			allWithdrawal() {
 				let gt = this;
@@ -176,7 +186,8 @@
 			},
 			showMethod() {
 				let gt = this;
-				gt.methodShow = true;
+				// gt.methodShow = true;
+				gt.confirmMethod(3)
 			},
 			confirmMethod(index) {
 				let gt = this;
@@ -188,19 +199,16 @@
 						gt.$refs.uToast.show({
 							title: '请先添加银行卡',
 							type: 'error',
-							back: true,
+							// back: true,
 						})
 						return false;
 					}else{
 						gt.bankListShow = true;
 					}
 				}
-
 				gt.methodShow = false;
-
 			},
 			bankCardConfirm(res) {
-				console.log(res);
 				let gt = this;
 				gt.withdrawalMethod = 3;
 				gt.bankNameNum = res[0].label;
@@ -215,12 +223,16 @@
 					shoukuan_method: gt.withdrawalMethod != 3 ? gt.withdrawalMethod : gt.bankCardId,
 				};
 				gt.gtRequest.post(url, data).then(res => {
-					
 					gt.$refs.uToast.show({
 						title: '提交成功',
 						type: 'success',
-						back: true,
+						// back: true,
 					})
+					setTimeout(()=> {
+						uni.redirectTo({
+							url: './balanceWithdrawal?withdraw_id=' + res.withdraw_id
+						})
+					}, 1500)
 					return false;
 				});
 			},
@@ -275,7 +287,7 @@
 				.con_iconAccount_more {
 					display: flex;
 					justify-content: space-between;
-
+					align-items: center;
 					.con_iconAccount {
 						display: flex;
 						margin-top: 40rpx;
@@ -290,7 +302,7 @@
 							font-family: PingFangSC-Regular, PingFang SC;
 							font-weight: 400;
 							color: #000000;
-							line-height: 44rpx;
+							line-height: 60rpx;
 							margin-left: 32rpx;
 						}
 					}
@@ -313,8 +325,38 @@
 						color: $gtProjectColor;
 					}
 				}
+				
+				.warning {
+					color: #d9001b;
+					margin-left: 35rpx;
+				}
 			}
-
+			
+			.footer {
+				width: 100%;
+				padding: 40rpx;
+				position: fixed;
+				bottom: 0;
+				background-color: #fff;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				font-family: PingFangSC-Regular, PingFang SC;
+				font-weight: 400;
+				.left {
+					.left_item {
+						margin: 10rpx 0;
+						&:nth-child(1) {
+							color: #909399;
+							font-size: 26rpx;
+						}
+					}
+				}
+				.right {
+					width: 300rpx;
+				}
+			}
+			
 			.con_btn {
 				width: 718rpx;
 				height: 100rpx;

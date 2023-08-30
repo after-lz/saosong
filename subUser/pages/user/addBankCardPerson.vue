@@ -1,14 +1,27 @@
 <template>
 	<view class="gt_content">
-
 		<view class="con_toast">
 			<u-toast ref="uToast" />
 		</view>
-
 		<view class="con_title">
 			<text>请绑定持卡人本人的银行卡</text>
 		</view>
 		<view class="con_card">
+			<view class="con_key_val">
+				<view class="con_key">
+					<view class="con_text">
+						<text>银行名称</text>
+					</view>
+				</view>
+				<view class="con_val">
+					<view class="con_input">
+						<u-input v-model="bank" placeholder="请选择" height="40" :clearable="false" disabled @click="show = true" />
+					</view>
+				</view>
+			</view>
+			<view class="con_line">
+				<u-line length="670rpx" color="#F2F2F2" margin="24rpx 0"></u-line>
+			</view>
 			<view class="con_key_val">
 				<view class="con_key">
 					<view class="con_text">
@@ -34,12 +47,14 @@
 					<view class="con_input">
 						<u-input v-model="num" type="number" placeholder="请输入银行卡号" height="40" :clearable="false" />
 					</view>
+					<!-- <u-icon name="camera" size="36" @click='openCamera'></u-icon> -->
 				</view>
 			</view>
 		</view>
 		<view class="con_btn" @click="submitBankCard">
 			<text>提交</text>
 		</view>
+		<u-select v-model="show" :list="list" @confirm='confirm'></u-select>
 	</view>
 </template>
 
@@ -49,10 +64,37 @@
 			return {
 				name: '',
 				num: '',
+				bank: '',
+				bank_code: '',
+				show: false,
+				list: []
 			}
 		},
+		onLoad() {
+			let gt = this
+			gt.getList()
+		},
 		methods: {
-
+			getList() {
+				let gt = this
+				gt.list = []
+				gt.gtRequest.post('/api/Appgobal/get_bank_list').then(res => {
+					res.list.forEach(item=> {
+						gt.list.push({
+							value: item.code,
+							label: item.name,
+						})
+					})
+				})
+			},
+			confirm(e) {
+				let gt = this
+				gt.bank = e[0].label
+				gt.bank_code = e[0].value
+			},
+			openCamera() {
+				
+			},
 			submitBankCard() {
 				let gt = this;
 				if (gt.name == '') {
@@ -62,7 +104,6 @@
 					});
 					return false;
 				}
-
 				if (gt.num == '') {
 					gt.$refs.uToast.show({
 						title: '银行卡号不能为空',
@@ -70,12 +111,8 @@
 					});
 					return false;
 				}
-
 				var bin = require('bankcardinfo');
 				bin.getBankBin(gt.num).then(res => {
-					// console.log('76:',res);
-					// return false;
-
 					var cardType = 0;
 					if (res.cardType == 'DC') {
 						cardType = 1;
@@ -83,7 +120,6 @@
 					if (res.cardType == 'CC') {
 						cardType = 2;
 					}
-
 					var url = "/logistics/userbank/add_bank";
 					var data = {
 						bank_card_type: cardType,
@@ -91,7 +127,7 @@
 						bank_name: res.bankName,
 						bank_truename: gt.name,
 						bank_number: gt.num,
-
+						bank_code: gt.bank_code
 					};
 					gt.gtRequest.post(url, data).then(res => {
 						gt.$refs.uToast.show({
@@ -100,20 +136,13 @@
 							back: true,
 						});
 					});
-
-
 				}).catch(res => {
-					console.log(res);
 					gt.$refs.uToast.show({
 						title: '银行卡号异常',
 						type: 'error',
 					});
 					return false;
 				});
-
-
-
-
 			}
 		}
 	}
@@ -144,7 +173,7 @@
 				display: flex;
 
 				.con_key {
-					width: 100rpx;
+					width: 140rpx;
 
 					.con_text {
 						font-size: 28rpx;
@@ -157,6 +186,12 @@
 
 				.con_val {
 					margin-left: 40rpx;
+					display: flex;
+					justify-content: space-between;
+					width: calc(100% - 140rpx);
+					.con_input {
+						width: 100%;
+					}
 				}
 			}
 		}

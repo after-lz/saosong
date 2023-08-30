@@ -2,7 +2,6 @@
 	<view class="gt_content">
 		<view class="con_list">
 			<view class="con_empty" v-if="dataList.length == 0">
-
 				<u-empty text="暂无数据" color="#000" :src="gtCommon.getOssImg('index/empty.png')" icon-size="550"
 					margin-top="200" font-size="32"></u-empty>
 			</view>
@@ -11,7 +10,7 @@
 					<view class="con_item" v-for="(item,index) in dataList" :key="index" @click="goDetail(item)">
 						<view class="con_title_num">
 							<view class="con_title">
-								<text>{{item.remark}}</text>
+								<text>{{item.log_type_msg}}</text>
 							</view>
 							<view class="con_num">
 								<text v-if="item.number > 0">+{{item.number}}</text>
@@ -33,7 +32,6 @@
 		data() {
 			return {
 				dataList:[],
-				
 				page: 1,
 				size: 10,
 				end: false,
@@ -73,8 +71,14 @@
 					}
 				});
 			},
+			goDetail(record) {
+				return false
+				let gt = this;
+				uni.navigateTo({
+					url: './balanceWithdrawal?withdraw_id=' + record.log_id
+				})
+			},
 			loadMore() {
-				console.log('loadMore');
 				let gt = this;
 				gt.getDataList();
 			},

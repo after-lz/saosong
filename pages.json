@@ -435,7 +435,7 @@
 				{
 					"path": "pages/user/moneyList",
 					"style": {
-						"navigationBarTitleText": "余额明细",
+						"navigationBarTitleText": "我的账单",
 						"enablePullDownRefresh": false
 					}
 				},
@@ -450,6 +450,13 @@
 					"path": "pages/user/withdrawal",
 					"style": {
 						"navigationBarTitleText": "提现",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "pages/user/balanceWithdrawal",
+					"style": {
+						"navigationBarTitleText": "余额提现",
 						"enablePullDownRefresh": false
 					}
 				},

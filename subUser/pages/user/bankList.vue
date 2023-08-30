@@ -2,30 +2,29 @@
 	<view class="gt_content">
 		<view class="con_list">
 			<!-- <view class="con_empty" v-if="dataList.length == 0">
-
 				<u-empty text="暂无数据" color="#000" :src="gtCommon.getOssImg('index/empty.png')" icon-size="550"
 					margin-top="200" font-size="32"></u-empty>
 			</view> -->
 			<view class="con_scroll">
 				<scroll-view class="scroll_view" scroll-y="true" @scrolltolower="loadMore">
 					<view class="con_item" v-for="(item,index) in dataList" :key="index">
-
 						<view class="con_icon_bankName">
-							<view class="con_icon">
-								<view class="con_img">
-									<image :src="gtCommon.getOssImg('user/bankCardIcon.png')" mode="widthFix"></image>
+							<view class="con_left">
+								<view class="con_icon">
+									<view class="con_img">
+										<image :src="gtCommon.getOssImg('user/bankCardIcon.png')" mode="widthFix"></image>
+									</view>
+								</view>
+								<view class="con_bankName">
+									<text>{{item.bank_name}}</text>
 								</view>
 							</view>
-							<view class="con_bankName">
-								<text>{{item.bank_name}}</text>
-							</view>
+							<view class="con_offset" @click="offset(item)">解绑</view>
 						</view>
-
 						<view class="con_typeName">
 							<text v-if="item.bank_type == 1">储蓄卡</text>
 							<text v-if="item.bank_type == 2">信用卡</text>
 						</view>
-
 						<view class="con_num">
 							<text>**** **** **** {{item.bank_number.substr(-4)}}</text>
 						</view>
@@ -38,7 +37,19 @@
 				</scroll-view>
 			</view>
 		</view>
-		
+		<view class="con_toast">
+			<u-toast ref="uToast" />
+		</view>
+		<u-modal v-model="del_show" @confirm='confirm' confirm-text='立即解绑' :show-title='false' :mask-close-able='true'>
+			<view class="slot-content">
+				<view class="label">开户行</view>
+				<view class="value">{{record.bank_name}}</view>
+				<view class="label">银行名称</view>
+				<view class="value">{{record.bank_name}}</view>
+				<view class="label">持卡人</view>
+				<view class="value">{{record.bank_truename}}</view>
+			</view>
+		</u-modal>
 	</view>
 </template>
 
@@ -56,7 +67,9 @@
 						label: '企业账户',
 						value: '2',
 					},
-				]
+				],
+				del_show: false,
+				record: {}
 			}
 		},
 		onShow() {
@@ -76,24 +89,46 @@
 				});
 			},
 			showAddBankCard() {
-				let gt = this;
-				gt.bankCardShow = true;
+				uni.navigateTo({
+					url:'./addBankCardPerson',
+				});
+				// let gt = this;
+				// gt.bankCardShow = true;
 			},
 			goAdd(res){
-				console.log(res);
 				if(res[0].value == 1){
 					uni.navigateTo({
 						url:'./addBankCardPerson',
 					});
 					return false;
 				}
-				
 				if(res[0].value == 2){
 					uni.navigateTo({
 						url:'./addBankCardCompany',
 					});
 					return false;
 				}
+			},
+			offset(record) {
+				let gt = this
+				gt.del_show = true
+				gt.record = record
+			},
+			confirm() {
+				let gt = this
+				gt.gtRequest.post('/logistics/userbank/del_bank', {
+					bank_id: gt.record.bank_id
+				}).then(res => {
+					gt.getDataList()
+					gt.$refs.uToast.show({
+						title: '解绑成功',
+						type: 'success'
+					})
+					gt.del_show = false
+				})
+			},
+			loadMore() {
+				
 			}
 		}
 	}
@@ -120,7 +155,10 @@
 
 							.con_icon_bankName {
 								display: flex;
-
+								justify-content: space-between;
+								.con_left {
+									display: flex;
+								}
 								.con_icon {
 									width: 80rpx;
 									height: 80rpx;
@@ -132,7 +170,6 @@
 										height: 40rpx;
 										margin: 20rpx;
 									}
-									
 								}
 
 								.con_bankName {
@@ -143,6 +180,14 @@
 									line-height: 44rpx;
 									margin-top: 18rpx;
 									margin-left: 20rpx;
+								}
+								
+								.con_offset {
+									color: #FFFFFF;
+									line-height: 44rpx;
+									margin-top: 18rpx;
+									font-family: PingFangSC-Medium, PingFang SC;
+									font-weight: 500;
 								}
 							}
 
@@ -167,7 +212,6 @@
 						}
 					}
 				}
-
 			}
 
 			.con_btn {
@@ -182,6 +226,21 @@
 				line-height: 120rpx;
 				text-align: center;
 				margin-left: 16rpx;
+			}
+			.slot-content {
+				padding: 40rpx 40rpx 100rpx 40rpx;
+				.label {
+					margin-top: 26rpx;
+					padding-left: 10rpx;
+				}
+				.value {
+					border-bottom: 2rpx solid #999999;
+					margin-top: 40rpx;
+					padding-bottom: 16rpx;
+					padding-left: 10rpx;
+					font-size: 26rpx;
+					color: #999;
+				}
 			}
 		}
 	}
