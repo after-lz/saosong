@@ -6,7 +6,7 @@
 		<!-- #ifdef MP-WEIXIN -->
 		<view class="con_type1" v-if="type == 1">
 			<view class="con_logo">
-				<image :src="gtCommon.getOssImg('login/logo.png')" mode="widthFix"></image>
+				<image :src="gtCommon.getOssImg('login/logo.png')" mode="widthFix" @longpress="envVersion_show = true"></image>
 			</view>
 			<view class="con_tip">
 				<text>发货 找物流 就上 伞送</text>
@@ -37,7 +37,7 @@
 		<!-- #endif -->
 		<view class="con_type2" v-if="type == 2">
 			<view class="con_title">
-				<text>手机号登录</text>
+				<text @longpress="envVersion_show = true">手机号登录</text>
 			</view>
 			<view class="con_areaCode_mobile">
 				<view class="con_areaCode">
@@ -82,6 +82,7 @@
 			<!-- <text>手机号一键登录</text> -->
 		</view>
 		<!-- #endif -->
+		<u-select v-model="envVersion_show" :list="list" @confirm="onChange"></u-select>
 	</view>
 </template>
 
@@ -131,6 +132,11 @@
 						}
 					}
 				},
+				envVersion_show: false,
+				list: [
+					{value: "http://test.sansongkeji.com", label: 'dev' },
+					{value: 'https://saasdemo.sansongkeji.com', label: 'prod' }
+				]
 			}
 		},
 		onLoad() {
@@ -150,6 +156,11 @@
 			// #endif
 		},
 		methods: {
+			onChange(e) {
+				let gt = this
+				uni.setStorageSync('environment', e[0].label)
+				uni.setStorageSync('apiDomain', e[0].value);
+			},
 			getLoginToken_ali() {
 				// 这里我是用了一个按钮触发这个方法，你也可以选择页面加载后就执行。
 				let gt = this;

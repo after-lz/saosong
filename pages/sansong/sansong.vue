@@ -42,7 +42,8 @@
 							</image>
 						</view>
 						<view class="con_text">
-							<text>{{item.name}}</text>
+							<text v-if="item.name == '发货取货'">发货/取货</text>
+							<text v-else>{{item.name}}</text>
 						</view>
 					</view>
 					<view class="con_iconText" v-else>
