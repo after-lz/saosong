@@ -23,15 +23,17 @@
 				</view>
 			</view>
 			<view class="con_agreement">
-				<u-checkbox v-model="agree" active-color="#485EF4">
-					<text>我已阅读并同意</text>
-					<text style="color:#485EF4;"
-						@click.stop="gtCommon.goLicence(licencesObj.logistics_yonghu_xieyi_url)">《用户协议》</text>
-					<text>和</text>
-					<text style="color:#485EF4;"
-						@click.stop="gtCommon.goLicence(licencesObj.logistics_yinsi_xieyi_url)">《隐私协议》</text>
-					<text>并授权伞送获得本机号码</text>
-				</u-checkbox>
+				<button open-type="agreePrivacyAuthorization" @click="agree = !agree" class="authorBtn" plain="true">
+					<u-checkbox v-model="agree" active-color="#485EF4">
+						<text>我已阅读并同意</text>
+						<text style="color:#485EF4;"
+							@click.stop="gtCommon.goLicence(licencesObj.logistics_yonghu_xieyi_url)">《用户协议》</text>
+						<text>和</text>
+						<text style="color:#485EF4;"
+							@click.stop="gtCommon.goLicence(licencesObj.logistics_yinsi_xieyi_url)">《隐私协议》</text>
+						<text>并授权伞送获得本机号码</text>
+					</u-checkbox>
+				</button>
 			</view>
 		</view>
 		<!-- #endif -->
@@ -67,14 +69,16 @@
 				<text>登录</text>
 			</view>
 			<view class="con_agreement">
-				<u-checkbox v-model="agree" active-color="#485EF4">
-					<text>我已阅读并同意</text><text style="color:#485EF4;"
-						@click.stop="gtCommon.goLicence(licencesObj.logistics_yonghu_xieyi_url)">《用户协议》</text>
-					<text>和</text>
-					<text style="color:#485EF4;"
-						@click.stop="gtCommon.goLicence(licencesObj.logistics_yinsi_xieyi_url)">《隐私协议》</text>
-					<text>并授权伞送获得本机号码</text>
-				</u-checkbox>
+				<button open-type="agreePrivacyAuthorization" @click="agree = !agree" class="authorBtn" plain="true">
+					<u-checkbox v-model="agree" active-color="#485EF4">
+						<text>我已阅读并同意</text><text style="color:#485EF4;"
+							@click.stop="gtCommon.goLicence(licencesObj.logistics_yonghu_xieyi_url)">《用户协议》</text>
+						<text>和</text>
+						<text style="color:#485EF4;"
+							@click.stop="gtCommon.goLicence(licencesObj.logistics_yinsi_xieyi_url)">《隐私协议》</text>
+						<text>并授权伞送获得本机号码</text>
+					</u-checkbox>
+				</button>
 			</view>
 		</view>
 		<!-- #ifdef APP-PLUS -->
@@ -541,6 +545,14 @@
 		background: #fff;
 
 		.gt_content {
+			button[plain] {
+				border: 0
+			}
+			.authorBtn {
+				background-color: transparent;
+				padding: 0;
+				text-align: left;
+			}
 			.con_type1 {
 				.con_logo {
 					width: 284rpx;

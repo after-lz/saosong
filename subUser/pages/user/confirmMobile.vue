@@ -69,6 +69,11 @@
 					gt.$refs.uToast.show({
 						title: res.msg || '更换成功'
 					})
+					setTimeout(()=> {
+						uni.switchTab({
+							url: '/pages/user/user'
+						})
+					}, 1500)
 				})
 			}
 		},

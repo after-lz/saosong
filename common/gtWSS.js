@@ -163,7 +163,7 @@ function send(value) {
 	ws.socketTask.send({
 		data: value,
 		async success() {
-			console.log("消息发送成功")
+			console.log("消息发送成功", ws.wsUrl)
 		}
 	});
 }

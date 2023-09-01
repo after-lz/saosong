@@ -1,6 +1,6 @@
 <template>
 	<view class="gt_content">
-		<view class="con_toast">
+		<view class="con_toast" v-if="dataInfo.waybill_info">
 			<u-toast ref="uToast" />
 		</view>
 		<view class="con_driverInfo" v-if="dataInfo.waybill_info">

@@ -1,6 +1,5 @@
 <template>
 	<view class="gt_content">
-
 		<view class="con_toast">
 			<u-toast ref="uToast" />
 		</view>
@@ -267,7 +266,7 @@
 											</view>
 										</view>
 										<view class="con_right">
-											<view class="con_fromAddress u-line-1">
+											<view class="con_fromAddress u-line-1"><!--  @longpress.stop="longtap($event, 'from')" -->
 												<text>{{dataInfo.pickup_province}}-{{dataInfo.pickup_city}}-{{dataInfo.pickup_county}}{{dataInfo.pickup_address}}</text>
 											</view>
 											<view class="con_fromType">
@@ -279,7 +278,7 @@
 													style="margin-left: 10rpx;">{{gtCommon.hiddenMobile4to7(dataInfo.pickup_mobile)}}</text>
 											</view>
 
-											<view class="con_toAddress u-line-1">
+											<view class="con_toAddress u-line-1"><!--  @longpress.stop="longtap($event, 'to')" -->
 												<text>{{dataInfo.receive_province}}-{{dataInfo.receive_city}}-{{dataInfo.receive_county}}{{dataInfo.receive_address}}</text>
 											</view>
 											<view class="con_toType">
@@ -1024,6 +1023,10 @@
 				</u-popup>
 			</view>
 		</view>
+		
+		<longpress-pop ref="longpressPop">
+			<view class="longc_copy" @click="copyMsg">复制</view>
+		</longpress-pop>
 	</view>
 </template>
 
@@ -1044,8 +1047,9 @@
 	// console.log(myAmapFun);
 
 	// // #endif
-
+	import longpressPop from '@/components/longpressPop.vue'
 	export default {
+		components: { longpressPop },
 		data() {
 			return {
 				intoFrom: 'A',
@@ -1088,7 +1092,7 @@
 
 				trajectoryShow: false,
 
-				
+				msg: '',
 				yunshu_xieyi_url:'https://saasdemo.sansongkeji.com/adminsite/#/agreement/transportation'
 				// yunshu_xieyi_url:'https://baidu.com'
 			}
@@ -1133,6 +1137,21 @@
 			gt.getDataInfo();
 		},
 		methods: {
+			longtap(e, type) {
+				let gt = this
+				if(type == 'from') {
+					gt.msg = gt.dataInfo.pickup_province+'-'+gt.dataInfo.pickup_city+'-'+gt.dataInfo.pickup_county+gt.dataInfo.pickup_address
+				} else {
+					gt.msg = gt.dataInfo.receive_province+'-'+gt.dataInfo.receive_city+'-'+gt.dataInfo.receive_county+gt.dataInfo.receive_address
+				}
+				gt.$refs.longpressPop.longtap(e)
+			},
+			copyMsg() {
+				let gt = this
+				uni.setClipboardData({
+					data: gt.msg
+				})
+			},
 			scoverImgLoad(res) {
 				console.log('scoverImgLoad:', res);
 			},
@@ -1936,9 +1955,15 @@
 <style lang="scss">
 	page {
 		background: $gtBackgroundColor;
-
-
 		.gt_content {
+			.longc_copy {
+				padding: 10rpx 20rpx;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+				user-select: none;
+				-webkit-touch-callout: none;
+			}
 			.con_map {
 				.con_cover {
 					display: flex;
@@ -2166,6 +2191,11 @@
 										}
 
 										.con_right {
+											-webkit-user-select: text;
+											-khtml-user-select: text;
+											-moz-user-select: text;
+											-ms-user-select: text;
+											user-select: text;
 											.con_fromAddress {
 												width: 582rpx;
 												font-size: 28rpx;
@@ -2174,6 +2204,7 @@
 												color: #000000;
 												line-height: 40rpx;
 												margin: 18rpx 0 0 40rpx;
+												
 											}
 
 											.con_fromType {
@@ -2203,6 +2234,7 @@
 												color: #000000;
 												line-height: 40rpx;
 												margin: 36rpx 0 0 40rpx;
+												
 											}
 
 											.con_toType {

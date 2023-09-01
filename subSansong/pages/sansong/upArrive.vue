@@ -322,6 +322,9 @@
 													<text>取货码：{{item.self_pickup_code}}</text>
 												</view>
 												<view class="con_btns">
+													<view class="con_btnItem" @click.stop="goHailing">
+														<text>叫车取货</text>
+													</view>
 													<!-- <view class="con_btnItem" @click.stop="addMoney(item)">
 														<text>电子面单</text>
 													</view> -->
@@ -1057,6 +1060,26 @@
 			uni.stopPullDownRefresh();
 		},
 		methods: {
+			goHailing() {
+				uni.navigateToMiniProgram({
+					appId: "wxb1a70937ee94c194",
+					success(res) {
+					// 打开成功
+						const info = {
+							platform: 'logistics',
+							btnType: 8
+						}
+						navigateLog(info).then(re => {
+							console.log(re)
+						}).catch(er => {
+							console.log(er)
+						})
+					},
+					fail(err) {
+						console.log(err)
+					}
+				})
+			},
 			showScreen() {
 				let gt = this;
 				if (gt.dataList.length) {

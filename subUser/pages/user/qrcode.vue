@@ -1,9 +1,6 @@
 <template>
 	<view class="gt_content">
-		<view class="con_switch">
-			邀请码
-			<!-- <selectSwitch :switchList="switchList" @change="changeSwitch" /> -->
-		</view>
+		<view class="con_switch">邀请码</view>
 		<view class="con_label">
 			<text>邀请码：{{code}}</text>
 		</view>
@@ -21,13 +18,10 @@
 </template>
 
 <script>
-	import selectSwitch from "@/components/xuan-switch/xuan-switch.vue";
 	import uQRCode from '@/common/uqrcode.js'
 	export default {
-		components: { selectSwitch },
 		data() {
 			return {
-				switchList: ['邀请码', '专线码'],
 				code: '',
 				apiDomain: '',
 				text: '',
@@ -67,9 +61,6 @@
 			gt.qrFun(gt.QRurl)
 		},
 		methods: {
-			changeSwitch(isSwitch) {
-				console.log(isSwitch)
-			},
 			qrFun(text) {
 				let gt = this
 				uQRCode.make({

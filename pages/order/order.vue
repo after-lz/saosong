@@ -180,6 +180,12 @@
 									<view class="con_line">
 									</view>
 									<view class="con_btns">
+										<!-- #ifdef MP-WEIXIN -->
+										<view class="con_btnItem" @click.stop="goHailing()"
+											v-if="item.status == 5">
+											<text>叫车取货</text>
+										</view>
+										<!-- #endif -->
 										<!-- <view class="con_btnItem" @click.stop="showRefuse(item)"
 											v-if="item.id > 1">
 											<text>电子面单</text>
@@ -486,6 +492,26 @@
 			uni.stopPullDownRefresh();
 		},
 		methods: {
+			goHailing() {
+				uni.navigateToMiniProgram({
+					appId: "wxb1a70937ee94c194",
+					success(res) {
+					// 打开成功
+						const info = {
+							platform: 'logistics',
+							btnType: 6
+						}
+						navigateLog(info).then(re => {
+							console.log(re)
+						}).catch(er => {
+							console.log(er)
+						})
+					},
+					fail(err) {
+						console.log(err)
+					}
+				})
+			},
 			searcList(item) {
 				let gt = this;
 				gt.searchVal = item;
