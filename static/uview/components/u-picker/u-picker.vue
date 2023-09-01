@@ -181,6 +181,10 @@ export default {
 			type: [String, Number],
 			default: 2050
 		},
+		endMonth: {
+			type: [String, Number],
+			default: 12
+		},
 		// "取消"按钮的颜色
 		cancelColor: {
 			type: String,
@@ -301,6 +305,7 @@ export default {
 		propsChange() {
 			this.reset = true;
 			setTimeout(() => this.init(), 10);
+			this.timeHandle()
 		},
 		// 如果地区发生变化，为了让picker联动起来，必须重置this.citys和this.areas
 		regionChange(val) {
@@ -311,6 +316,7 @@ export default {
 		// 一个月可能有30，31天，甚至闰年2月的29天，平年2月28天
 		yearAndMonth(val) {
 			if (this.params.year) this.setDays();
+			this.timeHandle()
 		},
 		// 微信和QQ小程序由于一些奇怪的原因(故同时对所有平台均初始化一遍)，需要重新初始化才能显示正确的值
 		value(n) {
@@ -321,6 +327,17 @@ export default {
 		}
 	},
 	methods: {
+		// 禁用可选月份
+		timeHandle(){
+			if(this.mode !== 'time') return;
+			if(this.endMonth) {
+				if(this.endYear === this.year){
+					this.setMonths(this.endMonth)
+				}else{
+					this.setMonths()
+				}
+			}
+		},
 		// 标识滑动开始，只有微信小程序才有这样的事件
 		pickstart() {
 			// #ifdef MP-WEIXIN
@@ -424,6 +441,7 @@ export default {
 				this.multiSelectorValue = this.defaultSelector;
 			}
 			this.$forceUpdate();
+			this.timeHandle()
 		},
 		// 设置picker的某一列值
 		setYears() {
@@ -432,13 +450,33 @@ export default {
 			// 设置this.valueArr某一项的值，是为了让picker预选中某一个值
 			this.valueArr.splice(this.valueArr.length - 1, 1, this.getIndex(this.years, this.year));
 		},
-		setMonths() {
-			this.months = this.generateArray(1, 12);
+		// setMonths() {
+		// 	this.months = this.generateArray(1, 12);
+		// 	this.valueArr.splice(this.valueArr.length - 1, 1, this.getIndex(this.months, this.month));
+		// },
+		// setDays() {
+		// 	let totalDays = new Date(this.year, this.month, 0).getDate();
+		// 	this.days = this.generateArray(1, totalDays);
+		// 	let index = 0;
+		// 	// 这里不能使用类似setMonths()中的this.valueArr.splice(this.valueArr.length - 1, xxx)做法
+		// 	// 因为this.month和this.year变化时，会触发watch中的this.setDays()，导致this.valueArr.length计算有误
+		// 	if (this.params.year && this.params.month) index = 2;
+		// 	else if (this.params.month) index = 1;
+		// 	else if (this.params.year) index = 1;
+		// 	else index = 0;
+		// 	// 当月份变化时，会导致日期的天数也会变化，如果原来选的天数大于变化后的天数，则重置为变化后的最大值
+		// 	// 比如原来选中3月31日，调整为2月后，日期变为最大29，这时如果day值继续为31显然不合理，于是将其置为29(picker-column从1开始)
+		// 	if(this.day > this.days.length) this.day = this.days.length;
+		// 	this.valueArr.splice(index, 1, this.getIndex(this.days, this.day));
+		// },
+		setMonths(num=12) {
+			// this.months = this.generateArray(1, 12);
+			this.months = this.generateArray(1, num);
 			this.valueArr.splice(this.valueArr.length - 1, 1, this.getIndex(this.months, this.month));
 		},
-		setDays() {
+		setDays(num) {
 			let totalDays = new Date(this.year, this.month, 0).getDate();
-			this.days = this.generateArray(1, totalDays);
+			this.days = this.generateArray(1, num?num:totalDays);
 			let index = 0;
 			// 这里不能使用类似setMonths()中的this.valueArr.splice(this.valueArr.length - 1, xxx)做法
 			// 因为this.month和this.year变化时，会触发watch中的this.setDays()，导致this.valueArr.length计算有误

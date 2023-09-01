@@ -1,18 +1,18 @@
 <template>
 	<view class="gt_content">
 		<view class="con_switch">
-			<selectSwitch :switchList="switchList" @change="changeSwitch" />
+			邀请码
+			<!-- <selectSwitch :switchList="switchList" @change="changeSwitch" /> -->
 		</view>
-
 		<view class="con_label">
-			<text>邀请码：876588</text>
+			<text>邀请码：{{code}}</text>
 		</view>
 		<view class="con_qrcode">
-			<!-- <image :src="gtCommon.getOssImg('user/qrcode.png')" mode="widthFix"></image> -->
-			<image :src="apiDomain + url + text" mode="widthFix"></image>
+			<!-- <image :src="url" mode="widthFix"></image> -->
+			<canvas canvas-id="qrcode" :style="{ width: qrWidth + 'px', height: qrWidth + 'px' }" class="canvas"></canvas>
 		</view>
 		<view class="con_text">
-			<text>推荐下载并成功认证，可领取红包</text>
+			<text>推荐下载并成功认证，可<text style="color: #ff646b;">领取红包</text></text>
 		</view>
 		<view class="con_btn">
 			<u-button type="primary" size="medium" @click="saveImage">保存</u-button>
@@ -22,47 +22,152 @@
 
 <script>
 	import selectSwitch from "@/components/xuan-switch/xuan-switch.vue";
-
+	import uQRCode from '@/common/uqrcode.js'
 	export default {
-
-		components: {
-			selectSwitch,
-		},
+		components: { selectSwitch },
 		data() {
 			return {
 				switchList: ['邀请码', '专线码'],
+				code: '',
 				apiDomain: '',
-				// url: '/api/qrcode/qrcode?text=',
-				url: '/api/qrcode/qrcode?text=',
-				text: '876588',
+				text: '',
+				url: '',
+				QRurl: '',
+				qrWidth: 0,
+				imgUrl: ''
 			}
 		},
 		onLoad() {
-			let gt = this;
-
-			var apiDomain = uni.getStorageSync('apiDomain');
-			gt.apiDomain = apiDomain;
+			let gt = this
+			// 获取手机屏幕大小
+			uni.getSystemInfo({
+				success: (res)=> {
+					if(res.windowWidth < 375) {
+						this.qrWidth = 175
+					} else {
+						this.qrWidth = res.windowWidth / 1.8
+					}
+				}
+			})
+			gt.code = uni.getStorageSync('user_info').invite_code
+			gt.apiDomain = uni.getStorageSync('apiDomain')
+			gt.text = uni.getStorageSync('environment') == 'dev' ?
+				'https://test.sansongkeji.com/adminsite/'+ `#` + '/agreement/register' : 
+				'https://saasdemo.sansongkeji.com/adminsite/#/agreement/register'
+			// #ifdef MP-WEIXIN
+			let from_plat = '小程序'
+			// #endif
+			// #ifdef APP-PLUS
+			let from_plat = 'APP'
+			// #endif
+			let params = '?code=' + gt.code + '&from_plat=' + from_plat
+			gt.url = gt.apiDomain + '/api/qrcode/qrcode?text=' + gt.text + params
+			
+			gt.QRurl = gt.text + params
+			gt.qrFun(gt.QRurl)
 		},
 		methods: {
 			changeSwitch(isSwitch) {
-				console.log(isSwitch);
+				console.log(isSwitch)
 			},
-			saveImage() {
-				let gt = this;
-				console.log(222)
-				uni.downloadFile({
-					url: gt.apiDomain + gt.url + gt.text,
-					success: (res) => {
-						console.log(res)
-						uni.saveImageToPhotosAlbum({
-							filePath: res.tempFilePath,
-							success: function() {
-								console.log('save success');
-							}
-						});
+			qrFun(text) {
+				let gt = this
+				uQRCode.make({
+					canvasId: 'qrcode',  // 必须与上面canvas-id="qrcode"值一致
+					componentInstance: gt,
+					text: text,  // 二维码内容
+					size: gt.qrWidth,
+					margin: 0,
+					backgroundColor: '#ffffff',
+					foregroundColor: '#000000',  // 前景颜色
+					fileType: 'jpg',  // 二维码图片类型
+					errorCorrectLevel: uQRCode.errorCorrectLevel.H,  // 容错级别
+					success: res => {
+						gt.imgUrl = res // base64
 					}
 				})
-
+			},
+			saveImage() {
+				let gt = this
+				uni.showLoading({
+				    title: '加载中',
+				    mask: true
+				})
+				// #ifdef MP-WEIXIN
+				let base64 = gt.imgUrl.replace(/^data:image\/\w+;base64,/, "") // 去掉data:image/png;base64
+				let filePath = wx.env.USER_DATA_PATH + '/ph_fit_qrcode.png'	// 路径文件名
+				uni.getFileSystemManager().writeFile({
+				    filePath: filePath,
+				    data: base64,
+				    encoding: 'base64',
+				    success: res => {
+				        uni.saveImageToPhotosAlbum({
+				            filePath: filePath,
+				            success: function(res2) {
+				                uni.hideLoading()
+				                uni.showToast({
+				                    title: '保存成功',
+				                    duration: 2000
+				                })
+				            }
+				        })
+				    }
+				})
+				// #endif
+				// #ifdef APP-PLUS
+				let base64 = gt.imgUrl.replace(/[\r\n]/g, "")
+				const bitmap = new plus.nativeObj.Bitmap('base64')
+				bitmap.loadBase64Data(base64, () => {
+					const url = '_doc/' + new Date().getTime() + '.png'
+					bitmap.save(
+						url,
+						{
+							overwrite: true // 是否覆盖
+							// quality: 'quality'  // 图片清晰度
+						},
+						(i) => {
+							uni.saveImageToPhotosAlbum({
+								filePath: url,
+								success: () => {
+									uni.showToast({
+									    title: '保存成功',
+									    duration: 2000
+									})
+									bitmap.clear()
+								}
+							})
+						},
+						(e) => {
+							uni.showToast({
+							    title: '图片保存失败',
+							    duration: 2000
+							})
+							bitmap.clear()
+						}
+					)},
+					(e) => {
+						uni.showToast({
+						    title: '图片保存失败',
+						    duration: 2000
+						})
+						bitmap.clear()
+					}
+				)
+				// #endif
+				// uni.downloadFile({
+				// 	url: gt.imgUrl,
+				// 	success: (res) => {
+				// 		uni.saveImageToPhotosAlbum({
+				// 			filePath: res.tempFilePath,
+				// 			success: function() {
+				// 				uni.showToast({
+				// 					title: '已保存到相册',
+				// 					duration: 2000
+				// 				})
+				// 			}
+				// 		})
+				// 	}
+				// })
 			}
 		}
 	}
@@ -75,7 +180,8 @@
 		.gt_content {
 			.con_switch {
 				margin-top: 48rpx;
-
+				text-align: center;
+				font-size: 32rpx;
 				.switch-container {
 					width: 336rpx;
 					height: 84rpx;
@@ -98,9 +204,12 @@
 			}
 
 			.con_qrcode {
-				width: 480rpx;
-				height: 480rpx;
-				margin: 20rpx auto;
+				// width: 480rpx;
+				// height: 480rpx;
+				// margin: 20rpx auto;
+				.canvas {
+					margin: 20rpx auto;
+				}
 			}
 
 			.con_text {

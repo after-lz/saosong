@@ -324,7 +324,7 @@
 					flex-wrap: wrap;
 
 					.con_item {
-						margin: 20rpx 40rpx;
+						margin: 20rpx 39rpx;
 
 						.con_icon {
 							width: 100rpx;

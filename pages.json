@@ -129,6 +129,13 @@
 			}
 		},
 		{
+			"path": "pages/user/revenue",
+			"style": {
+				"navigationBarTitleText": "我的营收",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
 			"path": "pages/index/historyList",
 			"style": {
 				"navigationBarTitleText": "历史记录",

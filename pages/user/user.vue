@@ -186,15 +186,15 @@
 						name: '我的营收',
 					},
 					{
-						id: 1,
+						id: 2,
 						name: '我的账单',
 					},
 					{
-						id: 1,
+						id: 3,
 						name: '发票管理',
 					},
 					{
-						id: 1,
+						id: 4,
 						name: '员工管理',
 					},
 				],
@@ -426,10 +426,15 @@
 					})
 					return false;
 				}
-				uni.navigateTo({
-					url: './empty',
-				});
-				return false;
+				if(item.id == 1) {
+					uni.navigateTo({
+						url: './revenue',
+					});
+				} else {
+					uni.navigateTo({
+						url: './empty',
+					});
+				}
 			},
 
 		}
