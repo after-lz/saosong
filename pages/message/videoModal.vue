@@ -1,5 +1,5 @@
 <template>
-	<u-modal v-model="_show" width='100%'
+	<u-modal v-model="_show" width='90%'
 			:show-title='false' :show-confirm-button='false' :mask-close-able="true"><!--  :zoom='false' -->
 		<view class="videoModal">
 			<video :src="src" class="myVideo" :show-mute-btn="true"></video>

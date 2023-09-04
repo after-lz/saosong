@@ -433,6 +433,52 @@
 					}
 				},
 				{
+					"path": "pages/user/fundFloat",
+					"style": {
+						"navigationBarTitleText": "在途资金",
+						"enablePullDownRefresh": true
+					}
+				},
+				{
+					"path": "pages/user/commonProblem",
+					"style": {
+						"navigationBarTitleText": "常见问题",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "pages/user/problemDetail",
+					"style": {
+						"navigationBarTitleText": "",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "pages/user/feedBack",
+					"style": {
+						"navigationBarTitleText": "意见反馈",
+						"enablePullDownRefresh": false
+						// "app-plus": {
+						//     "bounce": "none",
+						//     "titleNView": {
+						//         "buttons": [
+						//             {
+						//                 "fontSize": "26rpx",
+						//                 "text": "反馈记录"
+						//             }
+						//         ]
+						//     }
+						// }
+					}
+				},
+				{
+					"path": "pages/user/feedBackRecording",
+					"style": {
+						"navigationBarTitleText": "反馈记录",
+						"enablePullDownRefresh": true
+					}
+				},
+				{
 					"path": "pages/user/charge",
 					"style": {
 						"navigationBarTitleText": "充值",

@@ -37,7 +37,6 @@
 				</view>
 			</view>
 		</view>
-
 		<view class="con_nums1">
 			<view class="con_item">
 				<view class="con_num1">
@@ -81,7 +80,6 @@
 				</view>
 			</view>
 		</view>
-
 		<view class="con_swiper">
 			<u-swiper :list="swiperList" name="picurl" height="200"></u-swiper>
 		</view>
@@ -90,7 +88,7 @@
 				<text>我的钱包</text>
 			</view>
 			<view class="con_nums2">
-				<view class="con_item">
+				<view class="con_item" @click="goFloat">
 					<view class="con_num2">
 						<text>{{numArr2[0]}}</text>
 					</view>
@@ -132,10 +130,7 @@
 					</view>
 				</view>
 			</view>
-
-
 		</view>
-
 		<view class="con_menu">
 			<view class="con_title">
 				<text>便捷功能</text>
@@ -157,7 +152,7 @@
 				<text>帮助反馈</text>
 			</view>
 			<view class="con_list">
-				<view class="con_item" v-for="(item,index) in menuList2" :key="index" @click="menuClick(item)">
+				<view class="con_item" v-for="(item,index) in menuList2" :key="index" @click="menuClick1(item)">
 					<view class="con_icon">
 						<image :src="gtCommon.getOssImg('user/' + item.name +'.png')" mode="widthFix">
 						</image>
@@ -168,9 +163,6 @@
 				</view>
 			</view>
 		</view>
-
-
-
 	</view>
 </template>
 <script>
@@ -178,7 +170,6 @@
 		data() {
 			return {
 				loginStatus: false,
-
 				headHeight: -60,
 				swiperList: [],
 				menuList1: [{
@@ -203,15 +194,14 @@
 						name: '常见问题',
 					},
 					{
-						id: 1,
+						id: 2,
 						name: '联系客服',
 					},
 					{
-						id: 1,
+						id: 3,
 						name: '意见反馈',
 					},
 				],
-
 				logisticsInfo: {},
 				userInfo: {},
 				numArr1: [0, 0, 0, 0],
@@ -219,66 +209,59 @@
 			}
 		},
 		onLoad() {
-			let gt = this;
-			
+			let gt = this
 			// #ifdef MP-WEIXIN
-			var adType = 'AppletLogisticsPersonal';
+			var adType = 'AppletLogisticsPersonal'
 			// #endif
 			// #ifdef APP-PLUS
-			var adType = 'AppLogisticsPersonal';
+			var adType = 'AppLogisticsPersonal'
 			// #endif
-			var url = "/api/appgobal/get_ad_data";
+			var url = "/api/appgobal/get_ad_data"
 			var data = {
 				platform: 'logistics',
 				city: '无锡',
-				ad_sign: adType,
-				
-			};
+				ad_sign: adType
+			}
 			gt.gtRequest.post(url, data).then(res => {
-				console.log('userswiper:',res);
-				gt.swiperList = res.list;
-			});
-
+				gt.swiperList = res.list
+			})
 			// #ifdef MP-WEIXIN
-			var menuButtonInfo = uni.getMenuButtonBoundingClientRect();
-			gt.headHeight = menuButtonInfo.top + menuButtonInfo.height;
+			var menuButtonInfo = uni.getMenuButtonBoundingClientRect()
+			gt.headHeight = menuButtonInfo.top + menuButtonInfo.height
 			// #endif
 		},
 		async onShow() {
-			let gt = this;
-			await gt.getUserInfo();
+			let gt = this
+			await gt.getUserInfo()
 		},
 		methods: {
 			goLogin() {
 				uni.navigateTo({
-					url: '../login/login',
-				});
-				return false;
+					url: '../login/login'
+				})
+				return false
 			},
 			goQrcode() {
-				let gt = this;
-				
-				if(!gt.loginStatus){
+				let gt = this
+				if(!gt.loginStatus) {
 					uni.showModal({
 						title:'您还未登录',
 						content:'登录后才能使用此功能',
 						success(res) {
-							if(res.confirm){
-								gt.goLogin();
+							if(res.confirm) {
+								gt.goLogin()
 							}
 						}
-						
 					})
-				}else{
+				} else {
 					uni.navigateTo({
 						url: '/subUser/pages/user/qrcode',
 						complete: (res => {
-							console.log(res);
+							console.log(res)
 						})
-					});
-					return false;
+					})
+					return false
 				}
-				
 			},
 			goUser() {
 				uni.navigateTo({
@@ -286,54 +269,45 @@
 				})
 			},
 			goSetting() {
-				let gt = this;
-				
+				let gt = this
 				if(!gt.loginStatus){
 					uni.showModal({
 						title:'您还未登录',
 						content:'登录后才能使用此功能',
 						success(res) {
-							if(res.confirm){
-								gt.goLogin();
+							if(res.confirm) {
+								gt.goLogin()
 							}
 						}
-						
 					})
-					return false;
+					return false
 				}
-				
 				uni.navigateTo({
-					url: '/subUser/pages/user/setting',
-				});
-				return false;
+					url: '/subUser/pages/user/setting'
+				})
+				return false
 			},
 			async getUserInfo() {
-				let gt = this;
-				var token = await gt.gtRequest.getToken();
+				let gt = this
+				var token = await gt.gtRequest.getToken()
 				if (token) {
-					var url = "/logistics/user/get_user_info";
-
+					var url = "/logistics/user/get_user_info"
 					gt.gtRequest.post(url).then(res => {
-						uni.setStorageSync('user_info', res.user_info);
-						gt.userInfo = res.user_info;
-						if(res.logistics_info){
-							gt.logisticsInfo = res.logistics_info;
-							
-							gt.numArr1[0] = res.logistics_info.credit_score;
-							gt.numArr1[1] = res.logistics_info.visitor_count;
-							gt.numArr1[2] = res.logistics_info.collect_count;
-							gt.numArr1[3] = res.logistics_info.grade_score;
-							
-							gt.numArr2[0] = res.onway_money;
-							gt.numArr2[1] = res.logistics_info.money01;
-							gt.numArr2[2] = res.logistics_info.money02;
-							gt.numArr2[3] = res.bank_count;
+						uni.setStorageSync('user_info', res.user_info)
+						gt.userInfo = res.user_info
+						if(res.logistics_info) {
+							gt.logisticsInfo = res.logistics_info
+							gt.numArr1[0] = res.logistics_info.credit_score
+							gt.numArr1[1] = res.logistics_info.visitor_count
+							gt.numArr1[2] = res.logistics_info.collect_count
+							gt.numArr1[3] = res.logistics_info.grade_score
+							gt.numArr2[0] = res.onway_money
+							gt.numArr2[1] = res.logistics_info.money01
+							gt.numArr2[2] = res.logistics_info.money02
+							gt.numArr2[3] = res.bank_count
 						}
-						
-
-						gt.loginStatus = true;
-
-					});
+						gt.loginStatus = true
+					})
 				} else {
 					uni.showModal({
 						title: '请先登录',
@@ -341,102 +315,143 @@
 						success(res) {
 							if (res.confirm) {
 								uni.navigateTo({
-									url: '../login/login',
+									url: '../login/login'
 								});
-								return false;
+								return false
 							}
 						}
 					})
-					return false;
+					return false
 				}
+			},
+			goFloat() {
+				let gt = this
+				if(!gt.loginStatus) {
+					uni.showModal({
+						title:'您还未登录',
+						content:'登录后才能使用此功能',
+						success(res) {
+							if(res.confirm) {
+								gt.goLogin()
+							}
+						}
+					})
+					return false
+				}
+				uni.navigateTo({
+					url: '/subUser/pages/user/fundFloat'
+				})
+				return false
 			},
 			goWallet() {
-				let gt = this;
-				if(!gt.loginStatus){
+				let gt = this
+				if(!gt.loginStatus) {
 					uni.showModal({
 						title:'您还未登录',
 						content:'登录后才能使用此功能',
 						success(res) {
-							if(res.confirm){
-								gt.goLogin();
+							if(res.confirm) {
+								gt.goLogin()
 							}
 						}
-						
 					})
-					return false;
+					return false
 				}
 				uni.navigateTo({
-					url: '/subUser/pages/user/wallet',
-				});
-				return false;
+					url: '/subUser/pages/user/wallet'
+				})
+				return false
 			},
 			goPacket() {
-				let gt = this;
-				if(!gt.loginStatus){
+				let gt = this
+				if(!gt.loginStatus) {
 					uni.showModal({
 						title:'您还未登录',
 						content:'登录后才能使用此功能',
 						success(res) {
-							if(res.confirm){
-								gt.goLogin();
+							if(res.confirm) {
+								gt.goLogin()
 							}
 						}
-						
 					})
-					return false;
+					return false
 				}
 				uni.navigateTo({
-					url: '/subUser/pages/user/packet',
+					url: '/subUser/pages/user/packet'
 				});
-				return false;
+				return false
 			},
 			goBankCard() {
-				let gt = this;
-				if(!gt.loginStatus){
+				let gt = this
+				if(!gt.loginStatus) {
 					uni.showModal({
 						title:'您还未登录',
 						content:'登录后才能使用此功能',
 						success(res) {
-							if(res.confirm){
-								gt.goLogin();
+							if(res.confirm) {
+								gt.goLogin()
 							}
 						}
-						
 					})
 					return false;
 				}
 				uni.navigateTo({
-					url: '/subUser/pages/user/bankList',
-				});
-				return false;
+					url: '/subUser/pages/user/bankList'
+				})
+				return false
 			},
 			menuClick(item) {
-				console.log(item);
-				let gt = this;
-				if(!gt.loginStatus){
+				let gt = this
+				if(!gt.loginStatus) {
 					uni.showModal({
 						title:'您还未登录',
 						content:'登录后才能使用此功能',
 						success(res) {
-							if(res.confirm){
-								gt.goLogin();
+							if(res.confirm) {
+								gt.goLogin()
 							}
 						}
-						
 					})
-					return false;
+					return false
 				}
 				if(item.id == 1) {
 					uni.navigateTo({
 						url: './revenue',
-					});
+					})
+				} else {
+					uni.navigateTo({
+						url: './empty'
+					})
+				}
+			},
+			menuClick1(item) {
+				let gt = this
+				if(!gt.loginStatus) {
+					uni.showModal({
+						title:'您还未登录',
+						content:'登录后才能使用此功能',
+						success(res) {
+							if(res.confirm) {
+								gt.goLogin()
+							}
+						}
+					})
+					return false
+				}
+				if(item.id == 1) {
+					uni.navigateTo({
+						url: '/subUser/pages/user/commonProblem',
+					})
+				} else if(item.id == 3) {
+					uni.navigateTo({
+						url: '/subUser/pages/user/feedBack',
+					})
 				} else {
 					uni.navigateTo({
 						url: './empty',
-					});
+					})
 				}
 			},
-
 		}
 	}
 </script>
