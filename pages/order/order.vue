@@ -181,10 +181,10 @@
 									</view>
 									<view class="con_btns">
 										<!-- #ifdef MP-WEIXIN -->
-										<view class="con_btnItem" @click.stop="goHailing()"
+										<!-- <view class="con_btnItem" @click.stop="goHailing()"
 											v-if="item.status == 5">
 											<text>叫车取货</text>
-										</view>
+										</view> -->
 										<!-- #endif -->
 										<!-- <view class="con_btnItem" @click.stop="showRefuse(item)"
 											v-if="item.id > 1">

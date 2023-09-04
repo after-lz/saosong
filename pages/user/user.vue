@@ -438,6 +438,9 @@
 					})
 					return false
 				}
+				return uni.navigateTo({
+						url: './empty',
+					})
 				if(item.id == 1) {
 					uni.navigateTo({
 						url: '/subUser/pages/user/commonProblem',

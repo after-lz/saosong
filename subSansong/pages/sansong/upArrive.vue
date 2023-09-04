@@ -322,9 +322,11 @@
 													<text>取货码：{{item.self_pickup_code}}</text>
 												</view>
 												<view class="con_btns">
-													<view class="con_btnItem" @click.stop="goHailing">
+													<!-- #ifdef MP-WEIXIN -->
+													<!-- <view class="con_btnItem" @click.stop="goHailing">
 														<text>叫车取货</text>
-													</view>
+													</view> -->
+													<!-- #endif -->
 													<!-- <view class="con_btnItem" @click.stop="addMoney(item)">
 														<text>电子面单</text>
 													</view> -->
