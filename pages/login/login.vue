@@ -6,7 +6,7 @@
 		<!-- #ifdef MP-WEIXIN -->
 		<view class="con_type1" v-if="type == 1">
 			<view class="con_logo">
-				<image :src="gtCommon.getOssImg('login/logo.png')" mode="widthFix" @longpress="envVersion_show = true"></image>
+				<image :src="gtCommon.getOssImg('login/logo.png')" mode="widthFix"></image>
 			</view>
 			<view class="con_tip">
 				<text>发货 找物流 就上 伞送</text>
@@ -24,16 +24,15 @@
 			</view>
 			<view class="con_agreement">
 				<button open-type="agreePrivacyAuthorization" @click="agree = !agree" class="authorBtn" plain="true">
-					<u-checkbox v-model="agree" active-color="#485EF4">
-						<text>我已阅读并同意</text>
-						<text style="color:#485EF4;"
-							@click.stop="gtCommon.goLicence(licencesObj.logistics_yonghu_xieyi_url)">《用户协议》</text>
-						<text>和</text>
-						<text style="color:#485EF4;"
-							@click.stop="gtCommon.goLicence(licencesObj.logistics_yinsi_xieyi_url)">《隐私协议》</text>
-						<text>并授权伞送获得本机号码</text>
-					</u-checkbox>
+					<u-checkbox v-model="agree" active-color="#485EF4"></u-checkbox>
 				</button>
+				<view class="con_agreement_msg">
+					<text>我已阅读并同意</text>
+					<text style="color:#485EF4;" @click.stop="gtCommon.goLicence(licencesObj.logistics_yonghu_xieyi_url)">《用户协议》</text>
+					<text>和</text>
+					<text style="color:#485EF4;" @click.stop="gtCommon.goLicence(licencesObj.logistics_yinsi_xieyi_url)">《隐私协议》</text>
+					<text>并授权伞送获得本机号码</text>
+				</view>
 			</view>
 		</view>
 		<!-- #endif -->
@@ -70,15 +69,15 @@
 			</view>
 			<view class="con_agreement">
 				<button open-type="agreePrivacyAuthorization" @click="agree = !agree" class="authorBtn" plain="true">
-					<u-checkbox v-model="agree" active-color="#485EF4">
-						<text>我已阅读并同意</text><text style="color:#485EF4;"
-							@click.stop="gtCommon.goLicence(licencesObj.logistics_yonghu_xieyi_url)">《用户协议》</text>
-						<text>和</text>
-						<text style="color:#485EF4;"
-							@click.stop="gtCommon.goLicence(licencesObj.logistics_yinsi_xieyi_url)">《隐私协议》</text>
-						<text>并授权伞送获得本机号码</text>
-					</u-checkbox>
+					<u-checkbox v-model="agree" active-color="#485EF4"></u-checkbox>
 				</button>
+				<view class="con_agreement_msg">
+					<text>我已阅读并同意</text>
+					<text style="color:#485EF4;" @click.stop="gtCommon.goLicence(licencesObj.logistics_yonghu_xieyi_url)">《用户协议》</text>
+					<text>和</text>
+					<text style="color:#485EF4;" @click.stop="gtCommon.goLicence(licencesObj.logistics_yinsi_xieyi_url)">《隐私协议》</text>
+					<text>并授权伞送获得本机号码</text>
+				</view>
 			</view>
 		</view>
 		<!-- #ifdef APP-PLUS -->
@@ -607,8 +606,10 @@
 					font-family: PingFangSC-Regular, PingFang SC;
 					font-weight: 400;
 					color: #909399;
-					line-height: 34rpx;
 					margin: 44rpx 50rpx;
+					display: flex;
+					align-items: center;
+					font-size: 28rpx;
 				}
 			}
 
@@ -714,8 +715,10 @@
 					font-family: PingFangSC-Regular, PingFang SC;
 					font-weight: 400;
 					color: #909399;
-					line-height: 34rpx;
 					margin: 44rpx 55rpx;
+					display: flex;
+					align-items: center;
+					font-size: 28rpx;
 				}
 
 			}
