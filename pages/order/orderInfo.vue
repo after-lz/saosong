@@ -225,7 +225,8 @@
 							<view class="con_userInfo_contact">
 								<view class="con_userInfo">
 									<view class="con_headImg">
-										<image :src="cargoInfo.headerpic" mode="widthFix"></image>
+										<!-- <image :src="cargoInfo.headerpic" mode="widthFix"></image> -->
+										<u-avatar :src="cargoInfo.headerpic"></u-avatar>
 									</view>
 									<view class="con_nickNameMobile">
 										<view class="con_nickName">
@@ -2723,14 +2724,16 @@
 			}
 			.con_btns {
 				position: sticky;
-			
+				width: 750rpx;
+				min-height: 112rpx;
+				background: #FFFFFF;
 				.con_list {
 					display: flex;
 					justify-content: flex-end;
 					width: 750rpx;
 					height: 112rpx;
 					background: #FFFFFF;
-					padding-right: 20rpx
+					padding-right: 20rpx;
 				}
 			
 				.con_item {
