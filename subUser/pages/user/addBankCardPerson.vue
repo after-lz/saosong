@@ -124,7 +124,7 @@
 					var data = {
 						bank_card_type: cardType,
 						bank_type: 1,
-						bank_name: res.bankName,
+						bank_name: gt.bank,
 						bank_truename: gt.name,
 						bank_number: gt.num,
 						bank_code: gt.bank_code
