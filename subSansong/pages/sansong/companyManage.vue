@@ -80,13 +80,13 @@
 				<text>企业营销</text>
 			</view>
 			<view class="con_list">
-				<view class="con_item" style="display: none;">
+				<view class="con_item" @click="goSpecialLine">
 					<view class="con_title_status">
 						<view class="con_title">
 							<text>品质专线</text>
 						</view>
 						<view class="con_status">
-							<text>已缴纳</text>
+							<!-- <text>已缴纳</text> -->
 						</view>
 					</view>
 					<view class="con_descript">
@@ -232,6 +232,12 @@
 					url: './ticketManage'
 				});
 			},
+			goSpecialLine() {
+				let gt = this;
+				uni.navigateTo({
+					url: './specialLine'
+				});
+			}
 		}
 	}
 </script>

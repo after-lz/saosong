@@ -412,6 +412,48 @@
 						"navigationBarTitleText": "调整运单",
 						"enablePullDownRefresh": false
 					}
+				},
+				{
+					"path": "pages/sansong/specialLine",
+					"style": {
+						"navigationBarTitleText": "品质专线",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "pages/sansong/applyReturn",
+					"style": {
+						"navigationBarTitleText": "申请退还",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "pages/sansong/paymentRecord",
+					"style": {
+						"navigationBarTitleText": "缴纳记录",
+						"enablePullDownRefresh": true
+					}
+				},
+				{
+					"path": "pages/sansong/depositDescription",
+					"style": {
+						"navigationBarTitleText": "押金说明",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "pages/sansong/applySuccess",
+					"style": {
+						"navigationBarTitleText": "",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "pages/sansong/settleAccounts",
+					"style": {
+						"navigationBarTitleText": "结算",
+						"enablePullDownRefresh": false
+					}
 				}
 			]
 		}, 
