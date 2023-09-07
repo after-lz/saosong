@@ -455,7 +455,7 @@
 				margin-right: 20rpx;
 			}
 			.card_content {
-				width: 100%;
+				width: calc(100% - 100rpx);
 				.card_head {
 					display: flex;
 					align-items: center;
@@ -463,6 +463,10 @@
 					color: $gtProjectColor;
 					.company_name {
 						font-weight: 700;
+						text-overflow: ellipsis;
+						white-space: nowrap;
+						width: 75%;
+						overflow: hidden;
 					}
 				}
 				.card_info {

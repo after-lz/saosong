@@ -15,7 +15,7 @@
 		</view>
 		<view class="card">
 			<view class="card_type">
-				<view class="type_item" @click="changeType(1)" :class="active === 1 ? 'active' : ''" v-if="list.length">
+				<view class="type_item" @click="changeType(1)" :class="active === 1 ? 'active' : ''"  v-if="data.company_deposit !== '1'">
 					<view class="type_item_title">专线押金</view>
 					<view class="type_item_num">{{ data.lineDeposit }}元</view>
 					<view class="type_item_msg">指定专线专项押金</view>
@@ -23,39 +23,49 @@
 				<view class="type_item" @click="changeType(-1)" :class="active === -1 ? 'active' : ''">
 					<view class="type_item_title">全线押金</view>
 					<view class="type_item_num">{{ data.companyDeposit }}元</view>
-					<view class="type_item_msg">指定专线专项押金</view>
+					<view class="type_item_msg">适用全部专线</view>
 				</view>
 			</view>
-			<view class="unUpdateLine" v-if="list.length">
-				<view class="unUpdateLine_title">未升级专线</view>
-				<view class="unUpdateLine_lines" v-if="active === 1">
-					<view class="line" v-for="item in list" :key="item.line_id" @click="changeSelect(item)">
-						<!-- <u-image :src="gtCommon.getOssImg(item.selected ? 'sansong/selected.png' : 'sansong/unSelected.png')"
-								mode="widthFix" class="line_select"></u-image> -->
-						<view class="line_select" :style="{backgroundImage:
-						  `url(${gtCommon.getOssImg(item.selected ?'sansong/selected.png' : 'sansong/unSelected.png')})`}"></view>
-						<text>{{ item.start_city }}</text>
-						<text>——</text>
-						<text>{{ item.end_city }}</text>
+			<!-- 未升级全线 -->
+			<template v-if="data.company_deposit === '0'">
+				<view class="unUpdateLine" v-if="list.length || active === -1">
+					<view class="unUpdateLine_title">未升级专线</view>
+					<view class="unUpdateLine_lines" v-if="active === 1">
+						<view class="line" v-for="item in list" :key="item.line_id" @click="changeSelect(item)">
+							<view class="line_select" :style="{backgroundImage:
+							  `url(${gtCommon.getOssImg(item.selected ?'sansong/selected.png' : 'sansong/unSelected.png')})`}"></view>
+							<text>{{ item.start_city }}</text>
+							<text>——</text>
+							<text>{{ item.end_city }}</text>
+						</view>
+					</view>
+					<view class="unUpdateLine_lines" v-else>
+						<view class="line">全部专线</view>
 					</view>
 				</view>
-				<view class="unUpdateLine_lines" v-else>
-					<view class="line">全部专线</view>
-				</view>
-			</view>
-			<view class="unUpdateLine" v-if="list1.length">
-				<view class="unUpdateLine_title">已升级专线</view>
-				<view class="unUpdateLine_lines" v-if="active === 1">
-					<view class="line" v-for="item in list1" :key="item.line_id">
-						<text>{{ item.start_city }}</text>
-						<text>——</text>
-						<text>{{ item.end_city }}</text>
+				<view class="unUpdateLine" v-if="list1.length && active === 1">
+					<view class="unUpdateLine_title">已升级专线</view>
+					<view class="unUpdateLine_lines" v-if="active === 1">
+						<view class="line" v-for="item in list1" :key="item.line_id">
+							<text>{{ item.start_city }}</text>
+							<text>——</text>
+							<text>{{ item.end_city }}</text>
+						</view>
+					</view>
+					<view class="unUpdateLine_lines" v-else>
+						<view class="line">全部专线</view>
 					</view>
 				</view>
-				<view class="unUpdateLine_lines" v-else>
-					<view class="line">全部专线</view>
+			</template>
+			<!-- 已升级全线 -->
+			<template v-if="data.company_deposit === '1'">
+				<view class="unUpdateLine">
+					<view class="unUpdateLine_title">已升级专线</view>
+					<view class="unUpdateLine_lines">
+						<view class="line">全部专线</view>
+					</view>
 				</view>
-			</view>
+			</template>
 		</view>
 		<view class="footer">
 			<text class="msg">充值押金升级品质专线，升级可无限制接单抢单</text>
@@ -90,7 +100,7 @@
 				],
 			}
 		},
-		onLoad() {
+		onShow() {
 			let gt = this
 			gt.getData()
 		},
@@ -121,10 +131,10 @@
 						return item.selected = false
 					})
 					gt.list1 = res.list.filter(item=> item.deposit_status === '1')
-					if(!gt.list.length) gt.active = -1
 				})
 				gt.gtRequest.post('/logistics/Specialline/get_deposit_config_info').then(res => {
 					gt.data = res
+					if(res.company_deposit === '1') gt.active = -1
 				})
 			},
 			changeType(type) {

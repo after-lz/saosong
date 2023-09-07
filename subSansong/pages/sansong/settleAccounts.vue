@@ -65,14 +65,15 @@
 				order_id: '', // 生成支付订单的订单号
 				num: 0, // 订单金额
 				totalNum: 0, // 余额
-				type: 0
+				type: 0,
+				_disabled: false
 			}
 		},
 		onLoad(option) {
 			let gt = this
 			gt.ids = option.ids
 			gt.num = option.num
-			gt.totalNum = uni.getStorageSync('user_info').money01
+			gt.totalNum = uni.getStorageSync('companyInfo').money01
 			gt.creatdOrder()
 		},
 		methods: {
@@ -86,66 +87,83 @@
 			},
 			submit() {
 				let gt = this
-				if(gt.type === 1 && gt.num > gt.totalNum) {
+				if(gt._disabled) return
+				if(gt.type === 1 && +gt.num > +gt.totalNum) {
 					return gt.$refs.uToast.show({
 						title: '账户余额不足！'
 					})
 				}
-				gt.gtRequest.post('/logistics/Specialline/pay_deposit_order', {
-					order_id: gt.order_id,
-					pay_method: gt.type // 1余额2微信小程序3微信app
-				}).then(info => {
-					// #ifdef MP-WEIXIN
-					uni.getProvider({
-					    service: 'payment',
-					    success: function (res) {
-					        uni.requestPayment({
-					            provider: "wxpay",
-					            ...info,
-					            success(res) {
-					                gt.$refs.uToast.show({
-					                	title: '支付成功',
-					                	type: 'success',
-										back: true
-					                })
-					            },
-					            fail(err) {
-					                gt.$refs.uToast.show({
-					                	title: '支付失败',
-					                	type: 'error'
-					                })
-					            }
-					        })
-					    }
+				gt._disabled = true
+				let Fn = gt.gtCommon.debounce(()=> {
+					gt.gtRequest.post('/logistics/Specialline/pay_deposit_order', {
+						order_id: gt.order_id,
+						pay_method: gt.type // 1余额2微信小程序3微信app
+					}).then(info => {
+						if(gt.type === 1) {
+							gt.$refs.uToast.show({
+								title: '支付成功！',
+								type: 'success',
+								back: true
+							})
+						} else {
+							// #ifdef MP-WEIXIN
+							uni.getProvider({
+							    service: 'payment',
+							    success: function (res) {
+							        uni.requestPayment({
+							            provider: "wxpay",
+							            ...info,
+							            success(res) {
+							                gt.$refs.uToast.show({
+							                	title: '支付成功',
+							                	type: 'success',
+												back: true
+							                })
+							            },
+							            fail(err) {
+							                gt.$refs.uToast.show({
+							                	title: '支付失败',
+							                	type: 'error'
+							                })
+											gt._disabled = false
+							            }
+							        })
+							    }
+							})
+							// #endif
+							// #ifdef APP-PLUS
+							uni.getProvider({
+							    service: 'payment',
+							    success: function (res) {
+							        // if (~res.provider.indexOf('wxpay')) {
+							            uni.requestPayment({
+							                provider: "wxpay",
+							                orderInfo: info,
+							                success(res) {
+							                    gt.$refs.uToast.show({
+							                    	title: '支付成功',
+							                    	type: 'success',
+													back: true
+							                    })
+							                },
+							                fail(err) {
+							                    gt.$refs.uToast.show({
+							                    	title: '支付失败',
+							                    	type: 'error'
+							                    })
+												gt._disabled = false
+							                }
+							            })
+							        // }
+							    }
+							})
+							// #endif
+						}
+					}).catch(()=> {
+						gt._disabled = false
 					})
-					// #endif
-					// #ifdef APP-PLUS
-					uni.getProvider({
-					    service: 'payment',
-					    success: function (res) {
-					        // if (~res.provider.indexOf('wxpay')) {
-					            uni.requestPayment({
-					                provider: "wxpay",
-					                orderInfo: info,
-					                success(res) {
-					                    gt.$refs.uToast.show({
-					                    	title: '支付成功',
-					                    	type: 'success',
-											back: true
-					                    })
-					                },
-					                fail(err) {
-					                    gt.$refs.uToast.show({
-					                    	title: '支付失败',
-					                    	type: 'error'
-					                    })
-					                }
-					            })
-					        // }
-					    }
-					})
-					// #endif
-				})
+				}, 1000)
+				Fn()
 			}
 		},
 	}

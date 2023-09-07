@@ -45,7 +45,7 @@
 						<view class="card" v-for="item in list1" :key="item.id">
 							<view class="card_title">
 								<view class="card_title_name">{{ item.line_name }}</view>
-								<view class="card_title_status">{{ judgeStatus(item.pay_status) }}</view>
+								<view class="card_title_status">{{ judgeStatus(item.refund_status) }}</view>
 							</view>
 							<view class="card_content">
 								<view class="row">
@@ -167,7 +167,7 @@
 						str = '未退款'
 						break;
 					case '1':
-						str = '待审核'
+						str = '审核中'
 						break;
 					case '2':
 						str = '打款中'

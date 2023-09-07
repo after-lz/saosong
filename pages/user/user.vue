@@ -418,6 +418,10 @@
 					uni.navigateTo({
 						url: './revenue',
 					})
+				} else if(item.id == 2) {
+					uni.navigateTo({
+						url: '/subUser/pages/user/moneyList'
+					})
 				} else {
 					uni.navigateTo({
 						url: './empty'
@@ -446,9 +450,9 @@
 					uni.navigateTo({
 						url: '/subUser/pages/user/feedBack',
 					})
-				} else {
-					uni.navigateTo({
-						url: './empty',
+				} else if(item.id == 2) {
+					uni.makePhoneCall({
+						phoneNumber: '4008899050'
 					})
 				}
 			},

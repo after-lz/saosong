@@ -33,7 +33,7 @@
 			return {
 				dataList:[],
 				page: 1,
-				size: 10,
+				size: 15,
 				end: false,
 			}
 		},
@@ -46,7 +46,7 @@
 				let gt = this;
 				gt.dataList = [];
 				gt.page = 1;
-				gt.size = 10;
+				gt.size = 15;
 				gt.end = false;
 				gt.getDataList();
 			},
@@ -64,11 +64,12 @@
 				};
 				gt.gtRequest.post(url,data).then(res=>{
 					gt.dataList = gt.dataList.concat(res.list);
-					if (res.list.length == gt.size) {
-						gt.page = gt.page + 1;
-					} else {
-						gt.end = true;
-					}
+					gt.end = gt.page >= res.total_page
+					// if (res.list.length == gt.size) {
+					// 	gt.page = gt.page + 1;
+					// } else {
+					// 	gt.end = true;
+					// }
 				});
 			},
 			goDetail(record) {
@@ -80,6 +81,8 @@
 			},
 			loadMore() {
 				let gt = this;
+				if(gt.end) return
+				++gt.page
 				gt.getDataList();
 			},
 		}
@@ -96,6 +99,7 @@
 				}
 				.con_scroll{
 					.scroll_view{
+						height: 97vh;
 						padding: 0 24rpx;
 						.con_item{
 							width: 718rpx;
