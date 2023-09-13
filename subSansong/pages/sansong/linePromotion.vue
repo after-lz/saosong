@@ -734,7 +734,7 @@
 			},
 			read() {
 				let gt = this
-				gt.gtCommon.goLicence('https://saasdemo.sansongkeji.com/adminsite/#/agreement/transportation')
+				gt.gtCommon.goLicence('https://saasdemo.sansongkeji.com/adminsite/#/agreement/promotion')
 			},
 			confirm() {
 				let gt = this

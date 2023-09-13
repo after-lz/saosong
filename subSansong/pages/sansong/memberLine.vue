@@ -68,7 +68,7 @@
 					</view>
 				</template>
 			</view>
-			<view class="unUpdateLine">
+			<!-- <view class="unUpdateLine">
 				<view class="unUpdateLine_title">会员专线权益</view>
 				<view class="unUpdateLine_lines">
 					<text class="explain">
@@ -78,7 +78,14 @@
 						4、会员线路优先抢单
 					</text>
 				</view>
+			</view> -->
+		</view>
+		<view class="authorization">
+			<view class="radio" @click="flag = !flag" :style="{backgroundImage:
+				  `url(${gtCommon.getOssImg(flag ? 'sansong/selected.png' : 'sansong/unSelected.png')})`}">
 			</view>
+			<view @click="flag = !flag">我已阅读并同意</view>
+			<view class="agreement" @click="read">《会员推广协议》</view>
 		</view>
 		<view class="footer">
 			<u-button type="primary" v-if="list.length" @click="goTopup">
@@ -96,11 +103,13 @@
 				data: {},
 				list: [],
 				list1: [],
-				active: 1
+				active: 1,
+				flag: false
 			}
 		},
 		onShow() {
 			let gt = this
+			gt.flag = false
 			gt.getData()
 		},
 		computed: {
@@ -175,6 +184,9 @@
 			},
 			goTopup() {
 				let gt = this
+				if(!gt.flag) return gt.$refs.uToast.show({
+						title: '请勾选同意会员推广协议'
+					})
 				let ids = []
 				if(gt.active === 1) {
 					gt.list.forEach(item=> {
@@ -197,6 +209,10 @@
 			computedDay(str) {
 				let num = str - (+new Date() / 1000)
 				return Math.trunc(num / (24 * 60 * 60))
+			},
+			read() {
+				let gt = this
+				gt.gtCommon.goLicence('https://saasdemo.sansongkeji.com/adminsite/#/agreement/member')
 			}
 		}
 	}
@@ -242,7 +258,7 @@
 			}
 			.card {
 				width: calc(100% - 32rpx);
-				height: calc(100% - 290rpx - 138rpx);
+				height: calc(100% - 290rpx - 122rpx - 80rpx);
 				// height: 526rpx;
 				background-color: #fff;
 				border-radius: 20rpx 20rpx 0 0;
@@ -294,7 +310,8 @@
 					}
 				}
 				.card_content {
-					max-height: calc(100% - 262rpx - 236rpx - 32rpx);
+					// max-height: calc(100% - 262rpx - 236rpx - 32rpx);
+					max-height: calc(100% - 262rpx - 32rpx);
 					overflow: auto;
 					margin: 40rpx 0;
 				}
@@ -323,6 +340,10 @@
 								width: calc(100% - 52rpx);
 								display: flex;
 								align-items: center;
+								&>view:nth-child(1),
+								&>view:nth-child(3) {
+									min-width: 80rpx;
+								}
 							}
 						}
 						.explain {
@@ -339,6 +360,24 @@
 							}
 						}
 					}
+				}
+			}
+			.authorization {
+				display: flex;
+				align-items: center;
+				position: absolute;
+				bottom: 142rpx;
+				left: 16rpx;
+				color: #909399;
+				.radio {
+					width: 32rpx;
+					height: 32rpx;
+					background-size: cover;
+					background-repeat: no-repeat;
+					margin-right: 16rpx;
+				}
+				.agreement {
+					color: $gtProjectColor;
 				}
 			}
 			.footer {

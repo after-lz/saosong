@@ -289,6 +289,11 @@
 				gt.startArea = JSON.parse(options.startArea)
 			}
 			gt.promotion = JSON.parse(options.promotion)
+			if(gt.promotion) {
+				uni.setNavigationBarTitle({
+				    title: '专线推广'
+				})
+			}
 		},
 		onShow() {
 			let gt = this;
