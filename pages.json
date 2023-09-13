@@ -454,6 +454,27 @@
 						"navigationBarTitleText": "结算",
 						"enablePullDownRefresh": false
 					}
+				},
+				{
+					"path": "pages/sansong/linePromotion",
+					"style": {
+						"navigationBarTitleText": "专线推广",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "pages/sansong/promotionDetail",
+					"style": {
+						"navigationBarTitleText": "明细",
+						"enablePullDownRefresh": true
+					}
+				},
+				{
+					"path": "pages/sansong/memberLine",
+					"style": {
+						"navigationBarTitleText": "会员专线",
+						"enablePullDownRefresh": false
+					}
 				}
 			]
 		}, 
@@ -531,7 +552,7 @@
 					"path": "pages/user/moneyList",
 					"style": {
 						"navigationBarTitleText": "我的账单",
-						"enablePullDownRefresh": false
+						"enablePullDownRefresh": true
 					}
 				},
 				{

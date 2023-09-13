@@ -2,35 +2,31 @@
 	<view class="gt_content">
 		<view class="card_bg"></view>
 		<view class="card_bg1"></view>
-		<view class="more">
-			<u-dropdown>
-				<u-dropdown-item title="更多操作" :options="options" @change='changeMore'></u-dropdown-item>
-			</u-dropdown>
-		</view>
 		<view class="title">
-			<text>升级品质专线</text>
+			<text>{{ title }}</text>
 		</view>
 		<view class="title1">
-			<text>无限制接单抢单</text>
+			<text>{{ title1 }}</text>
 		</view>
 		<view class="card">
 			<view class="card_type">
-				<view class="type_item" @click="changeType(1)" :class="active === 1 ? 'active' : ''"  v-if="data.company_deposit !== '1'">
-					<view class="type_item_title">专线押金</view>
-					<view class="type_item_num">{{ data.lineDeposit }}元</view>
-					<view class="type_item_msg">指定专线专项押金</view>
+				<view class="type_item" @click="changeType(1)" :class="active === 1 ? 'active' : ''" v-if="data.company_member !== '1'">
+					<view class="type_item_title">会员专线</view>
+					<view class="type_item_num">{{ data.lineMember }}元/年</view>
+					<view class="type_item_msg">指定专线开通会员</view>
 				</view>
-				<view class="type_item" @click="changeType(-1)" :class="active === -1 ? 'active' : ''">
-					<view class="type_item_title">全线押金</view>
-					<view class="type_item_num">{{ data.companyDeposit }}元</view>
-					<view class="type_item_msg">适用全部专线</view>
+				<view class="type_item" @click="changeType(-1)" :class="active === -1 ? 'active' : ''" v-if="data.company_member === '1' || list.length">
+					<view class="type_item_title">全线会员</view>
+					<view class="type_item_num" v-if="data.company_member === '1'">剩余时间：{{ computedDay(data.company_member_time) }}天</view>
+					<view class="type_item_num" v-else>{{ data.companyMember }}元/年</view>
+					<view class="type_item_msg">全部专线开通会员</view>
 				</view>
 			</view>
 			<view class="card_content">
 				<!-- 未升级全线 -->
-				<template v-if="data.company_deposit === '0'">
+				<template v-if="data.company_member === '0'">
 					<view class="unUpdateLine" v-if="list.length || active === -1">
-						<view class="unUpdateLine_title">未升级专线</view>
+						<view class="unUpdateLine_title">未开通专线</view>
 						<view class="unUpdateLine_lines" v-if="active === 1">
 							<view class="line" v-for="item in list" :key="item.line_id" @click="changeSelect(item)">
 								<view class="line_select" :style="{backgroundImage:
@@ -47,7 +43,7 @@
 						</view>
 					</view>
 					<view class="unUpdateLine updateLine" v-if="list1.length && active === 1">
-						<view class="unUpdateLine_title">已升级专线</view>
+						<view class="unUpdateLine_title">已开通专线</view>
 						<view class="unUpdateLine_lines" v-if="active === 1">
 							<view class="line" v-for="item in list1" :key="item.line_id">
 								<view class="line_name">
@@ -63,18 +59,28 @@
 					</view>
 				</template>
 				<!-- 已升级全线 -->
-				<template v-if="data.company_deposit === '1'">
+				<template v-if="data.company_member === '1'">
 					<view class="unUpdateLine">
-						<view class="unUpdateLine_title">已升级专线</view>
+						<view class="unUpdateLine_title">已开通专线</view>
 						<view class="unUpdateLine_lines">
 							<view class="line">全部专线</view>
 						</view>
 					</view>
 				</template>
 			</view>
+			<view class="unUpdateLine">
+				<view class="unUpdateLine_title">会员专线权益</view>
+				<view class="unUpdateLine_lines">
+					<text class="explain">
+						1、专线升级为会员线路
+						2、会员线路佣金提点低
+						3、会员路线优先推送精准货源
+						4、会员线路优先抢单
+					</text>
+				</view>
+			</view>
 		</view>
 		<view class="footer">
-			<text class="msg">充值押金升级品质专线，升级可无限制接单抢单</text>
 			<u-button type="primary" v-if="list.length" @click="goTopup">
 				<text>立即充值{{ num }}元</text>
 			</u-button>
@@ -90,21 +96,7 @@
 				data: {},
 				list: [],
 				list1: [],
-				active: 1,
-				options: [
-					{
-						label: '申请退还',
-						value: 1,
-					},
-					{
-						label: '缴纳记录',
-						value: 2,
-					},
-					{
-						label: '押金说明',
-						value: 3,
-					}
-				],
+				active: 1
 			}
 		},
 		onShow() {
@@ -117,12 +109,40 @@
 				let str = 0
 				if(gt.active === 1) {
 					gt.list.forEach(item=> {
-						if(item.selected) str += gt.data.lineDeposit
+						if(item.selected) str += gt.data.lineMember
 					})
 					return str
 				} else {
-					return gt.data.companyDeposit
+					return gt.data.companyMember
 				}
+			},
+			title() {
+				let gt = this
+				let str = ''
+				if(gt.data.company_member === '1') {
+					str = '全线会员'
+				} else {
+					if(!gt.list.length) {
+						str = '会员专线'
+					} else {
+						str = '开通会员专线'
+					}
+				}
+				return str
+			},
+			title1() {
+				let gt = this
+				let str = ''
+				if(gt.data.company_member === '1') {
+					str = '已开通全线会员'
+				} else {
+					if(!gt.list.length) {
+						str = '已开通会员专线'
+					} else {
+						str = '优先匹配货源'
+					}
+				}
+				return str
 			}
 		},
 		methods: {
@@ -133,15 +153,15 @@
 					limit: 999,
 					logistics_id: uni.getStorageSync('companyInfo').logistics_id
 				}).then(res => {
-					gt.list = res.list.filter(item=> item.deposit_status === '0')
+					gt.list = res.list.filter(item=> item.member_status === '0')
 					gt.list.map(item=> {
 						return item.selected = false
 					})
-					gt.list1 = res.list.filter(item=> item.deposit_status === '1')
+					gt.list1 = res.list.filter(item=> item.member_status === '1')
 				})
-				gt.gtRequest.post('/logistics/Specialline/get_deposit_config_info').then(res => {
+				gt.gtRequest.post('/logistics/Specialline/get_member_config_info').then(res => {
 					gt.data = res
-					if(res.company_deposit === '1') gt.active = -1
+					if(res.company_member === '1') gt.active = -1
 				})
 			},
 			changeType(type) {
@@ -152,28 +172,6 @@
 				let gt = this
 				record.selected = !record.selected
 				gt.list = [...this.list]
-			},
-			changeMore(e) {
-				let gt = this
-				switch (e) {
-					case 1:
-						uni.navigateTo({
-							url: './applyReturn'
-						})
-						break;
-					case 2:
-						uni.navigateTo({
-							url: './paymentRecord'
-						})
-						break;
-					case 3:
-						uni.navigateTo({
-							url: './depositDescription?repositRemark=' + gt.data.repositRemark
-						})
-						break;
-					default:
-						break;
-				}
 			},
 			goTopup() {
 				let gt = this
@@ -188,13 +186,17 @@
 				} else {
 					ids = ['-1']
 				}
-				gt.gtRequest.post('/logistics/Specialline/create_deposit_order', {
+				gt.gtRequest.post('/logistics/Specialline/create_member_order', {
 					line_ids: ids.join(',')
 				}).then(res => {
 					uni.navigateTo({
-						url: "./settleAccounts?type=1&num=" + gt.num + '&order_id=' + res.order_id
+						url: "./settleAccounts?type=2&num=" + gt.num + '&order_id=' + res.order_id
 					})
 				})
+			},
+			computedDay(str) {
+				let num = str - (+new Date() / 1000)
+				return Math.trunc(num / (24 * 60 * 60))
 			}
 		}
 	}
@@ -220,11 +222,6 @@
 				background-color: #485EF4;
 				position: absolute;    
 			}
-			.more {
-				position: absolute;
-				right: 16rpx;
-				top: 0;
-			}
 			.title {
 				color: #FFFFFF;
 				font-size: 40rpx;
@@ -245,7 +242,7 @@
 			}
 			.card {
 				width: calc(100% - 32rpx);
-				height: calc(100% - 290rpx - 200rpx);
+				height: calc(100% - 290rpx - 138rpx);
 				// height: 526rpx;
 				background-color: #fff;
 				border-radius: 20rpx 20rpx 0 0;
@@ -297,7 +294,7 @@
 					}
 				}
 				.card_content {
-					height: calc(100% - 262rpx - 32rpx);
+					max-height: calc(100% - 262rpx - 236rpx - 32rpx);
 					overflow: auto;
 					margin: 40rpx 0;
 				}
@@ -327,6 +324,9 @@
 								display: flex;
 								align-items: center;
 							}
+						}
+						.explain {
+							margin-top: 24rpx;
 						}
 					}
 				}

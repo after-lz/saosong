@@ -471,7 +471,7 @@
 										</view>
 										<view class="con_item">
 											<view class="con_label">
-												<text>体积(m²)</text>
+												<text>体积(m³)</text>
 											</view>
 											<view class="con_num">
 												<text>{{dataInfo.goods_volume}}</text>

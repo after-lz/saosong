@@ -17,17 +17,22 @@
 					<view class="con_title">
 						<text>{{item.start_city}}-{{item.end_city}}</text>
 					</view>
-					<!-- <view class="con_labels">
-						<view class="con_label">
+					<view class="con_labels">
+						<view class="con_label" v-if="item.member_status === '1'">
 							<text>会员专线</text>
 						</view>
-						<view class="con_label" style="background: #485EF4;">
+						<view class="con_label" style="background: #485EF4;" v-if="item.deposit_status === '1'">
 							<text>品质专线</text>
 						</view>
-						<view class="con_label" style="background: #FFF700;color: #000000;">
+						<view class="con_label" style="background: #FFF700;color: #000000;"
+							v-if="item.promote_type === '1' || item.promote_type === '2' || item.promote_type === '3'">
 							<text>金卡推广</text>
 						</view>
-					</view> -->
+						<view class="con_label" style="background: #C7D1DB;color: #000000;"
+							v-if="item.promote_type === '6' || item.promote_type === '7' || item.promote_type === '8'">
+							<text>银卡推广</text>
+						</view>
+					</view>
 				</view>
 				<view class="con_table" style="display: none;">
 					<u-table border-color="#909399" bg-color="#fff" padding="14rpx 5rpx 16rpx 5rpx" font-size="24"
@@ -74,7 +79,6 @@
 							<u-td width="110rpx">{{item.fast_price_obj.P10}}元</u-td>
 							<u-td width="110rpx">{{item.fast_day_min}}-{{item.fast_day_max}}天</u-td>
 						</u-tr>
-
 					</u-table>
 				</view>
 
@@ -126,7 +130,6 @@
 								<text>(元/立方)</text>
 							</view>
 						</view>
-
 						<view class="con_gtTd"
 							style="border-top: none;border-right:none;font-size: 28rpx;font-family: PingFangSC-Medium, PingFang SC;font-weight: 500;color: #000000;">
 							<view class="con_text">
@@ -223,37 +226,46 @@
 
 				<view class="con_time_btns">
 					<view class="con_time">
-						<!-- <text>会员专线：355天</text> -->
+						<template v-if="!promotion && item.member_status === '1'">
+							<text>会员专线：{{ formatSeconds(item.member_end_time) }}</text>
+						</template>
+						<template v-if="promotion && (item.promote_type === '1' || item.promote_type === '2' || item.promote_type === '3')">
+							<text>金卡到期：{{ formatSeconds(item.promote_end_time) }}</text>
+						</template>
+						<template v-if="promotion && (item.promote_type === '6' || item.promote_type === '7' || item.promote_type === '8')">
+							<text>银卡到期：{{ formatSeconds(item.promote_end_time) }}</text>
+						</template>
 					</view>
 					<view class="con_btns">
 						<!-- <view class="con_btn">
 							<text>品质专线</text>
 						</view> -->
-
 						<view class="con_btn" @click="delLine(item)" style="color: #FF6067;border-color: #FF6067;"
-							v-if="item.status == 0">
+							v-if="!promotion && item.status == 0">
 							<text>删除</text>
 						</view>
-
 						<view class="con_btn" @click="goScope(item)">
 							<text>运输范围</text>
 						</view>
-						<view class="con_btn" @click="updownLine(item)" v-if="item.status == 1">
-							<text>下架</text>
-						</view>
-						<view class="con_btn" @click="updownLine(item)" v-if="item.status == 0">
-							<text>上架</text>
-						</view>
-
-						<view class="con_btn" @click="goEdit(item)" v-if="item.status == 0">
-							<text>修改</text>
+						<template v-if="!promotion">
+							<view class="con_btn" @click="updownLine(item)" v-if="item.status == 1">
+								<text>下架</text>
+							</view>
+							<view class="con_btn" @click="updownLine(item)" v-if="item.status == 0">
+								<text>上架</text>
+							</view>
+							<view class="con_btn" @click="goEdit(item)" v-if="item.status == 0">
+								<text>修改</text>
+							</view>
+						</template>
+						<view class="con_btn" @click="goPromotion(item)" v-if="promotion">
+							<text>立刻推广</text>
 						</view>
 					</view>
 				</view>
-
 			</view>
 		</view>
-		<view class="con_addBtn" @click="addLine">
+		<view class="con_addBtn" @click="addLine" v-if="!promotion">
 			<text>添加专线</text>
 		</view>
 	</view>
@@ -268,14 +280,15 @@
 				size: 10,
 				end: false,
 				startArea: '',
+				promotion: false
 			}
 		},
 		onLoad(options) {
 			let gt = this;
 			if (options.startArea) {
 				gt.startArea = JSON.parse(options.startArea)
-				console.log(gt.startArea)
 			}
+			gt.promotion = JSON.parse(options.promotion)
 		},
 		onShow() {
 			let gt = this;
@@ -378,6 +391,28 @@
 				});
 				return false;
 			},
+			goPromotion(item) {
+				let gt = this
+				gt.gtRequest.post('/logistics/Specialline/get_promote_config_info').then(res => {
+					if(!res.linePromote_gold_switch && !res.linePromote_silver_switch && item.promote_type === '0') {
+						return gt.$refs.uToast.show({
+							title: '专线推广服务暂未开通'
+						})
+					} 
+					uni.navigateTo({
+						url: './linePromotion?line_id=' + item.line_id + '&promote_type=' + item.promote_type
+						 + '&promote_end_time=' + item.promote_end_time + '&params=' + encodeURIComponent(JSON.stringify(res))
+					})
+				})
+			},
+			//秒数转化为时天小时
+			formatSeconds(value) {
+				let nowDate = +new Date()
+				let num = value - nowDate / 1000
+				let day = parseInt(num / (24 * 60 *60))
+				let hour = parseInt(num % (24 * 60 *60) / (60 *60))
+				return day + '天' + hour + '时'
+			}
 		}
 	}
 </script>
@@ -505,9 +540,6 @@
 							}
 						}
 					}
-
-
-
 
 					.con_keyVal {
 						.con_text {

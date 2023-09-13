@@ -8,7 +8,7 @@
 				<text>我的企业</text>
 			</view>
 			<view class="con_list">
-				<view class="con_item" @click="goJoin">
+				<view class="con_item" @click="goNextView(1)">
 					<view class="con_title_status">
 						<view class="con_title">
 							<text>企业入驻</text>
@@ -25,7 +25,7 @@
 						</view>
 					</view>
 				</view>
-				<view class="con_item" @click="goCompanyInfo" v-if="parkId">
+				<view class="con_item" v-if="parkId" @click="goNextView(2)">
 					<view class="con_title_status">
 						<view class="con_title">
 							<text>浏览公司详情</text>
@@ -40,7 +40,7 @@
 						</view>
 					</view>
 				</view>
-				<view class="con_item" @click="goLineManage">
+				<view class="con_item" @click="goNextView(3)">
 					<view class="con_title_status">
 						<view class="con_title">
 							<text>专线管理</text>
@@ -56,7 +56,7 @@
 						</view>
 					</view>
 				</view>
-				<view class="con_item" style="display: none;">
+				<view class="con_item" style="display: none;" @click="goNextView(4)">
 					<view class="con_title_status">
 						<view class="con_title">
 							<text>企业视频</text>
@@ -80,7 +80,7 @@
 				<text>企业营销</text>
 			</view>
 			<view class="con_list">
-				<view class="con_item" @click="goSpecialLine">
+				<view class="con_item" @click="goNextView(5)">
 					<view class="con_title_status">
 						<view class="con_title">
 							<text>品质专线</text>
@@ -96,7 +96,7 @@
 						</view>
 					</view>
 				</view>
-				<view class="con_item" style="display: none;">
+				<view class="con_item" @click="goNextView(6)">
 					<view class="con_title_status">
 						<view class="con_title">
 							<text>会员专线</text>
@@ -112,23 +112,7 @@
 						</view>
 					</view>
 				</view>
-				<view class="con_item" style="background-color: #485EF4;display: none;">
-					<view class="con_title_status">
-						<view class="con_title" style="color: #fff;">
-							<text>专线推广</text>
-						</view>
-						<view class="con_status">
-							<text></text>
-						</view>
-					</view>
-					<view class="con_descript">
-						<view class="con_text" style="color: #fff;">
-							<text> 马上付费享</text>
-							<text style="font-size: 28rpx;margin-left: 10rpx;">置顶推广</text>
-						</view>
-					</view>
-				</view>
-				<view class="con_item" @click="goTicketManage">
+				<view class="con_item" @click="goNextView(7)">
 					<view class="con_title_status">
 						<view class="con_title">
 							<text>发券管理</text>
@@ -144,9 +128,24 @@
 						</view>
 					</view>
 				</view>
+				<view class="con_item" style="background-color: #485EF4;" @click="goNextView(8)">
+					<view class="con_title_status">
+						<view class="con_title" style="color: #fff;">
+							<text>专线推广</text>
+						</view>
+						<view class="con_status">
+							<text></text>
+						</view>
+					</view>
+					<view class="con_descript">
+						<view class="con_text" style="color: #fff;">
+							<text> 马上付费享</text>
+							<text style="font-size: 28rpx;margin-left: 10rpx;">置顶推广</text>
+						</view>
+					</view>
+				</view>
 			</view>
 		</view>
-
 	</view>
 </template>
 
@@ -157,86 +156,96 @@
 				swiperList: [],
 				parkId: 0,
 				lineNum: 0,
-				startArea:'',
+				startArea:''
 			}
 		},
 		onLoad() {
-			let gt = this;
-
+			let gt = this
 			// #ifdef MP-WEIXIN
-			var adType = 'AppletLogisticsManage';
+			var adType = 'AppletLogisticsManage'
 			// #endif
 			// #ifdef APP-PLUS
-			var adType = 'AppLogisticsManage';
+			var adType = 'AppLogisticsManage'
 			// #endif
 
-			var url = "/api/appgobal/get_ad_data";
+			var url = "/api/appgobal/get_ad_data"
 			var data = {
 				platform: 'logistics',
 				city: '无锡',
-				ad_sign: adType,
-			};
+				ad_sign: adType
+			}
 			gt.gtRequest.post(url, data).then(res => {
-				gt.swiperList = res.list;
-			});
+				gt.swiperList = res.list
+			})
 		},
 		onShow() {
-			let gt = this;
-			gt.getCompanyInfo();
-			gt.getIndexInfo();
+			let gt = this
+			gt.getCompanyInfo()
+			gt.getIndexInfo()
 		},
 		methods: {
 			getCompanyInfo() {
-				let gt = this;
-				var url = "/logistics/company/get_company_info";
-
+				let gt = this
+				var url = "/logistics/company/get_company_info"
 				gt.gtRequest.post(url).then(res => {
-					gt.parkId = res.company_info.park_id;
-				});
+					gt.parkId = res.company_info.park_id
+				})
 			},
 			getIndexInfo() {
-				let gt = this;
-				var url = "/logistics/company/get_index_info";
-
+				let gt = this
+				var url = "/logistics/company/get_index_info"
 				gt.gtRequest.post(url).then(res => {
-					gt.lineNum = res.line_num;
+					gt.lineNum = res.line_num
 					gt.startArea = {
 						city: res.company_info.city,
 						county: res.company_info.county,
 						province: res.company_info.province
 					}
-				});
+				})
 			},
-			goCompanyInfo() {
-				uni.navigateTo({
-					url: './companyInfo',
-				});
-				return false;
-			},
-			goJoin() {
-				let gt = this;
-				uni.navigateTo({
-					url: './companyJoin'
-				});
-			},
-			goLineManage() {
-				let gt = this;
-				console.log(JSON.stringify(gt.startArea))
-				uni.navigateTo({
-					url: './lineManage?startArea='+JSON.stringify(gt.startArea)
-				});
-			},
-			goTicketManage() {
-				let gt = this;
-				uni.navigateTo({
-					url: './ticketManage'
-				});
-			},
-			goSpecialLine() {
-				let gt = this;
-				uni.navigateTo({
-					url: './specialLine'
-				});
+			goNextView(type) {
+				let gt = this
+				switch (type) {
+					case 1:
+						uni.navigateTo({
+							url: './companyJoin'
+						})
+						break;
+					case 2:
+						uni.navigateTo({
+							url: './companyInfo'
+						})
+						break;
+					case 3:
+						uni.navigateTo({
+							url: './lineManage?promotion=false&startArea=' + JSON.stringify(gt.startArea)
+						})
+						break;
+					case 4:
+						break;
+					case 5:
+						uni.navigateTo({
+							url: './specialLine'
+						})
+						break;
+					case 6:
+						uni.navigateTo({
+							url: './memberLine'
+						})
+						break;
+					case 7:
+						uni.navigateTo({
+							url: './ticketManage'
+						})
+						break;
+					case 8:
+						uni.navigateTo({
+							url: './lineManage?promotion=true'
+						})
+						break;
+					default:
+						break;
+				}
 			}
 		}
 	}
