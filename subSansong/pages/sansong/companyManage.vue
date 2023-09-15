@@ -25,22 +25,7 @@
 						</view>
 					</view>
 				</view>
-				<view class="con_item" v-if="parkId" @click="goNextView(2)">
-					<view class="con_title_status">
-						<view class="con_title">
-							<text>浏览公司详情</text>
-						</view>
-						<view class="con_status">
-							<text></text>
-						</view>
-					</view>
-					<view class="con_descript">
-						<view class="con_text">
-							<text>查看公司详情信息</text>
-						</view>
-					</view>
-				</view>
-				<view class="con_item" @click="goNextView(3)">
+				<view class="con_item" @click="goNextView(2)">
 					<view class="con_title_status">
 						<view class="con_title">
 							<text>专线管理</text>
@@ -53,6 +38,21 @@
 						<view class="con_text">
 							<text style="color: #485EF4;font-size: 28rpx;margin-right: 10rpx;">免费展示</text>
 							<text> 您的专线信息</text>
+						</view>
+					</view>
+				</view>
+				<view class="con_item" v-if="parkId" @click="goNextView(3)">
+					<view class="con_title_status">
+						<view class="con_title">
+							<text>浏览公司详情</text>
+						</view>
+						<view class="con_status">
+							<text></text>
+						</view>
+					</view>
+					<view class="con_descript">
+						<view class="con_text">
+							<text>查看公司详情信息</text>
 						</view>
 					</view>
 				</view>
@@ -213,12 +213,12 @@
 						break;
 					case 2:
 						uni.navigateTo({
-							url: './companyInfo'
+							url: './lineManage?promotion=false&startArea=' + JSON.stringify(gt.startArea)
 						})
 						break;
 					case 3:
 						uni.navigateTo({
-							url: './lineManage?promotion=false&startArea=' + JSON.stringify(gt.startArea)
+							url: './companyInfo'
 						})
 						break;
 					case 4:

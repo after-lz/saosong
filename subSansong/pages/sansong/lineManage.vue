@@ -413,9 +413,9 @@
 			//秒数转化为时天小时
 			formatSeconds(value) {
 				let nowDate = +new Date()
-				let num = value - nowDate / 1000
-				let day = parseInt(num / (24 * 60 *60))
-				let hour = parseInt(num % (24 * 60 *60) / (60 *60))
+				let num = value - Math.trunc(nowDate / 1000)
+				let day = Math.trunc(num / (24 * 60 *60))
+				let hour = Math.trunc(num % (24 * 60 *60) / (60 *60))
 				return day + '天' + hour + '时'
 			}
 		}

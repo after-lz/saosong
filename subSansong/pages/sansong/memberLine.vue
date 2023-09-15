@@ -42,10 +42,12 @@
 							<view class="line">全部专线</view>
 						</view>
 					</view>
-					<view class="unUpdateLine updateLine" v-if="list1.length && active === 1">
+					<view class="unUpdateLine" v-if="list1.length && active === 1">
 						<view class="unUpdateLine_title">已开通专线</view>
 						<view class="unUpdateLine_lines" v-if="active === 1">
-							<view class="line" v-for="item in list1" :key="item.line_id">
+							<view class="line" v-for="item in list1" :key="item.line_id" @click="changeSelect1(item)">
+								<view class="line_select" :style="{backgroundImage:
+								`url(${gtCommon.getOssImg(item.selected ?'sansong/selected.png' : 'sansong/unSelected.png')})`}"></view>
 								<view class="line_name">
 									<view class="">{{ item.start_city }}</view>
 									<view class="">——</view>
@@ -89,7 +91,7 @@
 		</view>
 		<view class="footer">
 			<u-button type="primary" v-if="list.length" @click="goTopup">
-				<text>立即充值{{ num }}元</text>
+				<text>{{ num }}元</text>
 			</u-button>
 		</view>
 		<u-toast ref="uToast" />
@@ -117,12 +119,19 @@
 				let gt = this
 				let str = 0
 				if(gt.active === 1) {
-					gt.list.forEach(item=> {
+					gt.list1.forEach(item=> {
 						if(item.selected) str += gt.data.lineMember
 					})
-					return str
+					if(str) {
+						return '立即续费' + str
+					} else {
+						gt.list.forEach(item=> {
+							if(item.selected) str += gt.data.lineMember
+						})
+						return '立即充值' + str
+					}
 				} else {
-					return gt.data.companyMember
+					return '立即充值' + gt.data.companyMember
 				}
 			},
 			title() {
@@ -180,7 +189,23 @@
 			changeSelect(record) {
 				let gt = this
 				record.selected = !record.selected
+				gt.list1.map(item=> {
+					return item.selected = false
+				})
 				gt.list = [...this.list]
+				gt.list1 = [...this.list1]
+			},
+			changeSelect1(record) {
+				let gt = this
+				gt.list.map(item=> {
+					return item.selected = false
+				})
+				gt.list1.map(item=> {
+					return item.selected = false
+				})
+				record.selected = !record.selected
+				gt.list = [...this.list]
+				gt.list1 = [...this.list1]
 			},
 			goTopup() {
 				let gt = this
@@ -188,23 +213,39 @@
 						title: '请勾选同意会员推广协议'
 					})
 				let ids = []
+				let ids1 = []
 				if(gt.active === 1) {
 					gt.list.forEach(item=> {
 						if(item.selected) ids.push(item.line_id)
 					})
-					if(!ids.length) return gt.$refs.uToast.show({
+					gt.list1.forEach(item=> {
+						if(item.selected) ids1.push(item.line_id)
+					})
+					if(!ids.length && !ids1.length) return gt.$refs.uToast.show({
 						title: '请选择充值专线'
 					})
 				} else {
 					ids = ['-1']
 				}
-				gt.gtRequest.post('/logistics/Specialline/create_member_order', {
-					line_ids: ids.join(',')
-				}).then(res => {
-					uni.navigateTo({
-						url: "./settleAccounts?type=2&num=" + gt.num + '&order_id=' + res.order_id
+				/* 充值 */
+				if(ids.length) {
+					gt.gtRequest.post('/logistics/Specialline/create_member_order', {
+						line_ids: ids.join(',')
+					}).then(res => {
+						uni.navigateTo({
+							url: "./settleAccounts?type=2&num=" + gt.num + '&order_id=' + res.order_id
+						})
 					})
-				})
+				/* 续费 */	
+				} else {
+					gt.gtRequest.post('/logistics/Specialline/create_renew_member_order', {
+						line_id: ids1.join(',')
+					}).then(res => {
+						uni.navigateTo({
+							url: "./settleAccounts?type=6&num=" + gt.num + '&order_id=' + res.order_id
+						})
+					})
+				}
 			},
 			computedDay(str) {
 				let num = str - (+new Date() / 1000)

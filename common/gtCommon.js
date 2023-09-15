@@ -226,8 +226,12 @@ function callMobile(mobile) {
 			icon: "error"
 		})
 	}
-
 	return false;
+}
+
+function isTel(str) {
+	const reg = /^(400|800)([0-9\\-]{7,10})|(([0-9]{4}|[0-9]{3})(-| )?)?([0-9]{7,8})((-| |转)*([0-9]{1,4}))?$/;
+	return reg.test(str);
 }
 
 function openLocation(lat, lng) {
@@ -373,3 +377,4 @@ module.exports.goLicence = goLicence;
 module.exports.getMoneyStatus = getMoneyStatus;
 module.exports.debounce = debounce;
 module.exports.judgeTime = judgeTime;
+module.exports.isTel = isTel;

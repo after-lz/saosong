@@ -99,7 +99,9 @@
 				gt.pay_url = '/logistics/Specialline/pay_renew_promote_order'
 			} else if(option.type === '5') {
 				gt.pay_url = '/logistics/Abnormal/pay_abnormal_order'
-			}
+			} else if(option.type === '6') { // 会员续费
+				gt.pay_url = '/logistics/Specialline/pay_renew_member_order'
+			} 
 		},
 		methods: {
 			/* 推广：获取推广可抵扣的红包金额数 */

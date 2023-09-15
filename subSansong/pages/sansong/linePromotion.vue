@@ -722,7 +722,7 @@
 					}
 				}
 				let url = name === '立即续费' ? '/logistics/Specialline/create_renew_promote_order' : '/logistics/Specialline/create_promote_order'
-				let pay_type = '立即续费' ? 4 : 3
+				let pay_type = name === '立即续费' ? 4 : 3
 				gt.gtRequest.post(url, {
 					line_id: gt.line_id,
 					promote_type: gt.type

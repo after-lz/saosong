@@ -240,10 +240,13 @@
 														title: '登录成功！',
 														type: 'success',
 													});
-													var pages = getCurrentPages();
-													uni.reLaunch({
-														url: pages[0].$page.fullPath
-													});
+													// var pages = getCurrentPages();
+													// uni.reLaunch({
+													// 	url: pages[0].$page.fullPath
+													// });
+													uni.switchTab({
+														url: '/pages/index/index'
+													})
 												}
 											})
 										} else {
@@ -251,10 +254,13 @@
 												title: '登录成功！',
 												type: 'success',
 											});
-											var pages = getCurrentPages();
-											uni.reLaunch({
-												url: pages[0].$page.fullPath
-											});
+											// var pages = getCurrentPages();
+											// uni.reLaunch({
+											// 	url: pages[0].$page.fullPath
+											// });
+											uni.switchTab({
+												url: '/pages/index/index'
+											})
 										}
 									// }
 								})
@@ -373,10 +379,13 @@
 												title: '登录成功！',
 												type: 'success',
 											});
-											var pages = getCurrentPages();
-											uni.reLaunch({
-												url: pages[0].$page.fullPath
-											});
+											// var pages = getCurrentPages();
+											// uni.reLaunch({
+											// 	url: pages[0].$page.fullPath
+											// });
+											uni.switchTab({
+												url: '/pages/index/index'
+											})
 										}
 									})
 								} else {
@@ -384,10 +393,13 @@
 										title: '登录成功！',
 										type: 'success',
 									});
-									var pages = getCurrentPages();
-									uni.reLaunch({
-										url: pages[0].$page.fullPath
-									});
+									// var pages = getCurrentPages();
+									// uni.reLaunch({
+									// 	url: pages[0].$page.fullPath
+									// });
+									uni.switchTab({
+										url: '/pages/index/index'
+									})
 								}
 							// }
 						})
@@ -516,21 +528,28 @@
 										title: '登录成功！',
 										type: 'success',
 									});
-									var pages = getCurrentPages();
-									uni.reLaunch({
-										url: pages[0].$page.fullPath
-									});
+								// 	var pages = getCurrentPages();
+								// 	console.debug(pages)
+								// 	uni.reLaunch({
+								// 		url: pages[0].$page.fullPath
+								// 	});
 								}
+								uni.switchTab({
+									url: '/pages/index/index'
+								})
 							})
 						} else {
 							gt.$refs.uToast.show({
 								title: '登录成功！',
 								type: 'success',
 							});
-							var pages = getCurrentPages();
-							uni.reLaunch({
-								url: pages[0].$page.fullPath
-							});
+							// var pages = getCurrentPages();
+							// uni.reLaunch({
+							// 	url: pages[0].$page.fullPath
+							// });
+							uni.switchTab({
+								url: '/pages/index/index'
+							})
 						}
 					// }
 				})

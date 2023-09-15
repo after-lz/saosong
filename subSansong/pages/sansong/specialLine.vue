@@ -326,6 +326,10 @@
 								width: calc(100% - 52rpx);
 								display: flex;
 								align-items: center;
+								&>view:nth-child(1),
+								&>view:nth-child(3) {
+									min-width: 80rpx;
+								}
 							}
 						}
 					}

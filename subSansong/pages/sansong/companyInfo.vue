@@ -24,22 +24,22 @@
 								</view>
 							</view>
 							<view class="con_rate">
-								<u-rate :count="rateCount" v-model="rateNum" active-color="#FF6067"
-									inactive-color="#FF6067" active-icon="heart-fill" inactive-icon="heart"></u-rate>
-								<!-- <u-rate :count="count" v-model="value"></u-rate> -->
+								<uv-rate :count="rateCount" v-model="rateNum" inactiveColor="#FF6067" activeColor="#FF6067"
+									:readonly='true' allowHalf active-icon="heart-fill" inactive-icon="heart"></uv-rate>
+								<view class="con_rate_num">{{ rateNum }}分</view>
 							</view>
 							<view class="con_nums">
 								<view class="con_numItem">
 									<text>浏览量:</text>
-									<text>326</text>
+									<text>{{ data.company_info.visitor_count }}</text>
 								</view>
 								<view class="con_numItem">
 									<text>下单量:</text>
-									<text>326</text>
+									<text>{{ data.company_info.order_count }}</text>
 								</view>
 								<view class="con_numItem">
 									<text>收藏量:</text>
-									<text>326</text>
+									<text>{{ data.company_info.collect_count }}</text>
 								</view>
 							</view>
 							<!-- <view class="con_coupon">
@@ -226,7 +226,6 @@
 					</scroll-view>
 				</swiper-item>
 				<swiper-item class="swiper-item" id="lineInfo">
-
 					<view class="con_empty" v-if="dataList.length == 0">
 						<view class="con_img">
 							<image :src="gtCommon.getOssImg('sansong/empty.png')" mode="widthFix"></image>
@@ -248,17 +247,22 @@
 										</view>
 
 										<view class="con_title">
-											<text>{{item.start_city}}-{{item.end_city}}</text>
+											<text>{{cityHide(item.start_city)}}-{{cityHide(item.end_city)}}</text>
 										</view>
 										<view class="con_labels">
-											<view class="con_label">
+											<view class="con_label" v-if="item.member_status === '1'">
 												<text>会员专线</text>
 											</view>
-											<view class="con_label" style="background: #485EF4;">
+											<view class="con_label" style="background: #485EF4;" v-if="item.deposit_status === '1'">
 												<text>品质专线</text>
 											</view>
-											<view class="con_label" style="background: #FFF700;color: #000000;">
+											<view class="con_label" style="background: #FFF700;color: #000000;"
+												v-if="item.promote_type === '1' || item.promote_type === '2' || item.promote_type === '3'">
 												<text>金卡推广</text>
+											</view>
+											<view class="con_label" style="background: #C7D1DB;color: #000000;"
+												v-if="item.promote_type === '6' || item.promote_type === '7' || item.promote_type === '8'">
+												<text>银卡推广</text>
 											</view>
 										</view>
 									</view>
@@ -513,7 +517,7 @@
 				companyName: '',
 				authStatus: 0,
 				rateCount: 5,
-				rateNum: 4,
+				rateNum: 0,
 				notice: '',
 
 				name: '',
@@ -525,7 +529,7 @@
 				lat: '',
 				parkName: '',
 
-
+				data: {},
 				dataList: [],
 				page: 1,
 				size: 10,
@@ -596,7 +600,8 @@
 						item = item + '?x-oss-process=style/sansong_app';
 						imgList.push(item);
 					});
-
+					gt.data = res
+					gt.rateNum = parseFloat(res.company_info.grade_score)
 					// gt.companyImgs = res.company_imgs_all;
 					gt.companyImgs = imgList;
 					gt.companyName = res.company_info.company_name;
@@ -663,6 +668,19 @@
 				} else {
 					gt.lineIndex = index;
 				}
+			},
+			// 城市名称 去掉 市  
+			cityHide(value) {
+				if(!value) return
+				if(value) {
+					let city = ""
+					if(value.indexOf("市") != -1) {
+						city = value.slice(0, -1)
+					} else {
+						city = value
+					}
+					return city
+				}
 			}
 		}
 	}
@@ -706,8 +724,15 @@
 
 								.con_rate {
 									width: 500rpx;
+									display: flex;
+									align-items: center;
 									margin-top: 14rpx;
 									margin-left: 40rpx;
+									color: #FF6067;
+									.con_rate_num {
+										font-size: 24rpx;
+										margin-left: 10rpx;
+									}
 								}
 
 								.con_nums {
@@ -877,11 +902,13 @@
 												color: #000000;
 												line-height: 44rpx;
 												margin-left: 16rpx;
+												white-space: nowrap;
+												text-overflow: ellipsis;
+												overflow: hidden;
 											}
 
 											.con_labels {
 												display: flex;
-												display: none;
 
 												.con_label {
 													width: 136rpx;

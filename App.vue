@@ -6,7 +6,7 @@
 			var companyAuth = uni.getStorageSync('companyAuth')
 			var checkStatus = uni.getStorageSync('checkStatus')
 			if(!userAuth && !companyAuth && (checkStatus === '' || checkStatus === 2)) {
-				uni.navigateTo({
+				uni.reLaunch({
 					url: "/pages/login/login"
 				})
 			}
@@ -151,8 +151,8 @@
 		onShow: function(options) {
 			let gt = this;
 			
-			// var pcaList = uni.getStorageSync('pcaList');
-			// if (!pcaList) {
+			var pcaList = uni.getStorageSync('pcaList');
+			if (!pcaList) {
 				let baseUrl = uni.getStorageSync('apiDomain')
 				var url = '/api/appgobal/get_city_data';
 				uni.request({
@@ -178,7 +178,7 @@
 						}
 					}
 				});
-			// }
+			}
 			
 			uni.onNetworkStatusChange(function(res) {
 				// console.log(res.isConnected);
