@@ -475,6 +475,27 @@
 						"navigationBarTitleText": "会员专线",
 						"enablePullDownRefresh": false
 					}
+				},
+				{
+					"path": "pages/sansong/abnormalBill",
+					"style": {
+						"navigationBarTitleText": "异常单",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "pages/sansong/abnormalBillDetail",
+					"style": {
+						"navigationBarTitleText": "异常单详情",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "pages/sansong/abnormalBillDispose",
+					"style": {
+						"navigationBarTitleText": "异常单处理",
+						"enablePullDownRefresh": false
+					}
 				}
 			]
 		}, 

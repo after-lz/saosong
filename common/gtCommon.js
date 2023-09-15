@@ -258,6 +258,14 @@ function previewImg(path) {
 	return false;
 }
 
+function previewImgs(path, count) {
+	uni.previewImage({
+		urls: path,
+		current: count
+	});
+	return false;
+}
+
 function goLicence(url) {
 	// console.log(url);
 	uni.navigateTo({
@@ -360,6 +368,7 @@ module.exports.callMobile = callMobile;
 module.exports.openLocation = openLocation;
 module.exports.copyStr = copyStr;
 module.exports.previewImg = previewImg;
+module.exports.previewImgs = previewImgs;
 module.exports.goLicence = goLicence;
 module.exports.getMoneyStatus = getMoneyStatus;
 module.exports.debounce = debounce;

@@ -97,6 +97,8 @@
 				gt.promote_type = option.promote_type
 				gt.getPacketNum()
 				gt.pay_url = '/logistics/Specialline/pay_renew_promote_order'
+			} else if(option.type === '5') {
+				gt.pay_url = '/logistics/Abnormal/pay_abnormal_order'
 			}
 		},
 		methods: {
