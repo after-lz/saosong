@@ -15,7 +15,8 @@
 					<view class="type_item_num">{{ data.lineMember }}元/年</view>
 					<view class="type_item_msg">指定专线开通会员</view>
 				</view>
-				<view class="type_item" @click="changeType(-1)" :class="active === -1 ? 'active' : ''" v-if="data.company_member === '1' || list.length">
+				<!-- <view class="type_item" @click="changeType(-1)" :class="active === -1 ? 'active' : ''" v-if="data.company_member === '1' || list.length"> -->
+				<view class="type_item" @click="changeType(-1)" :class="active === -1 ? 'active' : ''">
 					<view class="type_item_title">全线会员</view>
 					<view class="type_item_num" v-if="data.company_member === '1'">剩余时间：{{ computedDay(data.company_member_time) }}天</view>
 					<view class="type_item_num" v-else>{{ data.companyMember }}元/年</view>
@@ -23,6 +24,7 @@
 				</view>
 			</view>
 			<view class="card_content">
+				<!-- <scroll-view scroll-y style="height: 100rpx;"> -->
 				<!-- 未升级全线 -->
 				<template v-if="data.company_member === '0'">
 					<view class="unUpdateLine" v-if="list.length || active === -1">
@@ -69,6 +71,7 @@
 						</view>
 					</view>
 				</template>
+				<!-- </scroll-view> -->
 			</view>
 			<!-- <view class="unUpdateLine">
 				<view class="unUpdateLine_title">会员专线权益</view>
@@ -90,7 +93,7 @@
 			<view class="agreement" @click="read">《会员推广协议》</view>
 		</view>
 		<view class="footer">
-			<u-button type="primary" v-if="list.length" @click="goTopup">
+			<u-button type="primary" v-if="num" @click="goTopup">
 				<text>{{ num }}元</text>
 			</u-button>
 		</view>
@@ -119,19 +122,37 @@
 				let gt = this
 				let str = 0
 				if(gt.active === 1) {
-					gt.list1.forEach(item=> {
-						if(item.selected) str += gt.data.lineMember
-					})
-					if(str) {
-						return '立即续费' + str
-					} else {
+					if(gt.list.length && gt.list1.length) {
+						gt.list1.forEach(item=> {
+							if(item.selected) str += gt.data.lineMember
+						})
+						if(str) {
+							return '立即续费' + str
+						} else {
+							gt.list.forEach(item=> {
+								if(item.selected) str += gt.data.lineMember
+							})
+							return '立即充值' + str
+						}
+					} else if(gt.list.length && !gt.list1.length) {
 						gt.list.forEach(item=> {
 							if(item.selected) str += gt.data.lineMember
 						})
 						return '立即充值' + str
+					} else if(!gt.list.length && gt.list1.length) {
+						gt.list1.forEach(item=> {
+							if(item.selected) str += gt.data.lineMember
+						})
+						return '立即续费' + str
+					} else {
+						return ''
 					}
 				} else {
-					return '立即充值' + gt.data.companyMember
+					if(gt.data.company_member === '1') {
+						return '立即续费' + gt.data.companyMember
+					} else {
+						return '立即充值' + gt.data.companyMember
+					}
 				}
 			},
 			title() {
@@ -200,10 +221,13 @@
 				gt.list.map(item=> {
 					return item.selected = false
 				})
-				gt.list1.map(item=> {
-					return item.selected = false
+				gt.list1.forEach(item=> {
+					if(item.line_id === record.line_id) {
+						record.selected = !record.selected
+					} else {
+						item.selected = false
+					}
 				})
-				record.selected = !record.selected
 				gt.list = [...this.list]
 				gt.list1 = [...this.list1]
 			},
@@ -225,15 +249,20 @@
 						title: '请选择充值专线'
 					})
 				} else {
-					ids = ['-1']
+					if(gt.data.company_member === '1') {
+						ids1 = ['-1']
+					} else {
+						ids = ['-1']
+					}
 				}
+				let resultNum = gt.num.slice(4)
 				/* 充值 */
 				if(ids.length) {
 					gt.gtRequest.post('/logistics/Specialline/create_member_order', {
 						line_ids: ids.join(',')
 					}).then(res => {
 						uni.navigateTo({
-							url: "./settleAccounts?type=2&num=" + gt.num + '&order_id=' + res.order_id
+							url: "./settleAccounts?type=2&num=" + resultNum + '&order_id=' + res.order_id
 						})
 					})
 				/* 续费 */	
@@ -242,7 +271,7 @@
 						line_id: ids1.join(',')
 					}).then(res => {
 						uni.navigateTo({
-							url: "./settleAccounts?type=6&num=" + gt.num + '&order_id=' + res.order_id
+							url: "./settleAccounts?type=6&num=" + resultNum + '&order_id=' + res.order_id
 						})
 					})
 				}

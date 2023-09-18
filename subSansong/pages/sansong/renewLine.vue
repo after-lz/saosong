@@ -131,7 +131,7 @@
 		methods: {
 			confirm() {
 				this._show = false
-				this.$emit('confirm', this.promote_type)
+				this.$emit('confirm', this.promote_type, this.promote_type >= 6 ? '立即续费' : '')
 			}
 		}
 	}

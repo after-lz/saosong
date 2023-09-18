@@ -9,7 +9,7 @@
 				<view class="row">
 					<view class="row_label">赔偿金额：</view>
 					<view class="input">
-						<u-input v-model.number="money" type="digit" input-align='center' height='39' placeholder="请输入金额" />
+						<u-input v-model.number="money" type="digit" input-align='center' height='39' placeholder="请输入金额" @blur="inputChange" />
 					</view>
 					<view>元</view>
 				</view>
@@ -18,7 +18,7 @@
 						处理内容：
 					</view>
 					<view class="con_textarea">
-						<u-input v-model.trim="content" maxlength="300" type="textarea" auto-height placeholder="请尽量详细的描述问题的经过" />
+						<u-input v-model="content" maxlength="300" type="textarea" auto-height placeholder="请尽量详细的描述问题的经过" />
 						<view class="count">{{ content.length + '/300' }}</view>
 					</view>
 				</view>
@@ -73,6 +73,16 @@
 			delImg(index) {
 				let gt = this
 				gt.fileList.splice(index, 1)
+			},
+			inputChange(e) {
+				let gt = this
+				setTimeout(() => {
+					if(+e > 0) {
+						gt.money = e.match(/\d+\.?\d{0,2}/, '')[0]
+					} else {
+						gt.money = 0
+					}
+				}, 0)
 			},
 			submit() {
 				let gt = this

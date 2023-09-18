@@ -6,7 +6,8 @@
 		</view>
 		<view class="card_content">
 			<view class="complaint_content">
-				<text>{{ record.content }}</text>
+				<!-- <text>{{ record.content }}</text> -->
+				<u-input v-model="record.content" auto-height disabled type="textarea" height='20' />
 			</view>
 			<view class="complaint_imgs">
 				<view class="img" v-for="src in imgs" :key="src" :style="{backgroundImage: `url(${src})`}" @click="gtCommon.previewImgs(imgs, src)"></view>

@@ -28,7 +28,7 @@
 									:readonly='true' allowHalf active-icon="heart-fill" inactive-icon="heart"></uv-rate>
 								<view class="con_rate_num">{{ rateNum }}分</view>
 							</view>
-							<view class="con_nums">
+							<view class="con_nums" v-if="data.company_info">
 								<view class="con_numItem">
 									<text>浏览量:</text>
 									<text>{{ data.company_info.visitor_count }}</text>
@@ -497,19 +497,26 @@
 						</scroll-view>
 					</view>
 				</swiper-item>
+				<swiper-item class="swiper-item" id="evaluate">
+					<evaluate-list></evaluate-list>
+				</swiper-item>
 			</swiper>
 		</view>
 	</view>
 </template>
 
 <script>
+	import EvaluateList from './evaluateList'
 	export default {
+		components: { EvaluateList },
 		data() {
 			return {
 				tabList: [{
 					name: '公司资料'
 				}, {
 					name: '专线信息'
+				}, {
+					name: '评价(0)'
 				}],
 				currentTab: 0,
 				logistics_id: '',
@@ -543,6 +550,7 @@
 		onLoad(option) {
 			let gt = this;
 			gt.logistics_id = option.logistics_id ? option.logistics_id : uni.getStorageSync("companyInfo").logistics_id
+			gt.tabList[2].name = `评价（${uni.getStorageSync("companyInfo").comment_num}）`
 			gt.params = {
 				logistics_id: gt.logistics_id,
 				page: 1,

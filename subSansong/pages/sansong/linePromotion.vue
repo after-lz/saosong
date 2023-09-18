@@ -999,7 +999,7 @@
 				margin: 0 40rpx;
 			}
 			.goDetail {
-				margin: 116rpx 0 88rpx 0;
+				margin: 58rpx 0 88rpx 0;
 				text-align: center;
 				font-size: 26rpx;
 				color: #777777;

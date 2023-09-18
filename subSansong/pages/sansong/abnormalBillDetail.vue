@@ -6,11 +6,6 @@
 		</view>
 		<swiper :style="{height: height}" :current="swiperCurrent" @transition="transition" @animationfinish="animationfinish">
 			<swiper-item class="swiper-item">
-				<view style="height: 100%; overflow: auto;">
-					<abnormal-bill-base-detail :record='record' :imgs='imgs'></abnormal-bill-base-detail>
-				</view>
-			</swiper-item>
-			<swiper-item class="swiper-item">
 				<view class="orderProgress">
 					<view class="card">
 						<template v-if="record.status === '2'">
@@ -83,6 +78,11 @@
 					</view>
 				</view>
 			</swiper-item>
+			<swiper-item class="swiper-item">
+				<view style="height: 100%; overflow: auto;">
+					<abnormal-bill-base-detail :record='record' :imgs='imgs'></abnormal-bill-base-detail>
+				</view>
+			</swiper-item>
 		</swiper>
 	</view>
 </template>
@@ -97,8 +97,8 @@
 				record: {},
 				imgs: [],
 				tabs: [
-					{name: '订单详情'},
-					{name: '处理进度'}
+					{name: '处理进度'},
+					{name: '订单详情'}
 				],
 				height: '',
 				current: 0,

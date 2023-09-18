@@ -7,7 +7,7 @@
 					 || item.promote_type === '3' ? gold_type : silver_type})`}"></view>
 					<view class="card_content">
 						<view class="row">
-							<view class="time">{{ gtCommon.formateTime(item.end_time, 'YYYY-MM-DD HH:mm:ss') }}</view>
+							<view class="time">{{ gtCommon.formateTime(item.pay_time, 'YYYY-MM-DD HH:mm:ss') }}</view>
 							<view class="status">交易成功</view>
 						</view>
 						<view class="row">

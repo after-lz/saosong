@@ -305,7 +305,8 @@
 					"path": "pages/sansong/companyInfo",
 					"style": {
 						"navigationBarTitleText": "公司详情",
-						"enablePullDownRefresh": false
+						"enablePullDownRefresh": false,
+						"disableScroll": true
 					}
 				},
 				{
@@ -474,6 +475,7 @@
 					"style": {
 						"navigationBarTitleText": "会员专线",
 						"enablePullDownRefresh": false
+						// "disableScroll": true
 					}
 				},
 				{
