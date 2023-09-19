@@ -27,8 +27,7 @@
 					<view class="address_end">{{ item.deliver_info.receive_city }}</view>
 				</view>
 				<view class="row">
-					货物信息：{{item.deliver_info.goods_name}}/{{item.deliver_info.goods_number}}件/
-					{{parseFloat(item.deliver_info.goods_weight)}}吨/{{parseFloat(item.deliver_info.goods_volume)}}方
+					货物信息：{{item.deliver_info.goods_name}}/{{item.deliver_info.goods_number}}件/{{parseFloat(item.deliver_info.goods_weight)}}吨/{{parseFloat(item.deliver_info.goods_volume)}}方
 				</view>
 				<view class="row">投诉类型：{{ item.type }}</view>
 				<view class="row">投诉时间：{{ gtCommon.formateTime(item.create_time, 'YYYY-MM-DD HH:mm') }}</view>

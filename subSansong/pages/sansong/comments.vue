@@ -1,5 +1,5 @@
 <template>
-	<mescroll-uni @init="mescrollInit" :height="height" :down="downOption" @down="downCallback" :up="upOption" @up="upCallback" @emptyclick="emptyClick">
+	<mescroll-uni @init="mescrollInit" :height="height" :down="downOption" @down="downCallback" :up="upOption" @up="upCallback">
 		<view class="card" v-for="item in goods" :key="item.id">
 			<view class="card_head">
 				<view class="card_head_left">
@@ -7,7 +7,7 @@
 					<view class="name">{{ item.cargo_info.nickname }}</view>
 				</view>
 				<view class="card_head_right">
-					<view class="">综合评分：</view>
+					<view class="">综合评价：</view>
 					<view class="score">{{ item.average_score }}分</view>
 				</view>
 			</view>
@@ -44,7 +44,11 @@
 		mixins: [MescrollMixin, MescrollMoreItemMixin],
 		props:{
 			i: Number,
-			height: [Number, String]
+			height: [Number, String],
+			logistics_id: {
+				type: Number,
+				default: 0
+			}
 		},
 		data() {
 			return {
@@ -68,7 +72,7 @@
 					platform: 'logistics',
 					page: 1,
 					limit: 10,
-					logistics_id: uni.getStorageSync('companyInfo').logistics_id,
+					logistics_id: this.logistics_id,
 					type: 0
 				}
 			}
@@ -86,18 +90,17 @@
 				gt.gtRequest.post('/api/applogin/get_comment_list', gt.params).then(res => {
 					res.list.forEach(item=> {
 						item.imgList = item.imgs ? item.imgs.split('||') : []
+						if(item.average_score.length === 1) {
+							item.average_score += '.0'
+						} else if(item.average_score.length === 3) {
+							item.average_score = item.average_score.slice(0, 3)
+						}
 					})
 					if(page.num == 1) gt.goods = []
 					gt.goods = gt.goods.concat(res.list)
 					gt.mescroll.endSuccess(res.list.length)
 				}).catch(()=>{
 					gt.mescroll.endErr()
-				})
-			},
-			//点击空布局按钮的回调
-			emptyClick(){
-				uni.showToast({
-					title:'点击了按钮,具体逻辑自行实现'
 				})
 			},
 			judgeType(order_type, deliver_type) {

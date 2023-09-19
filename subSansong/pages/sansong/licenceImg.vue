@@ -10,12 +10,16 @@
 	export default {
 		data() {
 			return {
-				imgPath:'',
+				imgPath:''
 			}
 		},
-		onLoad() {
+		onLoad(options) {
 			let gt = this;
-			gt.getDataInfo();
+			if(options.img) {
+				gt.imgPath = options.img
+			} else {
+				gt.getDataInfo()
+			}
 		},
 		methods: {
 			getDataInfo(){

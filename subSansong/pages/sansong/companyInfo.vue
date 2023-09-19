@@ -195,7 +195,7 @@
 										</view>
 									</view>
 								</view>
-								<view class="con_line">
+								<!-- <view class="con_line">
 									<u-line length="682rpx" color="#F2F2F2" margin="32rpx" />
 								</view>
 								<view class="con_key_val">
@@ -207,7 +207,7 @@
 											<text>点击查看</text>
 										</view>
 									</view>
-								</view>
+								</view> -->
 								<view class="con_line">
 									<u-line length="682rpx" color="#F2F2F2" margin="32rpx" />
 								</view>
@@ -498,10 +498,11 @@
 					</view>
 				</swiper-item>
 				<swiper-item class="swiper-item" id="evaluate">
-					<evaluate-list></evaluate-list>
+					<evaluate-list :data='data.company_info' v-if="data.company_info"></evaluate-list>
 				</swiper-item>
 			</swiper>
 		</view>
+		<u-toast ref="uToast" />
 	</view>
 </template>
 
@@ -516,7 +517,7 @@
 				}, {
 					name: '专线信息'
 				}, {
-					name: '评价(0)'
+					name: '评价'
 				}],
 				currentTab: 0,
 				logistics_id: '',
@@ -550,7 +551,7 @@
 		onLoad(option) {
 			let gt = this;
 			gt.logistics_id = option.logistics_id ? option.logistics_id : uni.getStorageSync("companyInfo").logistics_id
-			gt.tabList[2].name = `评价（${uni.getStorageSync("companyInfo").comment_num}）`
+			// gt.tabList[2].name = `评价（${uni.getStorageSync("companyInfo").comment_num}）`
 			gt.params = {
 				logistics_id: gt.logistics_id,
 				page: 1,
@@ -578,19 +579,18 @@
 				gt.params.page++
 				gt.getPacketList()
 			},
-			preview() {
+			preview(e) {
 				let gt = this;
-				uni.navigateTo({
-					url: './companyImg',
-				});
-				return false;
+				// uni.navigateTo({
+				// 	url: './companyImg',
+				// });
+				gt.gtCommon.previewImgs(gt.companyImgs, e)
 			},
 			tabsChange(index) {
 				let gt = this;
 				gt.currentTab = index;
 				gt.gtLineList();
 			},
-
 			animationfinish(item) {
 				let gt = this;
 				gt.currentTab = item.detail.current;
@@ -608,10 +608,14 @@
 						item = item + '?x-oss-process=style/sansong_app';
 						imgList.push(item);
 					});
+					res.company_info.grade_score = res.company_info.grade_score.slice(0, 3)
 					gt.data = res
-					gt.rateNum = parseFloat(res.company_info.grade_score)
+					if(gt.logistics_id == uni.getStorageSync("companyInfo").logistics_id) {
+						uni.setStorageSync('companyInfo', res.company_info)
+					}
+					gt.rateNum = res.company_info.grade_score.slice(0, 3)
 					// gt.companyImgs = res.company_imgs_all;
-					gt.companyImgs = imgList;
+					gt.companyImgs = imgList
 					gt.companyName = res.company_info.company_name;
 					gt.authStatus = res.company_info.is_company_approve;
 					gt.notice = res.company_info.public_notice;
@@ -639,22 +643,36 @@
 				return false;
 			},
 			goImgs(url) {
-				uni.navigateTo({
-					url: './' + url + '?manageStatus=true',
-				});
-				return false;
+				let gt = this
+				// let manageStatus = gt.logistics_id == uni.getStorageSync("companyInfo").logistics_id
+				// uni.navigateTo({
+				// 	url: './' + url + '?manageStatus=' + manageStatus
+				// });
+				if(url === 'licenceImg') {
+					if(!gt.data.company_imgs.license_pic.length) return gt.$refs.uToast.show({
+						title: '未上传营业执照！'
+					})
+					uni.navigateTo({
+						url: './' + url + '?img=' + gt.data.company_imgs.license_pic[0]
+					});
+				}
+				if(url === 'insure') {
+					if(!gt.data.company_imgs.insurance_pics.length) return gt.$refs.uToast.show({
+						title: '未上传保单！'
+					})
+					uni.navigateTo({
+						url: './' + url + '?manageStatus=false&imgs=' + encodeURIComponent(JSON.stringify(gt.data.company_imgs.insurance_pics))
+					});
+				}
 			},
 			gtLineList() {
 				let gt = this;
-				if (gt.end) {
-					return false;
-				}
-
-
+				if (gt.end) return false;
 				var url = "/logistics/specialline/get_special_line_list";
 				var data = {
 					page: gt.page,
 					limit: gt.size,
+					logistics_id: gt.logistics_id
 				};
 				gt.gtRequest.post(url, data).then(res => {
 					for (var i = 0; i < res.list.length; i++) {

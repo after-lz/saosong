@@ -240,10 +240,10 @@
 						<!-- <view class="con_btn">
 							<text>品质专线</text>
 						</view> -->
-						<view class="con_btn" @click="delLine(item)" style="color: #FF6067;border-color: #FF6067;"
+						<!-- <view class="con_btn" @click="delLine(item)" style="color: #FF6067;border-color: #FF6067;"
 							v-if="!promotion && item.status == 0">
 							<text>删除</text>
-						</view>
+						</view> -->
 						<view class="con_btn" @click="goScope(item)">
 							<text>运输范围</text>
 						</view>

@@ -6,9 +6,11 @@
 			var companyAuth = uni.getStorageSync('companyAuth')
 			var checkStatus = uni.getStorageSync('checkStatus')
 			if(!userAuth && !companyAuth && (checkStatus === '' || checkStatus === 2)) {
+				// #ifdef APP-PLUS
 				uni.reLaunch({
 					url: "/pages/login/login"
 				})
+				// #endif
 			}
 			uni.loadFontFace({
 				global: true,

@@ -98,13 +98,30 @@
 					type_1: {},
 					type_2: {},
 					type_3: {}
-				}
+				},
+				token: ''
 			}
 		},
-		onShow() {
+		async onShow() {
 			let gt = this
-			gt.getList()
-			gt.refreshCircle()
+			gt.token = await gt.gtRequest.getToken()
+			if(gt.token) {
+				gt.getList()
+				gt.refreshCircle()
+			} else {
+				uni.showModal({
+					title: '请先登录',
+					showCancel: true,
+					success(res) {
+						if (res.confirm) {
+							uni.navigateTo({
+								url: '../login/login'
+							});
+							return false
+						}
+					}
+				})
+			}
 		},
 		methods: {
 			refreshCircle() {
@@ -123,7 +140,22 @@
 			},
 			tabsChange(index) {
 				let gt = this
-				gt.current = index
+				if(gt.token) {
+					gt.current = index
+				} else {
+					uni.showModal({
+						title: '获取完整体验，请先登录',
+						showCancel: true,
+						success(res) {
+							if (res.confirm) {
+								uni.navigateTo({
+									url: '../login/login'
+								});
+								return false
+							}
+						}
+					})
+				}
 			},
 			animationfinish(e) {
 				let gt = this
@@ -133,13 +165,28 @@
 			},
 			clearUnread() {
 				let gt = this
-				gt.gtRequest.post('/api/applogin/lots_read_message', {
-					platform: 'logistics'
-				}).then(res => {
-					gt.list.type_1.num = 0
-					gt.list.type_2.num = 0
-					gt.list.type_3.num = 0
-				})
+				if(gt.token) {
+					gt.gtRequest.post('/api/applogin/lots_read_message', {
+						platform: 'logistics'
+					}).then(res => {
+						gt.list.type_1.num = 0
+						gt.list.type_2.num = 0
+						gt.list.type_3.num = 0
+					})
+				} else {
+					uni.showModal({
+						title: '请先登录',
+						showCancel: true,
+						success(res) {
+							if (res.confirm) {
+								uni.navigateTo({
+									url: '../login/login'
+								});
+								return false
+							}
+						}
+					})
+				}
 			},
 			circleMsg() {
 				uni.navigateTo({
@@ -147,29 +194,45 @@
 				})
 			},
 			goDetail(type) {
-				switch (type){
-					case 1:
-						uni.navigateTo({
-							url: './visitorLog'
-						})
-						break;
-					case 2:
-						uni.navigateTo({
-							url: './logisticsInfo'
-						})
-						break;
-					case 3:
-						uni.navigateTo({
-							url: './redEnvelopeWelfare'
-						})
-						break;
-					case 4:
-						uni.navigateTo({
-							url: './serviceNotice'
-						})
-						break;
-					default:
-						break;
+				let gt = this
+				if(gt.token) {
+					switch (type){
+						case 1:
+							uni.navigateTo({
+								url: './visitorLog'
+							})
+							break;
+						case 2:
+							uni.navigateTo({
+								url: './logisticsInfo'
+							})
+							break;
+						case 3:
+							uni.navigateTo({
+								url: './redEnvelopeWelfare'
+							})
+							break;
+						case 4:
+							uni.navigateTo({
+								url: './serviceNotice'
+							})
+							break;
+						default:
+							break;
+					}
+				} else {
+					uni.showModal({
+						title: '请先登录',
+						showCancel: true,
+						success(res) {
+							if (res.confirm) {
+								uni.navigateTo({
+									url: '../login/login'
+								});
+								return false
+							}
+						}
+					})
 				}
 			},
 			formatDate(date) {

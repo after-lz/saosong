@@ -179,7 +179,7 @@
 					<text>报价信息</text>
 				</view>
 				<view class="con_switch">
-					<text>报价开关</text>
+					<view class="con_switch_name">报价开关</view>
 					<u-switch v-model="quotationSwitch" size="40"></u-switch>
 				</view>
 			</view>
@@ -1352,8 +1352,8 @@
 
 					.con_switch {
 						display: flex;
-
-						text {
+						align-items: center;
+						.con_switch_name {
 							font-size: 28rpx;
 							font-family: PingFangSC-Regular, PingFang SC;
 							font-weight: 400;

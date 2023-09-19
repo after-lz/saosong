@@ -4,7 +4,7 @@
 			<view class="grade_card">
 				<view class="grade_card_left">
 					<view class="grade">{{ data.grade_score }}</view>
-					<view class="level">{{ computedLevel() }}</view>
+					<view class="level">{{ computedLevel(data.grade_score) }}</view>
 				</view>
 				<view class="grade_card_right">
 					<view class="circle_progres" v-for="(item, index) in list" :key="index">
@@ -22,7 +22,7 @@
 		</view>
 		<swiper :style="{height: height}" :current="tabIndex" @change="swiperChange">
 			<swiper-item v-for="(tab, i) in tabs" :key="i">
-				<comments ref="mescrollItem" :i="i" :index="tabIndex" :height="height"></comments>
+				<comments ref="mescrollItem" :i="i" :index="tabIndex" :height="height" :logistics_id='data.logistics_id'></comments>
 			</swiper-item>
 		</swiper>
 	</view>
@@ -32,10 +32,18 @@
 	import comments from './comments'
 	export default {
 		components: { comments },
+		props: {
+			data: {
+				type: Object,
+				default: ()=> {
+					return {}
+				}
+			}
+		},
 		data() {
 			return {
-				data: {},
-				list: [],
+				// data: {},
+				// list: [],
 				tabIndex: 0, // 当前tab的下标
 				height: '',
 				tabs: [
@@ -48,40 +56,67 @@
 		},
 		mounted() {
 			let gt = this
-			gt.height = uni.getSystemInfoSync().windowHeight - 41 - 117 + 'px'
-			gt.data = uni.getStorageSync('companyInfo')
-			gt.data.grade_score = parseFloat(gt.data.grade_score).toFixed(1)
-			gt.computdProgres()
+			gt.height = uni.getSystemInfoSync().windowHeight - 45 - 41 - 117 + 'px'
+			// gt.data = uni.getStorageSync('companyInfo')
+			// gt.data.grade_score = gt.data.grade_score.slice(0, 3)
+			// gt.computdProgres()
 		},
-		methods: {
-			computdProgres() {
+		computed: {
+			list() {
 				let gt = this
-				gt.list = [
+				return [
 					{
 						name: '服务态度',
-						num: parseFloat(gt.data.service).toFixed(1),
+						num: gt.data.service.slice(0, 3),
 						progres: (parseFloat(gt.data.service) / 5).toFixed(2) * 100
 					},
 					{
 						name: '运单质量',
-						num: parseFloat(gt.data.waybill).toFixed(1),
+						num: gt.data.waybill.slice(0, 3),
 						progres: (parseFloat(gt.data.waybill) / 5).toFixed(2) * 100
 					},
 					{
 						name: '运输时效',
-						num: parseFloat(gt.data.transport).toFixed(1),
+						num: gt.data.transport.slice(0, 3),
 						progres: (parseFloat(gt.data.transport) / 5).toFixed(2) * 100
 					},
 					{
 						name: '回单时效',
-						num: parseFloat(gt.data.receipt).toFixed(1),
+						num: gt.data.receipt.slice(0, 3),
 						progres: (parseFloat(gt.data.receipt) / 5).toFixed(2) * 100
 					}
 				]
-			},
-			computedLevel() {
+			}
+		},
+		methods: {
+			// computdProgres() {
+			// 	let gt = this
+			// 	gt.list = [
+			// 		{
+			// 			name: '服务态度',
+			// 			num: gt.data.service.slice(0, 3),
+			// 			progres: (parseFloat(gt.data.service) / 5).toFixed(2) * 100
+			// 		},
+			// 		{
+			// 			name: '运单质量',
+			// 			num: gt.data.waybill.slice(0, 3),
+			// 			progres: (parseFloat(gt.data.waybill) / 5).toFixed(2) * 100
+			// 		},
+			// 		{
+			// 			name: '运输时效',
+			// 			num: gt.data.transport.slice(0, 3),
+			// 			progres: (parseFloat(gt.data.transport) / 5).toFixed(2) * 100
+			// 		},
+			// 		{
+			// 			name: '回单时效',
+			// 			num: gt.data.receipt.slice(0, 3),
+			// 			progres: (parseFloat(gt.data.receipt) / 5).toFixed(2) * 100
+			// 		}
+			// 	]
+			// },
+			computedLevel(score) {
 				let gt = this
-				let score = gt.data.grade_score
+				// let score = gt.data.grade_score
 				let str = ''
 				if(score <= 1) str = "极差"
 				if(score > 1 && score <= 2) str = "差"
