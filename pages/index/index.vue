@@ -595,16 +595,11 @@
 			let gt = this;
 			gt.innerAudioContext = uni.createInnerAudioContext();
 			// gt.innerAudioContext = uni.getBackgroundAudioManager();
-			// console.log(gt.$gtWSS.socketTask);
-			// var mobile = uni.getStorageSync('mobile');
-			// gt.mobile = mobile;
 			// if (mobile) {
 			// gt.gtonMessage();
 			// }
 			uni.setStorageSync('audioStatus', true);
 			// uni.setStorageSync('listenStatus', true);
-			// var companyInfo = uni.getStorageSync('companyInfo');
-			// gt.logistics_id = companyInfo.logistics_id;
 		},
 		async onShow() {
 			let gt = this;
@@ -631,7 +626,7 @@
 			// } else {
 			// 	gt.joinShow = true;
 			// }
-			gt.getLocation();
+			if(uni.getStorageSync('token')) gt.getLocation();
 			if (gt.mobile) {
 				await gt.getCompanyInfo();
 				if(gt.companyAuth) return

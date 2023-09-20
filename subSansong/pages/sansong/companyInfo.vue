@@ -17,11 +17,7 @@
 								<view class="con_name">
 									<text>{{companyName}}</text>
 								</view>
-								<view class="con_icons">
-									<view class="con_auth" v-if="authStatus == 1">
-										<image :src="gtCommon.getOssImg('user/auth.png')" mode="widthFix"></image>
-									</view>
-								</view>
+								<image :src="gtCommon.getOssImg('user/auth.png')" mode="widthFix" v-if="authStatus == 1"></image>
 							</view>
 							<view class="con_rate">
 								<uv-rate :count="rateCount" v-model="rateNum" inactiveColor="#FF6067" activeColor="#FF6067"
@@ -115,13 +111,13 @@
 												<text v-if="phone">{{phone}}</text>
 												<text v-else>-</text>
 											</view>
-											<view class="con_icon" @click="gtCommon.callMobile(phone)" v-if="phone">
+											<view class="con_icon" @click="callPhone(phone)" v-if="phone">
 												<u-icon name="phone-fill" size="40" color="#485EF4"></u-icon>
 											</view>
 										</view>
 									</view>
 								</view>
-								<view class="con_line">
+								<!-- <view class="con_line">
 									<u-line length="682rpx" color="#F2F2F2" margin="32rpx" />
 								</view>
 								<view class="con_key_val">
@@ -135,7 +131,7 @@
 											</view>
 										</view>
 									</view>
-								</view>
+								</view> -->
 								<view class="con_line">
 									<u-line length="682rpx" color="#F2F2F2" margin="32rpx" />
 								</view>
@@ -148,9 +144,9 @@
 											<view class="con_text">
 												<text>{{address}}</text>
 											</view>
-											<view class="con_icon" @click="gtCommon.openLocation(lat,lng)">
+											<!-- <view class="con_icon" @click="gtCommon.openLocation(lat,lng)">
 												<u-icon name="map-fill" size="40" color="#485EF4"></u-icon>
-											</view>
+											</view> -->
 										</view>
 									</view>
 								</view>
@@ -548,16 +544,22 @@
 				over: false
 			}
 		},
-		onLoad(option) {
+		async onLoad(option) {
 			let gt = this;
 			gt.logistics_id = option.logistics_id ? option.logistics_id : uni.getStorageSync("companyInfo").logistics_id
 			// gt.tabList[2].name = `评价（${uni.getStorageSync("companyInfo").comment_num}）`
+			let url = gt.logistics_id ? "/logistics/company/get_company_infother" : "/logistics/company/get_company_info"
+			await gt.getCompanyInfo(url);
+			if(url == '/logistics/company/get_company_info') {
+				gt.logistics_id = gt.data.company_info.logistics_id
+				uni.setStorageSync('companyAuth', gt.data.company_info.is_company_approve)
+				uni.setStorageSync('companyInfo', gt.data.company_info)
+			}
 			gt.params = {
 				logistics_id: gt.logistics_id,
 				page: 1,
 				limit: 10
 			}
-			gt.getCompanyInfo();
 			gt.gtLineList();
 			gt.getPacketList()
 		},
@@ -596,10 +598,10 @@
 				gt.currentTab = item.detail.current;
 				gt.gtLineList();
 			},
-			getCompanyInfo() {
+			getCompanyInfo(url) {
 				let gt = this;
 				// var url = "/logistics/company/get_company_info";
-				var url = "/logistics/company/get_company_infother";
+				// var url = "/logistics/company/get_company_infother";
 				gt.gtRequest.post(url, {
 					logistics_id: gt.logistics_id
 				}).then(res => {
@@ -608,12 +610,14 @@
 						item = item + '?x-oss-process=style/sansong_app';
 						imgList.push(item);
 					});
-					res.company_info.grade_score = res.company_info.grade_score.slice(0, 3)
+					/* 计算公司评分 */
+					let num = parseFloat(res.company_info.grade_score) / (res.company_info.comment_num + 1)
+					res.company_info.grade_score_result = gt.gtCommon.floatNum(num, 1)
 					gt.data = res
 					if(gt.logistics_id == uni.getStorageSync("companyInfo").logistics_id) {
 						uni.setStorageSync('companyInfo', res.company_info)
 					}
-					gt.rateNum = res.company_info.grade_score.slice(0, 3)
+					gt.rateNum = gt.data.company_info.grade_score_result
 					// gt.companyImgs = res.company_imgs_all;
 					gt.companyImgs = imgList
 					gt.companyName = res.company_info.company_name;
@@ -641,6 +645,19 @@
 					url: './transportScope?lineId=' + item.line_id,
 				});
 				return false;
+			},
+			callPhone(phone) {
+				let gt = this
+				if(gt.gtCommon.isTel(phone)) {
+					uni.makePhoneCall({
+						phoneNumber: phone,
+					});
+				} else {
+					uni.showToast({
+						title: '手机号格式错误',
+						icon: "error"
+					})
+				}
 			},
 			goImgs(url) {
 				let gt = this
@@ -743,8 +760,9 @@
 										// margin-top: 24rpx;
 										margin-left: 40rpx;
 									}
-									.con_auth image {
+									image {
 										width: 128rpx;
+										margin-left: 20rpx;
 									}
 								}
 
@@ -847,6 +865,8 @@
 											font-weight: 400;
 											color: #909399;
 											line-height: 40rpx;
+											white-space: nowrap;
+											margin-right: 30rpx;
 										}
 
 										.con_val {

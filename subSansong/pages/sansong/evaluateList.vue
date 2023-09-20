@@ -3,8 +3,8 @@
 		<view class="head">
 			<view class="grade_card">
 				<view class="grade_card_left">
-					<view class="grade">{{ data.grade_score }}</view>
-					<view class="level">{{ computedLevel(data.grade_score) }}</view>
+					<view class="grade">{{ data.grade_score_result }}</view>
+					<view class="level">{{ computedLevel(data.grade_score_result) }}</view>
 				</view>
 				<view class="grade_card_right">
 					<view class="circle_progres" v-for="(item, index) in list" :key="index">
@@ -42,8 +42,6 @@
 		},
 		data() {
 			return {
-				// data: {},
-				// list: [],
 				tabIndex: 0, // 当前tab的下标
 				height: '',
 				tabs: [
@@ -57,66 +55,37 @@
 		mounted() {
 			let gt = this
 			gt.height = uni.getSystemInfoSync().windowHeight - 45 - 41 - 117 + 'px'
-			// gt.data = uni.getStorageSync('companyInfo')
-			// gt.data.grade_score = gt.data.grade_score.slice(0, 3)
-			// gt.computdProgres()
 		},
 		computed: {
 			list() {
 				let gt = this
-				return [
+				let arr = [
 					{
 						name: '服务态度',
-						num: gt.data.service.slice(0, 3),
-						progres: (parseFloat(gt.data.service) / 5).toFixed(2) * 100
+						num: gt.gtCommon.floatNum(parseFloat(gt.data.service) / (gt.data.comment_num + 1), 1)
 					},
 					{
 						name: '运单质量',
-						num: gt.data.waybill.slice(0, 3),
-						progres: (parseFloat(gt.data.waybill) / 5).toFixed(2) * 100
+						num: gt.gtCommon.floatNum(parseFloat(gt.data.waybill) / (gt.data.comment_num + 1), 1)
 					},
 					{
 						name: '运输时效',
-						num: gt.data.transport.slice(0, 3),
-						progres: (parseFloat(gt.data.transport) / 5).toFixed(2) * 100
+						num: gt.gtCommon.floatNum(parseFloat(gt.data.transport) / (gt.data.comment_num + 1), 1)
 					},
 					{
 						name: '回单时效',
-						num: gt.data.receipt.slice(0, 3),
-						progres: (parseFloat(gt.data.receipt) / 5).toFixed(2) * 100
+						num: gt.gtCommon.floatNum(parseFloat(gt.data.receipt) / (gt.data.comment_num + 1), 1)
 					}
 				]
+				arr.forEach(item=> {
+					item.progres = (item.num / 5).toFixed(2) * 100
+				})
+				return arr
 			}
 		},
 		methods: {
-			// computdProgres() {
-			// 	let gt = this
-			// 	gt.list = [
-			// 		{
-			// 			name: '服务态度',
-			// 			num: gt.data.service.slice(0, 3),
-			// 			progres: (parseFloat(gt.data.service) / 5).toFixed(2) * 100
-			// 		},
-			// 		{
-			// 			name: '运单质量',
-			// 			num: gt.data.waybill.slice(0, 3),
-			// 			progres: (parseFloat(gt.data.waybill) / 5).toFixed(2) * 100
-			// 		},
-			// 		{
-			// 			name: '运输时效',
-			// 			num: gt.data.transport.slice(0, 3),
-			// 			progres: (parseFloat(gt.data.transport) / 5).toFixed(2) * 100
-			// 		},
-			// 		{
-			// 			name: '回单时效',
-			// 			num: gt.data.receipt.slice(0, 3),
-			// 			progres: (parseFloat(gt.data.receipt) / 5).toFixed(2) * 100
-			// 		}
-			// 	]
-			// },
 			computedLevel(score) {
 				let gt = this
-				// let score = gt.data.grade_score
 				let str = ''
 				if(score <= 1) str = "极差"
 				if(score > 1 && score <= 2) str = "差"

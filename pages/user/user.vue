@@ -300,7 +300,7 @@
 							gt.numArr1[0] = res.logistics_info.credit_score
 							gt.numArr1[1] = res.logistics_info.visitor_count
 							gt.numArr1[2] = res.logistics_info.collect_count
-							gt.numArr1[3] = res.logistics_info.grade_score.slice(0, 3)
+							gt.numArr1[3] = gt.gtCommon.floatNum(parseFloat(res.logistics_info.grade_score) / res.logistics_info.comment_num, 1)
 							gt.numArr2[0] = res.onway_money
 							gt.numArr2[1] = res.logistics_info.money01
 							gt.numArr2[2] = res.logistics_info.money02

@@ -11,7 +11,7 @@
 				<text>您还未添加任何专线</text>
 			</view>
 		</view>
-		<view class="con_list" v-else>
+		<view class="con_list" :class="promotion ? 'con_list1':''" v-else>
 			<view class="con_item" v-for="(item,index) in dataList" :key="index">
 				<view class="con_title_labels">
 					<view class="con_title">
@@ -581,7 +581,7 @@
 							display: flex;
 
 							.con_btn {
-								width: 120rpx;
+								// width: 120rpx;
 								height: 64rpx;
 								border-radius: 10rpx;
 								border: 2rpx solid $gtProjectColor;
@@ -592,12 +592,16 @@
 								line-height: 64rpx;
 								text-align: center;
 								margin: 18rpx 10rpx 20rpx 10rpx;
+								padding: 0 16rpx;
 							}
 						}
 					}
 				}
 			}
 
+			.con_list1 {
+				height: 100%;
+			}
 			.con_addBtn {
 				position: absolute;
 				bottom: 20rpx;

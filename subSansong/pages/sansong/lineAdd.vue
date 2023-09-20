@@ -926,7 +926,7 @@
 			},
 			showGTPCA(str) {
 				let gt = this;
-				gt.height = '600rpx';
+				gt.height = '534rpx';
 				if(str == 's' && (gt.isAdd || gt.isEdit)) return;
 				if(gt.isEdit && str == 'e') {
 					let editProvince = gt.provinceCityAreaList.filter(item=> item.city_code == gt.toPca[0][0].cityCode)
@@ -939,9 +939,11 @@
 				gt.allArea = str == 's' ? false : true;
 				gt.GTPCAShowS = str == 'e' ? false : true;
 				gt.GTPCAShowE = str == 's' ? false : true;
-				gt.$nextTick(()=> {
-					gt.$refs.gtPCA.init(gt.provinceCityAreaList1)
-				})
+				if(gt.isEdit && str == 'e') {
+					gt.$nextTick(()=> {
+						gt.$refs.gtPCA.init(gt.provinceCityAreaList1)
+					})
+				}
 			},
 			addArriveStation() {
 				let gt = this;

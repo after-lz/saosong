@@ -306,12 +306,12 @@
 					uni.showModal({
 						title: '请先同意协议',
 						content: '使用本系统前请先同意协议',
-						showCancel: true,
-						cancelText: '不同意',
-						confirmText: '我同意',
+						showCancel: false,
+						// cancelText: '不同意',
+						confirmText: '我知道了',
 						success(res) {
 							if (res.confirm) {
-								gt.agree = true;
+								// gt.agree = true;
 							}
 						}
 					})
@@ -451,12 +451,12 @@
 					uni.showModal({
 						title: '请先同意协议',
 						content: '使用本系统前请先同意协议',
-						showCancel: true,
-						cancelText: '不同意',
-						confirmText: '我同意',
+						showCancel: false,
+						// cancelText: '不同意',
+						confirmText: '我知道了',
 						success(res) {
 							if (res.confirm) {
-								gt.agree = true;
+								// gt.agree = true;
 							}
 						}
 					})

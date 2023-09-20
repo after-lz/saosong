@@ -5,11 +5,11 @@
 			<!-- 都未开通 -->
 			<template v-if="promote_type_name === ''">
 				<view class="tabs">
-					<view class="tab" :class="active === 1 ? 'tab_active':''" @click="active = 1">
+					<view class="tab" :class="active === 1 ? 'tab_active':''" @click="active = 1, type = -1">
 						<view class="goldLogo" :style="{backgroundImage: `url(${active === 1 ? goleSrc_active : goleSrc})`}"></view>
 						<view class="tabs_name">金卡</view>
 					</view>
-					<view class="tab" :class="active === 2 ? 'tab_active':''" @click="active = 2">
+					<view class="tab" :class="active === 2 ? 'tab_active':''" @click="active = 2, type = -1">
 						<view class="goldLogo" :style="{backgroundImage: `url(${active === 2 ? silverSrc_active : silverSrc})`}"></view>
 						<view class="tabs_name">银卡</view>
 					</view>
@@ -29,11 +29,11 @@
 			<!-- 已开通银卡 -->
 			<template v-if="promote_type_name === '银卡'">
 				<view class="tabs">
-					<view class="tab" :class="active === 1 ? 'tab_active':''" @click="active = 1">
+					<view class="tab" :class="active === 1 ? 'tab_active':''" @click="active = 1, type = -1">
 						<view class="goldLogo" :style="{backgroundImage: `url(${active === 1 ? goleSrc_active : goleSrc})`}"></view>
 						<view class="tabs_name">金卡</view>
 					</view>
-					<view class="tab" :class="active === 2 ? 'tab_active':''" @click="active = 2">
+					<view class="tab" :class="active === 2 ? 'tab_active':''" @click="active = 2, type = -1">
 						<view class="goldLogo" :style="{backgroundImage: `url(${active === 2 ? silverSrc_active : silverSrc})`}"></view>
 						<view class="tabs_name">银卡</view>
 					</view>
@@ -41,13 +41,13 @@
 			</template>
 			<view class="card_options">
 				<template v-if="active === 1">
-					<view class="option" :class="type === 1 ? 'option_active':''" @click="type = 1" v-if="data.linePromote_gold_annual_switch">
+					<view class="option" :class="type === 1 ? 'option_active':''" @click="type = 1, type === -1" v-if="data.linePromote_gold_annual_switch">
 						<view class="badge badge_gold">金卡推广</view>
 						<view class="option_title">年度推广</view>
 						<view class="option_nowNum">￥<text class="num">{{data.linePromote_gold_annual_nowMoney}}</text></view>
 						<view class="option_Num">原价{{data.linePromote_gold_annual_originalMoney}}</view>
 					</view>
-					<view class="option" :class="type === 2 ? 'option_active':''" @click="type = 2" v-if="data.linePromote_gold_semi_switch">
+					<view class="option" :class="type === 2 ? 'option_active':''" @click="type = 2, type === -1" v-if="data.linePromote_gold_semi_switch">
 						<view class="badge badge_gold">金卡推广</view>
 						<view class="option_title">半年推广</view>
 						<view class="option_nowNum">￥<text class="num">{{data.linePromote_gold_semi_nowMoney}}</text></view>
@@ -153,11 +153,11 @@
 			<!-- 已开通银卡 -->
 			<template v-if="promote_type_name === '银卡'">
 				<view class="tabs">
-					<view class="tab" :class="active === 1 ? 'tab_active':''" @click="active = 1">
+					<view class="tab" :class="active === 1 ? 'tab_active':''" @click="active = 1, type = -1">
 						<view class="goldLogo" :style="{backgroundImage: `url(${active === 1 ? goleSrc_active : goleSrc})`}"></view>
 						<view class="tabs_name">金卡</view>
 					</view>
-					<view class="tab" :class="active === 2 ? 'tab_active':''" @click="active = 2">
+					<view class="tab" :class="active === 2 ? 'tab_active':''" @click="active = 2, type = -1">
 						<view class="goldLogo" :style="{backgroundImage: `url(${active === 2 ? silverSrc_active : silverSrc})`}"></view>
 						<view class="tabs_name">银卡</view>
 					</view>
@@ -664,7 +664,13 @@
 				let gt = this
 				let str = ''
 				if(gt.active === 1) {
-					str = gt.promote_end_time ? '立即续费' : '立即开通'
+					if(gt.promote_type_name === '金卡') {
+						str = gt.promote_end_time ? '立即续费' : '立即开通'
+					} else if(gt.promote_type_name === '银卡') {
+						str = gt.promote_end_time ? '立即升级' : '立即开通'
+					} else {
+						str = gt.promote_end_time ? '立即续费' : '立即开通'
+					}
 				}
 				return str
 			},

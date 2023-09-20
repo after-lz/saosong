@@ -52,7 +52,7 @@
 									<view class="row_label">充值金额</view>
 									<view class="row_value money">￥{{ item.pay_money }}</view>
 								</view>
-								<view class="row">
+								<view class="row" v-if="item.refund_status === '3'">
 									<view class="row_label">退款时间</view>
 									<view class="row_value">{{ gtCommon.formateTime(item.refund_time, 'YYYY-MM-DD HH:mm:ss') }}</view>
 								</view>
