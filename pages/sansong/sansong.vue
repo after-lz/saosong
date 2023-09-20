@@ -149,7 +149,8 @@
 					{
 						id: 1,
 						name: '数据看板',
-						url: './empty'
+						// url: './empty'
+						url: '/subSansong/pages/sansong/dataBoard'
 					},
 				],
 

@@ -498,6 +498,13 @@
 						"navigationBarTitleText": "异常单处理",
 						"enablePullDownRefresh": false
 					}
+				},
+				{
+					"path": "pages/sansong/dataBoard",
+					"style": {
+						"navigationBarTitleText": "数据看板",
+						"enablePullDownRefresh": false
+					}
 				}
 			]
 		}, 
