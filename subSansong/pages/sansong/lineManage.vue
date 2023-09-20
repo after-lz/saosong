@@ -443,9 +443,11 @@
 			}
 
 			.con_list {
-				margin-top: 10rpx;
-				padding-bottom: 58rpx;
-
+				height: calc(100vh - 120rpx);
+				overflow: auto;
+				// margin-top: 10rpx;
+				// padding-bottom: 58rpx;
+				
 				.con_item {
 					width: 718rpx;
 					background: #FFFFFF;
@@ -597,6 +599,8 @@
 			}
 
 			.con_addBtn {
+				position: absolute;
+				bottom: 20rpx;
 				width: 718rpx;
 				height: 100rpx;
 				background: $gtProjectColor;
@@ -607,7 +611,7 @@
 				color: #FFFFFF;
 				line-height: 100rpx;
 				text-align: center;
-				margin: 70rpx 16rpx 0 16rpx;
+				margin: 0 16rpx;
 			}
 		}
 	}

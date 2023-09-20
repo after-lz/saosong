@@ -653,7 +653,7 @@
 				th_price: '',
 				sh_status: true,
 				sh_price: '',
-				// provinceCityAreaList: [],
+				provinceCityAreaList: [],
 				areaShow: false,
 				provinceIndex: 0,
 				cityIndex: 0,
@@ -668,6 +668,11 @@
 		},
 		async onLoad(options) {
 			let gt = this;
+			if(options.isEdit) {
+				uni.setNavigationBarTitle({
+				    title: "修改专线"
+				});
+			}
 			// var list = uni.getStorage('pcaList')
 			uni.getStorage({
 				key: 'pcaList',
@@ -934,9 +939,9 @@
 				gt.allArea = str == 's' ? false : true;
 				gt.GTPCAShowS = str == 'e' ? false : true;
 				gt.GTPCAShowE = str == 's' ? false : true;
-				setTimeout(()=> {
+				gt.$nextTick(()=> {
 					gt.$refs.gtPCA.init(gt.provinceCityAreaList1)
-				}, 0)
+				})
 			},
 			addArriveStation() {
 				let gt = this;

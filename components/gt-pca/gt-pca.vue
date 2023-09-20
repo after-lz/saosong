@@ -1,6 +1,5 @@
 <template>
 	<view class="gt_content">
-		<!-- {{height}} -->
 		<view class="con_search">
 			<u-search placeholder="请输入市县区" v-model="searchVal" shape="round" :clearabled="false" :show-action="false"
 				height="72" margin="32rpx 16rpx" @change="searchPCA"></u-search>
@@ -16,10 +15,7 @@
 				<text>区县</text>
 			</view>
 		</view>
-
 		<view class="con_list" :style="[listStyle]">
-			<!-- {{pcaList}} -->
-
 			<view class="con_pca">
 				<scroll-view :scroll-y="true" :scroll-into-view="provinceScrollInto">
 					<view class="con_item u-line-1" :class="item.selected ? 'item_selected' : ''"
@@ -34,7 +30,6 @@
 							</view>
 						</view>
 					</view>
-
 					<!-- <u-checkbox-group max="1">
 						<u-checkbox v-model="item.checked" v-for="(item, index) in provinceList" :key="index"
 							:name="item.city_name">
@@ -43,8 +38,6 @@
 							</view>
 						</u-checkbox>
 					</u-checkbox-group> -->
-
-
 				</scroll-view>
 			</view>
 			<view class="con_pca">
@@ -83,7 +76,6 @@
 	</view>
 </template>
 
-
 <script>
 	export default {
 		name: "gt-pca",
@@ -117,39 +109,27 @@
 			return {
 				pcaList: [],
 				searchVal: '',
-
 				provinceList: [],
 				cityList: [],
 				areaList: [],
-
 				provinceScrollInto: 0,
 				cityScrollInto: 0,
 				areaScrollInto: 0,
-
 				provinceSelected: [],
 				citySelected: [],
 				areaSelected: [],
-
-
 				break: false,
 			};
 		},
 		watch: {
 			show(newVal, oldVal) {
-				
-				console.log(newVal);
-				
-				
 				let gt = this;
-
 				if (newVal) {
 					if (gt.selectedList.length > 0 && gt.selectedList.length != 3) {
 						var cityList = gt.getChildren(gt.selectedList[0][0]);
 						gt.cityList = cityList;
 						var areaList = gt.getChildren(gt.selectedList[1][0]);
 						gt.areaList = areaList;
-
-
 						setTimeout(function() {
 							for (var i = 0; i < gt.selectedList[2].length; i++) {
 								var item = {};
@@ -160,11 +140,9 @@
 									}
 								}
 							}
-
-						}, 400);
+						}, 400)
 					}
 				} else {
-
 					var provinceSelected = [];
 					var citySelected = [];
 					var areaSelected = [];
@@ -186,15 +164,11 @@
 					gt.provinceSelected = provinceSelected;
 					gt.citySelected = citySelected;
 					gt.areaSelected = areaSelected;
-
 					gt.$emit('gtPCASelect', JSON.stringify([provinceSelected, citySelected, areaSelected]));
 				}
 			},
-
 			pcaList2(newVal, oldVal) {
-
 				let gt = this;
-				console.log(newVal);
 				var pcaList = [];
 				for (var i = 0; i < newVal.length; i++) {
 					var item1 = {};
@@ -214,49 +188,20 @@
 					}
 					pcaList.push(item1);
 				}
-				console.log(pcaList);
-				
 				gt.pcaList = pcaList;
-				
-				// console.log('pcaList:', gt.pcaList2);
-				// return false;
-				
 				gt.init();
-				
 			}
 		},
 		mounted() {
 			let gt = this;
-			// if(pcaList == []){
-				var pcaList = uni.getStorageSync('pcaList');
-			// }
-			gt.pcaList = pcaList;
-			
-			gt.init();
-			
-			
-			// uni.getStorage({
-			// 	key: 'pcaList',
-			// 	success: function(res) {
-			// 		console.log('pcaList:', res);
-			// 		gt.pcaList = res.data;
-					
-			// 		gt.init();
-			// 	},
-			
-			// });
-
-			// console.log('pcaList:', gt.pcaList2);
-			// return false;
-
-
-
-
+			if(!gt.pcaList.length) {
+				gt.pcaList = uni.getStorageSync('pcaList');
+				gt.init();
+			}
 		},
 		computed: {
 			listStyle() {
 				let gt = this;
-
 				let style = {};
 				style.height = `calc(${gt.height} - 212rpx)`;
 				return style;
@@ -304,7 +249,6 @@
 					gt.cityList = gt.getChildren(gt.selectedList[0][0]);
 					gt.areaList = gt.getChildren(gt.selectedList[1][0]);
 				}
-
 			},
 			getChildren(item) {
 				let gt = this;
@@ -322,7 +266,6 @@
 								};
 								children.push(cityItem);
 							}
-
 							return children;
 						}
 					}
@@ -387,13 +330,10 @@
 					var areaList = gt.getChildren(item);
 					gt.areaList = areaList;
 				}
-
 				gt.selectdPCA(item, selected);
 			},
 			selectdPCA(item, selected) {
 				let gt = this;
-
-
 				gt.provinceList.map(ite => {
 					ite.selected = false;
 				});
@@ -405,7 +345,6 @@
 						ite.selected = false;
 					});
 				}
-
 				item.selected = selected;
 				if (item.cityType == 1) {
 					gt.cityList[0].selected = selected;
@@ -422,8 +361,6 @@
 						gt.areaList[0].selected = selected;
 					}
 					var provinceItem = gt.getParent(item);
-
-
 					provinceItem.selected = selected;
 				}
 				if (item.cityType == 3) {
@@ -439,8 +376,6 @@
 						} else {
 							var num = 0;
 							for (var i = 0; i < gt.areaList.length; i++) {
-
-
 								if (gt.areaList[i].cityCode && gt.areaList[i].selected) {
 									num++;
 								}
@@ -458,25 +393,18 @@
 								provinceItem.selected = false;
 							}
 						}
-
 					} else {
-
 						cityItem.selected = selected;
 						provinceItem.selected = selected;
 					}
 				}
-
-
 				gt.scrollPCA(item);
 			},
 			scrollPCA(item) {
 				let gt = this;
-
 				gt.provinceScrollInto = 'pScroll_0';
 				gt.cityScrollInto = 'cScroll_0';
 				gt.areaScrollInto = 'aScroll_0';
-
-
 				setTimeout(function() {
 					if (item.cityType == 1) {
 						gt.provinceScrollInto = 'pScroll_' + item.cityCode;
@@ -503,16 +431,12 @@
 						gt.provinceScrollInto = 'pScroll_' + provinceItem.cityCode;
 						gt.cityScrollInto = 'cScroll_' + cityItem.cityCode;
 						gt.areaScrollInto = 'aScroll_' + item.cityCode;
-
 					}
 				}, 200);
-
-
 			},
 			searchPCA() {
 				let gt = this;
 				gt.break = false;
-
 				if (gt.searchVal) {
 					gt.provinceList.map(ite => {
 						ite.selected = false;
@@ -601,14 +525,9 @@
 							}
 						}
 					}
-				} else {
-
 				}
-
-
 			}
 		}
-
 	}
 </script>
 
