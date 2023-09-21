@@ -162,21 +162,17 @@
 		},
 		onLoad(option) {
 			let gt = this;
-			var list = uni.getStorageSync('pcaList')
-			gt.provinceCityAreaList = list;
+			gt.getCity()
+			// var list = uni.getStorageSync('pcaList')
+			// gt.provinceCityAreaList = list;
 			if(option.flag) gt.getAuthInfo();
-		},
-		onShow() {
-			let gt = this;
 		},
 		methods: {
 			getAuthInfo() {
 				let gt = this;
 				var url = "/logistics/company/get_company_approve_info";
 				gt.gtRequest.post(url).then(res => {
-					console.log(res);
 					if (res.company_approve_info.status !== undefined) {
-						// console.log(res.company_approve_info.status);
 						gt.checkStatus = res.company_approve_info.status;
 						gt.checkRemark = res.company_approve_info.audit_remark;
 						gt.fileList = [{
@@ -194,37 +190,43 @@
 					}
 				});
 			},
+			getCity() {
+				let gt = this
+				gt.gtRequest.post('/api/appgobal/get_city_data').then(data => {
+					for (var i = 0; i < data.city_china.length; i++) {
+						for (var j = 0; j < data.city_china[i].children.length; j++) {
+							for (var k = 0; k < data.city_china[i].children[j].children.length; k++) {
+								data.city_china[i].children[j].children[k].selected = false
+							}
+							data.city_china[i].children[j].selected = false
+						}
+						data.city_china[i].selected = false
+					}
+					gt.provinceCityAreaList = data.city_china
+				})
+			},
 			previewImg(url) {
 				uni.previewImage({
 					urls: [url]
 				})
 			},
 			chooseImg(item) {
-				console.log(item);
-
 				let gt = this;
 				var file = item.fileInfo;
-
 				gt.gtRequest.upload(file).then(res => {
-					console.log(res);
 					if (res.src) {
 						gt.imgPath = res.src;
 						gt.licenceOcr(res.src);
 					} else {
 						gt.removeImg();
 					}
-
 				}).catch(res => {
-					console.log(res);
 					gt.$refs.uUpload.remove(0);
-
-
 					gt.$refs.uToast.show({
 						title: res,
 						type: 'error',
 					});
 					return false;
-
 				});
 			},
 			licenceOcr(path) {
@@ -247,27 +249,21 @@
 				});
 			},
 			removeImg() {
-				console.log('removeImg');
 				let gt = this;
 				gt.imgPath = '';
 				gt.fileList = [];
 			},
-
 			chooseLocation() {
-				console.log('chooseLocation');
 				let gt = this;
 				if (gt.checkStatus != -1) {
 					uni.openLocation({
 						latitude: Number(gt.lat),
 						longitude: Number(gt.lng),
-						complete(res) {
-							console.log(res);
-						}
+						complete(res) {}
 					});
 				} else {
 					uni.chooseLocation({
 						success: function(res) {
-							console.log(res);
 							if (res.errMsg == 'chooseLocation:ok') {
 								gt.address = res.address;
 								gt.lng = res.longitude;
@@ -276,9 +272,7 @@
 						}
 					})
 				}
-
 			},
-
 			showPCA() {
 				let gt = this;
 				if (gt.checkStatus != -1) {
@@ -287,9 +281,7 @@
 				gt.areaShow = true;
 			},
 			confirmArea(e) {
-				// console.log(e);
 				let gt = this;
-
 				gt.provinceStr = e[0].label;
 				gt.provinceCode = e[0].value;
 				gt.cityStr = e[1].label;
@@ -297,18 +289,14 @@
 				gt.areaStr = e[2].label;
 				gt.areaCode = e[2].value;
 				gt.pca = e[0].label + '-' + e[1].label + '-' + e[2].label;
-
 				var provinceList = gt.provinceCityAreaList;
 				for (var i = 0; i < provinceList.length; i++) {
-					// console.log(i);
 					if (provinceList[i].city_code == e[0].value) {
 						var cityList = provinceList[i].children;
-						// console.log(i);
 						gt.provinceIndex = i;
 						break;
 					}
 				}
-				// console.log(cityList);
 				for (var j = 0; j < cityList.length; j++) {
 					if (cityList[j].city_code == e[1].value) {
 						var areaList = cityList[j].children;
@@ -317,20 +305,12 @@
 					}
 				}
 				for (var m = 0; m < areaList.length; m++) {
-					// console.log(m);
 					if (areaList[m].city_code == e[2].value) {
 						gt.areaIndex = m;
-						// console.log(m);
 						break;
 					}
 				}
-
-
-				// console.log(provinceList);
-				// console.log(cityList);
-
 			},
-
 			submitForm() {
 				let gt = this;
 				if (gt.checkStatus == 2) {
@@ -340,7 +320,6 @@
 				if (gt.checkStatus != -1) {
 					return false;
 				}
-
 				if (gt.$u.test.isEmpty(gt.imgPath)) {
 					gt.$refs.uToast.show({
 						title: '请上传营业执照',
@@ -407,26 +386,17 @@
 					longitude: gt.lng,
 				};
 				gt.gtRequest.post(url, data).then(res => {
-
 					gt.checkStatus = 0;
-
-
-
 					// uni.setStorageSync('companyAuth', 1);
-
 					var pages = getCurrentPages();
 					var url = pages[0].$page.fullPath;
-
-
 					gt.$refs.uToast.show({
 						title: '申请完成，等待审核',
 						type: 'success',
 						url: url,
 						isTab: true,
 					});
-
 					return false;
-
 				});
 			}
 		}

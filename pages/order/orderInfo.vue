@@ -471,7 +471,7 @@
 										</view>
 										<view class="con_item">
 											<view class="con_label">
-												<text>体积(m²)</text>
+												<text>体积(m³)</text>
 											</view>
 											<view class="con_num">
 												<text>{{dataInfo.goods_volume}}</text>
@@ -999,7 +999,7 @@
 					</view>
 
 					<view class="con_list">
-						<scroll-view scroll-y="true" style="height: 52vh;overflow: auto;">
+						<scroll-view scroll-y="true" style="height: 44vh;overflow: auto;">
 							<view class="trajectoryItem" v-for="(item,index) in trajectoryList" :key="index">
 								<view class="con_icon_title">
 									<view class="con_icon">
@@ -1007,15 +1007,18 @@
 									<view class="con_text">
 										<text>{{item.status_msg}}</text>
 										<text
-											style="margin-left: 40rpx;font-size: 28rpx;font-family: PingFangSC-Regular, PingFang SC;font-weight: 400;color: #909399;line-height: 40rpx;">{{$u.timeFormat(item.create_time, 'mm-dd hh:MM:ss')}}</text>
+											style="margin-left: 40rpx;font-size: 28rpx;font-family: PingFangSC-Regular, PingFang SC;font-weight: 400;color: #909399;line-height: 40rpx;">{{gtCommon.formateTime(item.create_time, 'YYYY年MM月DD日HH:mm:ss')}}</text>
 									</view>
 								</view>
 								<view class="con_line_time">
 									<view class="con_line">
 										<u-line length="84rpx" color="#E5E5E5" direction="col" margin="16rpx"></u-line>
 									</view>
-									<view class="con_time" v-if="item.company_contact">
+									<!-- <view class="con_time" v-if="item.company_contact">
 										<text>操作人:{{item.company_contact}}</text>
+									</view> -->
+									<view class="con_time">
+										<text>{{item.remark}}</text>
 									</view>
 								</view>
 							</view>

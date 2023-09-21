@@ -1,5 +1,5 @@
 <!-- 
- * qiun-data-charts 秋云高性能跨全端图表组件 v2.3.7-20220118
+ * qiun-data-charts 秋云高性能跨全端图表组件
  * Copyright (c) 2021 QIUN® 秋云 https://www.ucharts.cn All rights reserved.
  * Licensed ( http://www.apache.org/licenses/LICENSE-2.0 )
  * 复制使用请保留本段注释，感谢支持开源！
@@ -97,7 +97,7 @@
     </block>
     <!-- #endif -->
     <!-- 其他小程序通过vue渲染图表 -->
-    <!-- #ifdef MP-360 || MP-BAIDU || MP-QQ || MP-TOUTIAO || MP-WEIXIN -->
+    <!-- #ifdef MP-WEIXIN || MP-BAIDU || MP-QQ || MP-TOUTIAO || MP-KUAISHOU || MP-LARK || MP-JD || MP-360 -->
     <block v-if="type2d">
       <view v-if="ontouch" @tap="_tap">
         <canvas
@@ -175,7 +175,7 @@ function deepCloneAssign(origin = {}, ...args) {
 
 function formatterAssign(args,formatter) {
   for (let key in args) {
-    if(args[key] !== null && typeof args[key] === 'object'){
+    if(args.hasOwnProperty(key) && args[key] !== null && typeof args[key] === 'object'){
       formatterAssign(args[key],formatter)
     }else if(key === 'format' && typeof args[key] === 'string'){
       args['formatter'] = formatter[args[key]] ? formatter[args[key]] : undefined;
@@ -210,11 +210,11 @@ var lastMoveTime = null;
  * 在 vue 中使用（注意：不能使用箭头函数，否则this指向不对，并且不能再次封装如：
  * move(){  // 错误调用方式
  *   debounce(function () {
- *   //    console.log(this.title);
+ *   console.log(this.title);
  * }, 1000)}）;
  * 应该直接使用：// 正确调用方式
  * move: debounce(function () {
- *   //    console.log(this.title);
+ *   console.log(this.title);
  * }, 1000)
  */
 function debounce(fn, wait) {
@@ -303,6 +303,14 @@ export default {
       default: false
     },
     disableScroll: {
+      type: Boolean,
+      default: false
+    },
+    optsWatch: {
+      type: Boolean,
+      default: true
+    },
+    onzoom: {
       type: Boolean,
       default: false
     },
@@ -399,7 +407,9 @@ export default {
       cHeight: 250,
       showchart: false,
       echarts: false,
-      echartsResize:false,
+      echartsResize:{
+        state:false
+      },
       uchartsOpts: {},
       echartsOpts: {},
       drawData:{},
@@ -426,15 +436,16 @@ export default {
     if (this.canvas2d === false || systemInfo.platform === 'windows' || systemInfo.platform === 'mac') {
       this.type2d = false;
     }else{
+      this.type2d = true;
       this.pixel = systemInfo.pixelRatio;
-      if (this.canvasId === 'uchartsid' || this.canvasId == '') {
-        //    console.log('[uCharts]:开启canvas2d模式，必须指定canvasId，否则会出现偶尔获取不到dom节点的问题！');
-      }
     }
     // #endif
     //非微信小程序端强制关闭canvas2d模式
     // #ifndef MP-WEIXIN
     this.type2d = false;
+    // #endif
+    // #ifdef  MP-TOUTIAO || MP-LARK || MP-ALIPAY
+    this.type2d = this.canvas2d;
     // #endif
     // #ifdef MP-ALIPAY
     this.inAli = true;
@@ -486,7 +497,7 @@ export default {
           return;
         }
         if (_this.echarts) {
-          _this.echartsResize = !_this.echartsResize;
+          _this.echartsResize.state = !_this.echartsResize.state;
         } else {
           _this.resizeHandler();
         }
@@ -511,11 +522,11 @@ export default {
       handler(val, oldval) {
         if (typeof val === 'object') {
           if (JSON.stringify(val) !== JSON.stringify(oldval)) {
+            this._clearChart();
             if (val.series && val.series.length > 0) {
               this.beforeInit();
             }else{
               this.mixinDatacomLoading = true;
-              this._clearChart();
               this.showchart = false;
               this.mixinDatacomErrorMessage = null;
             }
@@ -549,7 +560,7 @@ export default {
     optsProps: {
       handler(val, oldval) {
         if (typeof val === 'object') {
-          if (JSON.stringify(val) !== JSON.stringify(oldval) && this.echarts === false) {
+          if (JSON.stringify(val) !== JSON.stringify(oldval) && this.echarts === false && this.optsWatch == true) {
             this.checkData(this.drawData);
           }
         } else {
@@ -581,7 +592,7 @@ export default {
       if (val === true && this.mixinDatacomLoading === false) {
         setTimeout(() => {
           this.mixinDatacomErrorMessage = null;
-          this.echartsResize = !this.echartsResize;
+          this.echartsResize.state = !this.echartsResize.state;
           this.checkData(this.drawData);
         }, 200);
       }
@@ -597,7 +608,7 @@ export default {
       if (val) {
         this.emitMsg({name: 'error', params: {type:"error", errorShow: this.errorShow, msg: val, id: this.cid}});
         if(this.errorShow){
-          //    console.log('[秋云图表组件]' + val);
+          console.log('[秋云图表组件]' + val);
         }
       }
     },
@@ -854,10 +865,12 @@ export default {
     },
     _clearChart() {
       let cid = this.cid
-      if (this.echrts !== true) {
-        const ctx = uni.createCanvasContext(cid, this);
-        ctx.clearRect(0, 0, this.cWidth, this.cHeight);
-        ctx.draw();
+      if (this.echarts !== true && cfu.option[cid] && cfu.option[cid].context) {
+        const ctx = cfu.option[cid].context;
+        if(typeof ctx === "object" && !!!cfu.option[cid].update){
+          ctx.clearRect(0, 0, this.cWidth*this.pixel, this.cHeight*this.pixel);
+          ctx.draw();
+        }
       }
     },
     init() {
@@ -882,6 +895,7 @@ export default {
               cfu.option[cid].animation = this.animation;
               cfu.option[cid].width = data.width * this.pixel;
               cfu.option[cid].height = data.height * this.pixel;
+              cfu.option[cid].onzoom = this.onzoom;
               cfu.option[cid].ontap = this.ontap;
               cfu.option[cid].ontouch = this.ontouch;
               cfu.option[cid].onmouse = this.openmouse;
@@ -924,14 +938,14 @@ export default {
                         const canvas = res[0].node;
                         const ctx = canvas.getContext('2d');
                         cfu.option[cid].context = ctx;
-                        canvas.width = data.width * this.pixel;
-                        canvas.height = data.height * this.pixel;
-                        canvas._width = data.width * this.pixel;
-                        canvas._height = data.height * this.pixel;
                         cfu.option[cid].rotateLock = cfu.option[cid].rotate;
                         if(cfu.instance[cid] && cfu.option[cid] && cfu.option[cid].update === true){
                           this._updataUChart(cid)
                         }else{
+                          canvas.width = data.width * this.pixel;
+                          canvas.height = data.height * this.pixel;
+                          canvas._width = data.width * this.pixel;
+                          canvas._height = data.height * this.pixel;
                           setTimeout(()=>{
                             cfu.option[cid].context.restore();
                             cfu.option[cid].context.save();
@@ -983,17 +997,38 @@ export default {
     	    //#endif
     	    //#ifndef H5
     	      uni.saveImageToPhotosAlbum({
-    	          filePath: res.tempFilePath,
-    	          success: function () {
-    	              uni.showToast({
-    	                  title: '保存成功',
-    	                  duration: 2000
-    	              });
-    	          }
+              filePath: res.tempFilePath,
+              success: function () {
+                uni.showToast({
+                  title: '保存成功',
+                  duration: 2000
+                });
+              }
     	      });
     	    //#endif
     	  } 
     	},this);
+    },
+    getImage(){
+      if(this.type2d == false){
+        uni.canvasToTempFilePath({
+          canvasId: this.cid,
+          success: res=>{
+            this.emitMsg({name: 'getImage', params: {type:"getImage", base64: res.tempFilePath}});
+          }
+        },this);
+      }else{
+        const query = uni.createSelectorQuery().in(this)
+        query
+          .select('#' + this.cid)
+          .fields({ node: true, size: true })
+          .exec(res => {
+            if (res[0]) {
+              const canvas = res[0].node;
+              this.emitMsg({name: 'getImage', params: {type:"getImage", base64: canvas.toDataURL('image/png')}});
+            }
+          });
+      }
     },
     // #ifndef APP-VUE || H5
     _newChart(cid) {
@@ -1003,14 +1038,14 @@ export default {
       this.showchart = true;
       cfu.instance[cid] = new uCharts(cfu.option[cid]);
       cfu.instance[cid].addEventListener('renderComplete', () => {
-        this.emitMsg({name: 'complete', params: {type:"complete", complete: true, id: cid}});
+        this.emitMsg({name: 'complete', params: {type:"complete", complete: true, id: cid, opts: cfu.instance[cid].opts}});
         cfu.instance[cid].delEventListener('renderComplete')
       });
       cfu.instance[cid].addEventListener('scrollLeft', () => {
-        this.emitMsg({name: 'scrollLeft', params: {type:"scrollLeft", scrollLeft: true, id: cid}});
+        this.emitMsg({name: 'scrollLeft', params: {type:"scrollLeft", scrollLeft: true, id: cid, opts: cfu.instance[cid].opts}});
       });
       cfu.instance[cid].addEventListener('scrollRight', () => {
-        this.emitMsg({name: 'scrollRight', params: {type:"scrollRight", scrollRight: true, id: cid}});
+        this.emitMsg({name: 'scrollRight', params: {type:"scrollRight", scrollRight: true, id: cid, opts: cfu.instance[cid].opts}});
       });
     },
     _updataUChart(cid) {
@@ -1124,31 +1159,35 @@ export default {
     _touchStart(e) {
       let cid = this.cid
       lastMoveTime=Date.now();
-      if(cfu.option[cid].enableScroll === true){
+      if(cfu.option[cid].enableScroll === true && e.touches.length == 1){
         cfu.instance[cid].scrollStart(e);
       }
-      this.emitMsg({name:'getTouchStart', params:{type:"touchStart", event:e.changedTouches[0], id:cid}});
+      this.emitMsg({name:'getTouchStart', params:{type:"touchStart", event:e.changedTouches[0], id:cid, opts: cfu.instance[cid].opts}});
     },
     _touchMove(e) {
       let cid = this.cid
       let currMoveTime = Date.now();
       let duration = currMoveTime - lastMoveTime;
-      if (duration < Math.floor(1000 / 60)) return;//每秒60帧
+      let touchMoveLimit = cfu.option[cid].touchMoveLimit || 24;
+      if (duration < Math.floor(1000 / touchMoveLimit)) return;//每秒60帧
       lastMoveTime = currMoveTime;
-      if(cfu.option[cid].enableScroll === true){
+      if(cfu.option[cid].enableScroll === true && e.changedTouches.length == 1){
         cfu.instance[cid].scroll(e);
       }
-      this.emitMsg({name: 'getTouchMove', params: {type:"touchMove", event:e.changedTouches[0], id: cid}});
       if(this.ontap === true && cfu.option[cid].enableScroll === false && this.onmovetip === true){
         this._tap(e,true)
       }
+      if(this.ontouch === true && cfu.option[cid].enableScroll === true && this.onzoom === true && e.changedTouches.length == 2){
+        cfu.instance[cid].dobuleZoom(e);
+      }
+      this.emitMsg({name: 'getTouchMove', params: {type:"touchMove", event:e.changedTouches[0], id: cid, opts: cfu.instance[cid].opts}});
     },
     _touchEnd(e) {
       let cid = this.cid
-      if(cfu.option[cid].enableScroll === true){
+      if(cfu.option[cid].enableScroll === true && e.touches.length == 0){
         cfu.instance[cid].scrollEnd(e);
       }
-      this.emitMsg({name:'getTouchEnd', params:{type:"touchEnd", event:e.changedTouches[0], id:cid}});
+      this.emitMsg({name:'getTouchEnd', params:{type:"touchEnd", event:e.changedTouches[0], id:cid, opts: cfu.instance[cid].opts}});
       if(this.ontap === true && cfu.option[cid].enableScroll === false && this.onmovetip === true){
         this._tap(e,true)
       }
@@ -1195,7 +1234,7 @@ function rddeepCloneAssign(origin = {}, ...args) {
 
 function rdformatterAssign(args,formatter) {
   for (let key in args) {
-    if(args[key] !== null && typeof args[key] === 'object'){
+    if(args.hasOwnProperty(key) && args[key] !== null && typeof args[key] === 'object'){
       rdformatterAssign(args[key],formatter)
     }else if(key === 'format' && typeof args[key] === 'string'){
       args['formatter'] = formatter[args[key]] ? formatter[args[key]] : undefined;
@@ -1246,19 +1285,22 @@ export default {
         cfe.option[cid] = rddeepCloneAssign({}, eopts);
       }
       let newData = eopts.chartData;
-      //挂载categories和series
-      if(cfe.option[cid].xAxis && cfe.option[cid].xAxis.type && cfe.option[cid].xAxis.type === 'category'){
-        cfe.option[cid].xAxis.data = newData.categories
+      if(newData){
+        //挂载categories和series
+        if(cfe.option[cid].xAxis && cfe.option[cid].xAxis.type && cfe.option[cid].xAxis.type === 'category'){
+          cfe.option[cid].xAxis.data = newData.categories
+        }
+        if(cfe.option[cid].yAxis && cfe.option[cid].yAxis.type && cfe.option[cid].yAxis.type === 'category'){
+          cfe.option[cid].yAxis.data = newData.categories
+        }
+        cfe.option[cid].series = []
+        for (var i = 0; i < newData.series.length; i++) {
+          cfe.option[cid].seriesTemplate = cfe.option[cid].seriesTemplate ? cfe.option[cid].seriesTemplate : {}
+          let Template = rddeepCloneAssign({},cfe.option[cid].seriesTemplate,newData.series[i])
+          cfe.option[cid].series.push(Template)
+        }
       }
-      if(cfe.option[cid].yAxis && cfe.option[cid].yAxis.type && cfe.option[cid].yAxis.type === 'category'){
-        cfe.option[cid].yAxis.data = newData.categories
-      }
-      cfe.option[cid].series = []
-      for (var i = 0; i < newData.series.length; i++) {
-        cfe.option[cid].seriesTemplate = cfe.option[cid].seriesTemplate ? cfe.option[cid].seriesTemplate : {}
-        let Template = rddeepCloneAssign({},cfe.option[cid].seriesTemplate,newData.series[i])
-        cfe.option[cid].series.push(Template)
-      }
+      
       if (typeof window.echarts === 'object') {
           this.newEChart()
       }else{
@@ -1267,7 +1309,7 @@ export default {
         script.src = './uni_modules/qiun-data-charts/static/app-plus/echarts.min.js'
         // #endif
         // #ifdef H5
-        const rooturl = window.location.origin 
+        const rooturl = window.location.origin
         const directory = instance.getDataset().directory
         script.src = rooturl + directory + 'uni_modules/qiun-data-charts/static/h5/echarts.min.js'
         // #endif
@@ -1294,7 +1336,7 @@ export default {
           })
           // 增加ECharts的highlight消息，实现按下移动返回索引功能。add by onefish 创建于 2021-12-11 09:50
           cfe.instance[cid].on('highlight', resdata => {
-            that[cid].callMethod('emitMsg',{name:"getHighlight", params:{type:"highlight", dataIndex:resdata.batch[0].dataIndex, id:cid}})
+            that[cid].callMethod('emitMsg',{name:"getHighlight", params:{type:"highlight", res:resdata, id:cid}})
           })
         }
         this.updataEChart(cid,cfe.option[cid])
@@ -1328,7 +1370,16 @@ export default {
         if(cfe.instance[cid]){
           cfe.instance[cid].off('finished')
         }
-      })
+      });
+
+      //修复init初始化实例获取宽高不正确问题
+      if(
+        typeof that[cid].$el.children[0].clientWidth != 'undefined' &&
+          (
+            Math.abs( that[cid].$el.children[0].clientWidth - cfe.instance[cid].getWidth() )>3 ||
+            Math.abs( that[cid].$el.children[0].clientHeight - cfe.instance[cid].getHeight() )>3
+          )
+      ){this.ecresize();}
     },
     tooltipPosition(){
       return (point, params, dom, rect, size) => {
@@ -1380,14 +1431,14 @@ export default {
       let cid = this.rid
       cfu.instance[cid] = new uChartsRD(cfu.option[cid])
       cfu.instance[cid].addEventListener('renderComplete', () => {
-        that[cid].callMethod('emitMsg',{name:"complete",params:{type:"complete",complete:true,id:cid}})
+        that[cid].callMethod('emitMsg',{name:"complete",params:{type:"complete",complete:true,id:cid, opts: cfu.instance[cid].opts}})
         cfu.instance[cid].delEventListener('renderComplete')
       });
       cfu.instance[cid].addEventListener('scrollLeft', () => {
-        that[cid].callMethod('emitMsg',{name:"scrollLeft",params:{type:"scrollLeft",scrollLeft:true,id:cid}})
+        that[cid].callMethod('emitMsg',{name:"scrollLeft",params:{type:"scrollLeft",scrollLeft:true,id:cid, opts: cfu.instance[cid].opts}})
       });
       cfu.instance[cid].addEventListener('scrollRight', () => {
-        that[cid].callMethod('emitMsg',{name:"scrollRight",params:{type:"scrollRight",scrollRight:true,id:cid}})
+        that[cid].callMethod('emitMsg',{name:"scrollRight",params:{type:"scrollRight",scrollRight:true,id:cid, opts: cfu.instance[cid].opts}})
       });
     },
     updataUChart() {
@@ -1471,31 +1522,39 @@ export default {
       let cid = this.rid
       let ontouch = cfu.option[cid].ontouch
       if(ontouch == false) return;
-      cfu.instance[cid].scrollStart(e)
-      that[cid].callMethod('emitMsg',{name:"getTouchStart",params:{type:"touchStart",event:e.changedTouches[0],id:cid}})
+      if(cfu.option[cid].enableScroll === true && e.touches.length == 1){
+        cfu.instance[cid].scrollStart(e);
+      }
+      that[cid].callMethod('emitMsg',{name:"getTouchStart",params:{type:"touchStart",event:e.changedTouches[0],id:cid, opts: cfu.instance[cid].opts}})
     },
     touchMove(e) {
       let cid = this.rid
       let ontouch = cfu.option[cid].ontouch
       if(ontouch == false) return;
-      cfu.instance[cid].scroll(e)
-      that[cid].callMethod('emitMsg',{name:"getTouchMove",params:{type:"touchMove",event:e.changedTouches[0],id:cid}})
+      if(cfu.option[cid].enableScroll === true && e.changedTouches.length == 1){
+        cfu.instance[cid].scroll(e);
+      }
       if(cfu.option[cid].ontap === true && cfu.option[cid].enableScroll === false && cfu.option[cid].onmovetip === true){
         let rchartdom = document.getElementById('UC'+cid).getBoundingClientRect()
         let tmpe = { x: e.changedTouches[0].clientX - rchartdom.left, y:e.changedTouches[0].clientY - rchartdom.top + rootdom.top}
-        e.changedTouches = [];
         e.changedTouches.unshift(tmpe)
         if(cfu.option[cid].tooltipShow === true){
           this.showTooltip(e,cid)
         }
       }
+      if(ontouch === true && cfu.option[cid].enableScroll === true && cfu.option[cid].onzoom === true && e.changedTouches.length == 2){
+        cfu.instance[cid].dobuleZoom(e);
+      }
+      that[cid].callMethod('emitMsg',{name:"getTouchMove",params:{type:"touchMove",event:e.changedTouches[0],id:cid, opts: cfu.instance[cid].opts}})
     },
     touchEnd(e) {
       let cid = this.rid
       let ontouch = cfu.option[cid].ontouch
       if(ontouch == false) return;
-      cfu.instance[cid].scrollEnd(e)
-      that[cid].callMethod('emitMsg',{name:"getTouchEnd",params:{type:"touchEnd",event:e.changedTouches[0],id:cid}})
+      if(cfu.option[cid].enableScroll === true && e.touches.length == 0){
+        cfu.instance[cid].scrollEnd(e);
+      }
+      that[cid].callMethod('emitMsg',{name:"getTouchEnd",params:{type:"touchEnd",event:e.changedTouches[0],id:cid, opts: cfu.instance[cid].opts}})
     },
     mouseDown(e) {
       let cid = this.rid
@@ -1508,7 +1567,7 @@ export default {
       e.changedTouches.unshift(tmpe)
       cfu.instance[cid].scrollStart(e)
       cfu.option[cid].mousedown=true;
-      that[cid].callMethod('emitMsg',{name:"getTouchStart",params:{type:"mouseDown",event:tmpe,id:cid}})
+      that[cid].callMethod('emitMsg',{name:"getTouchStart",params:{type:"mouseDown",event:tmpe,id:cid, opts: cfu.instance[cid].opts}})
     },
     mouseMove(e) {
       let cid = this.rid
@@ -1522,7 +1581,7 @@ export default {
       e.changedTouches.unshift(tmpe)
       if(cfu.option[cid].mousedown){
         cfu.instance[cid].scroll(e)
-        that[cid].callMethod('emitMsg',{name:"getTouchMove",params:{type:"mouseMove",event:tmpe,id:cid}})
+        that[cid].callMethod('emitMsg',{name:"getTouchMove",params:{type:"mouseMove",event:tmpe,id:cid, opts: cfu.instance[cid].opts}})
       }else if(cfu.instance[cid]){
         if(tooltipShow==true){
           this.showTooltip(e,cid)
@@ -1540,7 +1599,7 @@ export default {
       e.changedTouches.unshift(tmpe)
       cfu.instance[cid].scrollEnd(e)
       cfu.option[cid].mousedown=false;
-      that[cid].callMethod('emitMsg',{name:"getTouchEnd",params:{type:"mouseUp",event:tmpe,id:cid}})
+      that[cid].callMethod('emitMsg',{name:"getTouchEnd",params:{type:"mouseUp",event:tmpe,id:cid, opts: cfu.instance[cid].opts}})
     },
   }
 }

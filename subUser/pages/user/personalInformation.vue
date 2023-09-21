@@ -41,7 +41,7 @@
 			<view class="con_line">
 				<u-line length="718rpx" color="#f2f2f2" margin="0 16rpx"></u-line>
 			</view>
-			<view class="con_item">
+			<view class="con_item" @click="goCompanyAuth">
 				<view class="con_text">
 					<text>公司认证</text>
 				</view>
@@ -313,6 +313,13 @@
 				let gt = this
 				if(gt.userInfo.is_approve) return
 				uni.navTo('/pages/login/peopleAuth?flag=true')
+			},
+			goCompanyAuth() {
+				let gt = this
+				if(gt.companyInfo.is_company_approve) return
+				uni.navigateTo({
+					url: '/pages/login/companyAuth?flag=true'
+				})
 			},
 			confirm(type) {
 				let gt = this

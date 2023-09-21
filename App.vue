@@ -6,9 +6,11 @@
 			var companyAuth = uni.getStorageSync('companyAuth')
 			var checkStatus = uni.getStorageSync('checkStatus')
 			if(!userAuth && !companyAuth && (checkStatus === '' || checkStatus === 2)) {
-				uni.navigateTo({
+				// #ifdef APP-PLUS
+				uni.reLaunch({
 					url: "/pages/login/login"
 				})
+				// #endif
 			}
 			uni.loadFontFace({
 				global: true,
@@ -89,33 +91,7 @@
 					uni.setStorageSync('apiDomain', apiDomain);
 				}
 			}
-			var pcaList = uni.getStorageSync('pcaList');
-			if (!pcaList) {
-				var url = '/api/appgobal/get_city_data';
-				uni.request({
-					url: apiDomain + url,
-					method: 'POST',
-					success: (res) => {
-						if (res.statusCode == 200) {
-							let data = res.data.data;
-							// console.log(data.city_china);
-							for (var i = 0; i < data.city_china.length; i++) {
-								for (var j = 0; j < data.city_china[i].children.length; j++) {
-									// console.log(data.city_china[i].children[j].city_name);
-									for (var k = 0; k < data.city_china[i].children[j].children.length; k++) {
-										data.city_china[i].children[j].children[k].selected = false;
-									}
-									data.city_china[i].children[j].selected = false;
-								}
-								data.city_china[i].selected = false;
-							}
-							uni.setStorageSync('pcaList', data.city_china);
-						} else {
-							// console.log('App.vue ,sync pcaList Fail');
-						}
-					}
-				});
-			}
+			
 			let gt = this;
 			// uni.setStorageSync('audioStatus', false);
 			
@@ -176,6 +152,36 @@
 		},
 		onShow: function(options) {
 			let gt = this;
+			
+			var pcaList = uni.getStorageSync('pcaList');
+			if (!pcaList) {
+				let baseUrl = uni.getStorageSync('apiDomain')
+				var url = '/api/appgobal/get_city_data';
+				uni.request({
+					url: baseUrl + url,
+					method: 'POST',
+					success: (res) => {
+						if (res.statusCode == 200) {
+							let data = res.data.data;
+							// console.log(data.city_china);
+							for (var i = 0; i < data.city_china.length; i++) {
+								for (var j = 0; j < data.city_china[i].children.length; j++) {
+									// console.log(data.city_china[i].children[j].city_name);
+									for (var k = 0; k < data.city_china[i].children[j].children.length; k++) {
+										data.city_china[i].children[j].children[k].selected = false;
+									}
+									data.city_china[i].children[j].selected = false;
+								}
+								data.city_china[i].selected = false;
+							}
+							uni.setStorageSync('pcaList', data.city_china);
+						} else {
+							// console.log('App.vue ,sync pcaList Fail');
+						}
+					}
+				});
+			}
+			
 			uni.onNetworkStatusChange(function(res) {
 				// console.log(res.isConnected);
 				// console.log(res.networkType);

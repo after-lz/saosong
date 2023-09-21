@@ -17,29 +17,25 @@
 								<view class="con_name">
 									<text>{{companyName}}</text>
 								</view>
-								<view class="con_icons">
-									<view class="con_auth" v-if="authStatus == 1">
-										<image :src="gtCommon.getOssImg('user/auth.png')" mode="widthFix"></image>
-									</view>
-								</view>
+								<image :src="gtCommon.getOssImg('user/auth.png')" mode="widthFix" v-if="authStatus == 1"></image>
 							</view>
 							<view class="con_rate">
-								<u-rate :count="rateCount" v-model="rateNum" active-color="#FF6067"
-									inactive-color="#FF6067" active-icon="heart-fill" inactive-icon="heart"></u-rate>
-								<!-- <u-rate :count="count" v-model="value"></u-rate> -->
+								<uv-rate :count="rateCount" v-model="rateNum" inactiveColor="#FF6067" activeColor="#FF6067"
+									:readonly='true' allowHalf active-icon="heart-fill" inactive-icon="heart"></uv-rate>
+								<view class="con_rate_num">{{ rateNum }}分</view>
 							</view>
-							<view class="con_nums">
+							<view class="con_nums" v-if="data.company_info">
 								<view class="con_numItem">
 									<text>浏览量:</text>
-									<text>326</text>
+									<text>{{ data.company_info.visitor_count }}</text>
 								</view>
 								<view class="con_numItem">
 									<text>下单量:</text>
-									<text>326</text>
+									<text>{{ data.company_info.order_count }}</text>
 								</view>
 								<view class="con_numItem">
 									<text>收藏量:</text>
-									<text>326</text>
+									<text>{{ data.company_info.collect_count }}</text>
 								</view>
 							</view>
 							<!-- <view class="con_coupon">
@@ -115,13 +111,13 @@
 												<text v-if="phone">{{phone}}</text>
 												<text v-else>-</text>
 											</view>
-											<view class="con_icon" @click="gtCommon.callMobile(phone)" v-if="phone">
+											<view class="con_icon" @click="callPhone(phone)" v-if="phone">
 												<u-icon name="phone-fill" size="40" color="#485EF4"></u-icon>
 											</view>
 										</view>
 									</view>
 								</view>
-								<view class="con_line">
+								<!-- <view class="con_line">
 									<u-line length="682rpx" color="#F2F2F2" margin="32rpx" />
 								</view>
 								<view class="con_key_val">
@@ -135,7 +131,7 @@
 											</view>
 										</view>
 									</view>
-								</view>
+								</view> -->
 								<view class="con_line">
 									<u-line length="682rpx" color="#F2F2F2" margin="32rpx" />
 								</view>
@@ -148,9 +144,9 @@
 											<view class="con_text">
 												<text>{{address}}</text>
 											</view>
-											<view class="con_icon" @click="gtCommon.openLocation(lat,lng)">
+											<!-- <view class="con_icon" @click="gtCommon.openLocation(lat,lng)">
 												<u-icon name="map-fill" size="40" color="#485EF4"></u-icon>
-											</view>
+											</view> -->
 										</view>
 									</view>
 								</view>
@@ -195,7 +191,7 @@
 										</view>
 									</view>
 								</view>
-								<view class="con_line">
+								<!-- <view class="con_line">
 									<u-line length="682rpx" color="#F2F2F2" margin="32rpx" />
 								</view>
 								<view class="con_key_val">
@@ -207,7 +203,7 @@
 											<text>点击查看</text>
 										</view>
 									</view>
-								</view>
+								</view> -->
 								<view class="con_line">
 									<u-line length="682rpx" color="#F2F2F2" margin="32rpx" />
 								</view>
@@ -226,7 +222,6 @@
 					</scroll-view>
 				</swiper-item>
 				<swiper-item class="swiper-item" id="lineInfo">
-
 					<view class="con_empty" v-if="dataList.length == 0">
 						<view class="con_img">
 							<image :src="gtCommon.getOssImg('sansong/empty.png')" mode="widthFix"></image>
@@ -248,17 +243,22 @@
 										</view>
 
 										<view class="con_title">
-											<text>{{item.start_city}}-{{item.end_city}}</text>
+											<text>{{cityHide(item.start_city)}}-{{cityHide(item.end_city)}}</text>
 										</view>
 										<view class="con_labels">
-											<view class="con_label">
+											<view class="con_label" v-if="item.member_status === '1'">
 												<text>会员专线</text>
 											</view>
-											<view class="con_label" style="background: #485EF4;">
+											<view class="con_label" style="background: #485EF4;" v-if="item.deposit_status === '1'">
 												<text>品质专线</text>
 											</view>
-											<view class="con_label" style="background: #FFF700;color: #000000;">
+											<view class="con_label" style="background: #FFF700;color: #000000;"
+												v-if="item.promote_type === '1' || item.promote_type === '2' || item.promote_type === '3'">
 												<text>金卡推广</text>
+											</view>
+											<view class="con_label" style="background: #C7D1DB;color: #000000;"
+												v-if="item.promote_type === '6' || item.promote_type === '7' || item.promote_type === '8'">
+												<text>银卡推广</text>
 											</view>
 										</view>
 									</view>
@@ -493,19 +493,27 @@
 						</scroll-view>
 					</view>
 				</swiper-item>
+				<swiper-item class="swiper-item" id="evaluate">
+					<evaluate-list :data='data.company_info' v-if="data.company_info"></evaluate-list>
+				</swiper-item>
 			</swiper>
 		</view>
+		<u-toast ref="uToast" />
 	</view>
 </template>
 
 <script>
+	import EvaluateList from './evaluateList'
 	export default {
+		components: { EvaluateList },
 		data() {
 			return {
 				tabList: [{
 					name: '公司资料'
 				}, {
 					name: '专线信息'
+				}, {
+					name: '评价'
 				}],
 				currentTab: 0,
 				logistics_id: '',
@@ -513,7 +521,7 @@
 				companyName: '',
 				authStatus: 0,
 				rateCount: 5,
-				rateNum: 4,
+				rateNum: 0,
 				notice: '',
 
 				name: '',
@@ -525,7 +533,7 @@
 				lat: '',
 				parkName: '',
 
-
+				data: {},
 				dataList: [],
 				page: 1,
 				size: 10,
@@ -536,15 +544,22 @@
 				over: false
 			}
 		},
-		onLoad(option) {
+		async onLoad(option) {
 			let gt = this;
 			gt.logistics_id = option.logistics_id ? option.logistics_id : uni.getStorageSync("companyInfo").logistics_id
+			// gt.tabList[2].name = `评价（${uni.getStorageSync("companyInfo").comment_num}）`
+			let url = gt.logistics_id ? "/logistics/company/get_company_infother" : "/logistics/company/get_company_info"
+			await gt.getCompanyInfo(url);
+			if(url == '/logistics/company/get_company_info') {
+				gt.logistics_id = gt.data.company_info.logistics_id
+				uni.setStorageSync('companyAuth', gt.data.company_info.is_company_approve)
+				uni.setStorageSync('companyInfo', gt.data.company_info)
+			}
 			gt.params = {
 				logistics_id: gt.logistics_id,
 				page: 1,
 				limit: 10
 			}
-			gt.getCompanyInfo();
 			gt.gtLineList();
 			gt.getPacketList()
 		},
@@ -566,28 +581,27 @@
 				gt.params.page++
 				gt.getPacketList()
 			},
-			preview() {
+			preview(e) {
 				let gt = this;
-				uni.navigateTo({
-					url: './companyImg',
-				});
-				return false;
+				// uni.navigateTo({
+				// 	url: './companyImg',
+				// });
+				gt.gtCommon.previewImgs(gt.companyImgs, e)
 			},
 			tabsChange(index) {
 				let gt = this;
 				gt.currentTab = index;
 				gt.gtLineList();
 			},
-
 			animationfinish(item) {
 				let gt = this;
 				gt.currentTab = item.detail.current;
 				gt.gtLineList();
 			},
-			getCompanyInfo() {
+			getCompanyInfo(url) {
 				let gt = this;
 				// var url = "/logistics/company/get_company_info";
-				var url = "/logistics/company/get_company_infother";
+				// var url = "/logistics/company/get_company_infother";
 				gt.gtRequest.post(url, {
 					logistics_id: gt.logistics_id
 				}).then(res => {
@@ -596,9 +610,16 @@
 						item = item + '?x-oss-process=style/sansong_app';
 						imgList.push(item);
 					});
-
+					/* 计算公司评分 */
+					let num = parseFloat(res.company_info.grade_score) / (res.company_info.comment_num + 1)
+					res.company_info.grade_score_result = gt.gtCommon.floatNum(num, 1)
+					gt.data = res
+					if(gt.logistics_id == uni.getStorageSync("companyInfo").logistics_id) {
+						uni.setStorageSync('companyInfo', res.company_info)
+					}
+					gt.rateNum = gt.data.company_info.grade_score_result
 					// gt.companyImgs = res.company_imgs_all;
-					gt.companyImgs = imgList;
+					gt.companyImgs = imgList
 					gt.companyName = res.company_info.company_name;
 					gt.authStatus = res.company_info.is_company_approve;
 					gt.notice = res.company_info.public_notice;
@@ -625,23 +646,50 @@
 				});
 				return false;
 			},
+			callPhone(phone) {
+				let gt = this
+				if(gt.gtCommon.isTel(phone)) {
+					uni.makePhoneCall({
+						phoneNumber: phone,
+					});
+				} else {
+					uni.showToast({
+						title: '手机号格式错误',
+						icon: "error"
+					})
+				}
+			},
 			goImgs(url) {
-				uni.navigateTo({
-					url: './' + url + '?manageStatus=true',
-				});
-				return false;
+				let gt = this
+				// let manageStatus = gt.logistics_id == uni.getStorageSync("companyInfo").logistics_id
+				// uni.navigateTo({
+				// 	url: './' + url + '?manageStatus=' + manageStatus
+				// });
+				if(url === 'licenceImg') {
+					if(!gt.data.company_imgs.license_pic.length) return gt.$refs.uToast.show({
+						title: '未上传营业执照！'
+					})
+					uni.navigateTo({
+						url: './' + url + '?img=' + gt.data.company_imgs.license_pic[0]
+					});
+				}
+				if(url === 'insure') {
+					if(!gt.data.company_imgs.insurance_pics.length) return gt.$refs.uToast.show({
+						title: '未上传保单！'
+					})
+					uni.navigateTo({
+						url: './' + url + '?manageStatus=false&imgs=' + encodeURIComponent(JSON.stringify(gt.data.company_imgs.insurance_pics))
+					});
+				}
 			},
 			gtLineList() {
 				let gt = this;
-				if (gt.end) {
-					return false;
-				}
-
-
+				if (gt.end) return false;
 				var url = "/logistics/specialline/get_special_line_list";
 				var data = {
 					page: gt.page,
 					limit: gt.size,
+					logistics_id: gt.logistics_id
 				};
 				gt.gtRequest.post(url, data).then(res => {
 					for (var i = 0; i < res.list.length; i++) {
@@ -662,6 +710,19 @@
 					gt.lineIndex = 9999;
 				} else {
 					gt.lineIndex = index;
+				}
+			},
+			// 城市名称 去掉 市  
+			cityHide(value) {
+				if(!value) return
+				if(value) {
+					let city = ""
+					if(value.indexOf("市") != -1) {
+						city = value.slice(0, -1)
+					} else {
+						city = value
+					}
+					return city
 				}
 			}
 		}
@@ -699,15 +760,23 @@
 										// margin-top: 24rpx;
 										margin-left: 40rpx;
 									}
-									.con_auth image {
+									image {
 										width: 128rpx;
+										margin-left: 20rpx;
 									}
 								}
 
 								.con_rate {
 									width: 500rpx;
+									display: flex;
+									align-items: center;
 									margin-top: 14rpx;
 									margin-left: 40rpx;
+									color: #FF6067;
+									.con_rate_num {
+										font-size: 24rpx;
+										margin-left: 10rpx;
+									}
 								}
 
 								.con_nums {
@@ -796,6 +865,8 @@
 											font-weight: 400;
 											color: #909399;
 											line-height: 40rpx;
+											white-space: nowrap;
+											margin-right: 30rpx;
 										}
 
 										.con_val {
@@ -877,11 +948,13 @@
 												color: #000000;
 												line-height: 44rpx;
 												margin-left: 16rpx;
+												white-space: nowrap;
+												text-overflow: ellipsis;
+												overflow: hidden;
 											}
 
 											.con_labels {
 												display: flex;
-												display: none;
 
 												.con_label {
 													width: 136rpx;

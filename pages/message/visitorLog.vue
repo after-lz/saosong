@@ -70,7 +70,7 @@
 								<u-avatar :src="item.headerpic"></u-avatar>
 							</view>
 							<view class="card_info">
-								用户{{ item.nickname }},通过伞送APP拨打了贵公司电话,请及时处理
+								用户<text class="mobile" @click="gtCommon.callMobile(item.mobile)">{{ item.mobile }}</text>通过伞送APP拨打了贵公司电话,请及时处理
 							</view>
 							<view class="card_time">
 								{{ formatDate(item.create_time) }}
@@ -245,6 +245,9 @@
 								display: -webkit-box;
 								-webkit-line-clamp: 3;
 								-webkit-box-orient: vertical;
+								.mobile {
+									color: $gtProjectColor;
+								}
 							}
 						}
 					}

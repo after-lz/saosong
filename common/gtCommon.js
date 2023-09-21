@@ -215,7 +215,6 @@ function endMobile(mobile) {
 }
 
 function callMobile(mobile) {
-	// console.log(mobile);
 	if (/^1[3-9]\d{9}$/.test(mobile)) {
 		uni.makePhoneCall({
 			phoneNumber: mobile,
@@ -226,14 +225,16 @@ function callMobile(mobile) {
 			icon: "error"
 		})
 	}
-
 	return false;
 }
 
-function openLocation(lat, lng) {
-	// console.log(lat);
-	// console.log(lng);
+/* 座机号 */
+function isTel(str) {
+	const reg = /^(400|800)([0-9\\-]{7,10})|(([0-9]{4}|[0-9]{3})(-| )?)?([0-9]{7,8})((-| |转)*([0-9]{1,4}))?$/;
+	return reg.test(str);
+}
 
+function openLocation(lat, lng) {
 	uni.openLocation({
 		latitude: Number(lat),
 		longitude: Number(lng),
@@ -251,15 +252,21 @@ function copyStr(str) {
 }
 
 function previewImg(path) {
-	// console.log(path);
 	uni.previewImage({
 		urls: [path],
 	});
 	return false;
 }
 
+function previewImgs(path, count) {
+	uni.previewImage({
+		urls: path,
+		current: count
+	});
+	return false;
+}
+
 function goLicence(url) {
-	// console.log(url);
 	uni.navigateTo({
 		url: '/pages/login/licence?url=' + url,
 	})
@@ -343,6 +350,10 @@ function judgeTime(time) {
 	}
 }
 
+function floatNum(num=0, few=2) {
+	return (parseInt(num * 10) / 10).toFixed(few)
+}
+
 module.exports.getOssImg = getOssImg;
 module.exports.formateTime = formateTime;
 module.exports.getPreMonthDay = getPreMonthDay;
@@ -360,7 +371,10 @@ module.exports.callMobile = callMobile;
 module.exports.openLocation = openLocation;
 module.exports.copyStr = copyStr;
 module.exports.previewImg = previewImg;
+module.exports.previewImgs = previewImgs;
 module.exports.goLicence = goLicence;
 module.exports.getMoneyStatus = getMoneyStatus;
 module.exports.debounce = debounce;
 module.exports.judgeTime = judgeTime;
+module.exports.isTel = isTel;
+module.exports.floatNum = floatNum;

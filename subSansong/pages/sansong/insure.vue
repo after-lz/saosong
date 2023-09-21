@@ -45,20 +45,19 @@
 		},
 		onLoad(options) {
 			let gt = this;
-			gt.manageStatus = options.manageStatus;
-			
-			gt.getDataList();
+			gt.manageStatus = JSON.parse(options.manageStatus);
+			if(gt.manageStatus) {
+				gt.getDataList()
+			} else {
+				gt.imgArr = JSON.parse(decodeURIComponent(options.imgs))
+			}
 		},
-		
 		methods: {
 			getDataList() {
 				let gt = this;
-
 				var url = "/logistics/company/get_company_img";
-
 				gt.gtRequest.post(url).then(res => {
 					gt.imgArr = res.company_imgs.insurance_pics;
-
 					for (var i = 0; i < res.company_imgs.insurance_pics.length; i++) {
 						gt.imgs.push({
 							url: res.company_imgs.insurance_pics[i]
@@ -67,35 +66,22 @@
 				});
 			},
 			chooseImg(item) {
-				console.log(item);
 				let gt = this;
-
 				var file = item.fileInfo;
-
 				gt.gtRequest.upload(file).then(res => {
 					gt.imgArr.push(res.src);
 				});
 			},
 			removeImg(index, list, ind) {
-				console.log(index);
-				console.log(list);
-				console.log(ind);
-				// return false;
 				let gt = this;
-
 				gt.imgArr.splice(index, 1);
 			},
-
 			submitForm() {
 				let gt = this;
 				var url = "/logistics/company/upload_insurance_img";
 				var data = {
 					insurance_pics: gt.imgArr.join('||'),
 				};
-				console.log(data);
-				// return false;
-
-
 				gt.gtRequest.post(url, data).then(res => {
 					gt.$refs.uToast.show({
 						title: '保存成功！',

@@ -23,7 +23,7 @@
 			</view>
 			<view class="con_FormItem con_nameInvoiceNotice">
 				<view class="con_name">
-					<u-input v-model="companyName" placeholder="输入公司名称" height="92" />
+					<u-input v-model="companyName" placeholder="输入公司名称" height="92" :disabled="flag" />
 				</view>
 				<!-- <view class="con_invoiceSwitch">
 					<view class="con_required">
@@ -124,7 +124,7 @@
 				<view class="con_keyVal">
 					<view class="con_key">
 						<view class="con_required">
-							<!-- <text>*</text> -->
+							<text>*</text>
 						</view>
 						<view class="con_text">
 							<text>座机号码</text>
@@ -591,6 +591,13 @@
 				if (!gt.$u.test.mobile(gt.mobile)) {
 					gt.$refs.uToast.show({
 						title: '手机号码不正确',
+						type: 'error',
+					});
+					return false;
+				}
+				if (!gt.gtCommon.isTel(gt.phone)) {
+					gt.$refs.uToast.show({
+						title: '座机号码不正确',
 						type: 'error',
 					});
 					return false;

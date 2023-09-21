@@ -1,11 +1,8 @@
 <template>
 	<view class="gt_content">
-
 		<view class="con_fromTo" v-if="fromTo">
 			<text>{{fromTo}}</text>
 		</view>
-
-
 		<view class="con_title">
 			<view class="con_item">
 				<text>省份</text>
@@ -17,8 +14,6 @@
 				<text>区县</text>
 			</view>
 		</view>
-
-
 		<view class="con_list">
 			<view class="con_pca">
 				<scroll-view :scroll-y="true" :scroll-into-view="provinceScrollInto">
@@ -69,8 +64,6 @@
 				</scroll-view>
 			</view>
 		</view>
-
-
 	</view>
 </template>
 
@@ -80,27 +73,19 @@
 			return {
 				lineId: 0,
 				fromTo: '',
-				
 				allArea:false,
-
 				pcaList: [],
-
 				provinceList: [],
 				cityList: [],
 				areaList: [],
-
 				provinceScrollInto: 0,
 				cityScrollInto: 0,
 				areaScrollInto: 0,
-
 				provinceSelected: [],
 				citySelected: [],
 				areaSelected: [],
-
 				break: false,
-
 				selectedList: [],
-
 			}
 		},
 		onLoad(options) {
@@ -112,15 +97,7 @@
 					gt.getLineInfo();
 				}, 500);
 			}
-
-
-
 			gt.getDataList();
-		},
-		onShow() {
-			let gt = this;
-
-
 		},
 		methods: {
 			getLineInfo() {
@@ -132,7 +109,6 @@
 				gt.gtRequest.post(url, data).then(res => {
 					// var info = res.info;
 					gt.fromTo = res.info.start_city + ' - ' + res.info.end_city;
-
 					for (var i = 0; i < gt.pcaList.length; i++) {
 						// if(gt.pcaList[i].city_name == res.info.end_province){
 						// 	gt.selectItem(gt.pcaList[i]);
@@ -148,8 +124,6 @@
 			getDataList() {
 				let gt = this;
 				var url = "/logistics/specialline/get_special_line_range";
-
-
 				gt.gtRequest.post(url).then(res => {
 					var list = [];
 					for (var i = 0; i < res.range.length; i++) {
@@ -186,21 +160,14 @@
 						}
 						item1.children = list2;
 						list.push(item1);
-
 					}
-					// console.log(list);
-
 					gt.pcaList = list;
 					gt.init();
 				});
 			},
-
 			init() {
-
 				let gt = this;
 				var provinceList = gt.pcaList;
-				// console.log(provinceList);
-
 				for (var i = 0; i < provinceList.length; i++) {
 					var provinceItem = {
 						cityCode: provinceList[i].city_code,
@@ -211,7 +178,6 @@
 					};
 					gt.provinceList.push(provinceItem);
 				}
-
 				if (gt.selectedList.length == 0 || gt.selectedList.length == 3) {
 					var firstProvince = {
 						cityCode: provinceList[0].city_code,
@@ -227,7 +193,6 @@
 						parentCode: provinceList[0].children[0].parent_code,
 						selected: false,
 					};
-
 					gt.cityList = gt.getChildren(firstProvince);
 					gt.areaList = gt.getChildren(firstCity);
 				} else {
@@ -235,7 +200,6 @@
 					gt.areaList = gt.getChildren(gt.selectedList[1][0]);
 				}
 			},
-
 			getChildren(item) {
 				let gt = this;
 				var children = [];
@@ -252,7 +216,6 @@
 								};
 								children.push(cityItem);
 							}
-
 							return children;
 						}
 					}
@@ -304,52 +267,37 @@
 				}
 			},
 			selectItem(item) {
-				console.log(item);
-
 				let gt = this;
 				var selected = !item.selected;
-
 				if (item.cityType == 1) {
 					var cityList = gt.getChildren(item);
 					gt.cityList = cityList;
 					var areaList = gt.getChildren(cityList[0]);
 					gt.areaList = areaList;
-
 				}
 				if (item.cityType == 2) {
 					var areaList = gt.getChildren(item);
 					gt.areaList = areaList;
 				}
-
 				gt.selectdPCA(item, selected);
 			},
 			selectItem2(item) {
-				console.log(item);
 				let gt = this;
 				// var selected = !item.selected;
-
 				if (item.cityType == 1) {
 					var cityList = gt.getChildren(item);
-					console.log(cityList);
 					gt.cityList = cityList;
 					var areaList = gt.getChildren(cityList[0]);
-					console.log(areaList);
 					gt.areaList = areaList;
-
-
 				}
 				if (item.cityType == 2) {
 					var areaList = gt.getChildren(item);
 					gt.areaList = areaList;
 				}
-
 				// gt.selectdPCA(item, selected);
 			},
 			selectdPCA(item, selected) {
 				let gt = this;
-				console.log(selected);
-
-
 				gt.provinceList.map(ite => {
 					ite.selected = false;
 				});
@@ -361,7 +309,6 @@
 						ite.selected = false;
 					});
 				}
-
 				item.selected = selected;
 				if (item.cityType == 1) {
 					gt.cityList[0].selected = selected;
@@ -378,8 +325,6 @@
 						gt.areaList[0].selected = selected;
 					}
 					var provinceItem = gt.getParent(item);
-
-
 					provinceItem.selected = selected;
 				}
 				if (item.cityType == 3) {
@@ -395,8 +340,6 @@
 						} else {
 							var num = 0;
 							for (var i = 0; i < gt.areaList.length; i++) {
-
-
 								if (gt.areaList[i].cityCode && gt.areaList[i].selected) {
 									num++;
 								}
@@ -416,23 +359,17 @@
 						}
 
 					} else {
-
 						cityItem.selected = selected;
 						provinceItem.selected = selected;
 					}
 				}
-				console.log(item);
-
 				gt.scrollPCA(item);
 			},
 			scrollPCA(item) {
 				let gt = this;
-
 				gt.provinceScrollInto = 'pScroll_0';
 				gt.cityScrollInto = 'cScroll_0';
 				gt.areaScrollInto = 'aScroll_0';
-
-
 				setTimeout(function() {
 					if (item.cityType == 1) {
 						gt.provinceScrollInto = 'pScroll_' + item.cityCode;
@@ -459,16 +396,12 @@
 						gt.provinceScrollInto = 'pScroll_' + provinceItem.cityCode;
 						gt.cityScrollInto = 'cScroll_' + cityItem.cityCode;
 						gt.areaScrollInto = 'aScroll_' + item.cityCode;
-
 					}
 				}, 200);
-
-
 			},
 			searchPCA() {
 				let gt = this;
 				gt.break = false;
-
 				if (gt.searchVal) {
 					gt.provinceList.map(ite => {
 						ite.selected = false;
@@ -557,11 +490,7 @@
 							}
 						}
 					}
-				} else {
-
 				}
-
-
 			}
 
 		}

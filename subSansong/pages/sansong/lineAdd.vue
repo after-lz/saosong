@@ -179,7 +179,7 @@
 					<text>报价信息</text>
 				</view>
 				<view class="con_switch">
-					<text>报价开关</text>
+					<view class="con_switch_name">报价开关</view>
 					<u-switch v-model="quotationSwitch" size="40"></u-switch>
 				</view>
 			</view>
@@ -653,7 +653,7 @@
 				th_price: '',
 				sh_status: true,
 				sh_price: '',
-				// provinceCityAreaList: [],
+				provinceCityAreaList: [],
 				areaShow: false,
 				provinceIndex: 0,
 				cityIndex: 0,
@@ -668,6 +668,11 @@
 		},
 		async onLoad(options) {
 			let gt = this;
+			if(options.isEdit) {
+				uni.setNavigationBarTitle({
+				    title: "修改专线"
+				});
+			}
 			// var list = uni.getStorage('pcaList')
 			uni.getStorage({
 				key: 'pcaList',
@@ -921,7 +926,7 @@
 			},
 			showGTPCA(str) {
 				let gt = this;
-				gt.height = '600rpx';
+				gt.height = '534rpx';
 				if(str == 's' && (gt.isAdd || gt.isEdit)) return;
 				if(gt.isEdit && str == 'e') {
 					let editProvince = gt.provinceCityAreaList.filter(item=> item.city_code == gt.toPca[0][0].cityCode)
@@ -934,9 +939,11 @@
 				gt.allArea = str == 's' ? false : true;
 				gt.GTPCAShowS = str == 'e' ? false : true;
 				gt.GTPCAShowE = str == 's' ? false : true;
-				setTimeout(()=> {
-					gt.$refs.gtPCA.init(gt.provinceCityAreaList1)
-				}, 0)
+				if(gt.isEdit && str == 'e') {
+					gt.$nextTick(()=> {
+						gt.$refs.gtPCA.init(gt.provinceCityAreaList1)
+					})
+				}
 			},
 			addArriveStation() {
 				let gt = this;
@@ -1352,8 +1359,8 @@
 
 					.con_switch {
 						display: flex;
-
-						text {
+						align-items: center;
+						.con_switch_name {
 							font-size: 28rpx;
 							font-family: PingFangSC-Regular, PingFang SC;
 							font-weight: 400;

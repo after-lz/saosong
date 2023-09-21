@@ -21,10 +21,11 @@
 						<view class="card_right">
 							<view class="right_title">
 								<view class="right_name">访客记录</view>
-								<view class="right_time"></view>
+								<view class="right_time" v-if="list.type_0.create_time">{{ formatDate(list.type_0.create_time) }}</view>
 							</view>
 							<view class="right_info">
-								<text>暂无信息</text>
+								<text v-if="list.type_0.content">{{ list.type_0.content }}</text>
+								<text v-else>暂无信息</text>
 							</view>
 						</view>
 					</view>
@@ -36,7 +37,7 @@
 						<view class="card_right">
 							<view class="right_title">
 								<view class="right_name">物流信息</view>
-								<view class="right_time" v-if="list.type_3.create_time">{{ formatDate(list.type_1.create_time) }}</view>
+								<view class="right_time" v-if="list.type_1.create_time">{{ formatDate(list.type_1.create_time) }}</view>
 							</view>
 							<view class="right_info">
 								<text v-if="list.type_1.content">{{ list.type_1.content }}</text>
@@ -46,32 +47,32 @@
 					</view>
 					<view class="card" @click="goDetail(3)">
 						<view class="card_left">
-							<u-badge :is-dot="true" type="error" :count="list.type_2.num" :offset='offset'></u-badge>
+							<u-badge :is-dot="true" type="error" :count="list.type_3.num" :offset='offset'></u-badge>
 							<image :src="gtCommon.getOssImg('message/message03.png')" mode="widthFix" class="msgImg"></image>
 						</view>
 						<view class="card_right">
 							<view class="right_title">
 								<view class="right_name">红包福利</view>
-								<view class="right_time" v-if="list.type_2.create_time">{{ formatDate(list.type_2.create_time) }}</view>
+								<view class="right_time" v-if="list.type_3.create_time">{{ formatDate(list.type_3.create_time) }}</view>
 							</view>
 							<view class="right_info">
-								<text v-if="list.type_2.content">{{ list.type_2.content }}</text>
+								<text v-if="list.type_3.content">{{ list.type_3.content }}</text>
 								<text v-else>暂无信息</text>
 							</view>
 						</view>
 					</view>
 					<view class="card" @click="goDetail(4)">
 						<view class="card_left">
-							<u-badge :is-dot="true" type="error" :count="list.type_3.num" :offset='offset'></u-badge>
+							<u-badge :is-dot="true" type="error" :count="list.type_2.num" :offset='offset'></u-badge>
 							<image :src="gtCommon.getOssImg('message/message04.png')" mode="widthFix" class="msgImg"></image>
 						</view>
 						<view class="card_right">
 							<view class="right_title">
 								<view class="right_name">服务通知</view>
-								<view class="right_time" v-if="list.type_3.create_time">{{ formatDate(list.type_3.create_time) }}</view>
+								<view class="right_time" v-if="list.type_2.create_time">{{ formatDate(list.type_2.create_time) }}</view>
 							</view>
 							<view class="right_info">
-								<text v-if="list.type_3.content">{{ list.type_3.content }}</text>
+								<text v-if="list.type_2.content">{{ list.type_2.content }}</text>
 								<text v-else>暂无信息</text>
 							</view>
 						</view>
@@ -95,16 +96,34 @@
 				current: 0,
 				offset: [0, 0],
 				list: {
+					type_0: {},
 					type_1: {},
 					type_2: {},
 					type_3: {}
-				}
+				},
+				token: ''
 			}
 		},
-		onShow() {
+		async onShow() {
 			let gt = this
-			gt.getList()
-			gt.refreshCircle()
+			gt.token = await gt.gtRequest.getToken()
+			if(gt.token) {
+				gt.getList()
+				gt.refreshCircle()
+			} else {
+				uni.showModal({
+					title: '请先登录',
+					showCancel: true,
+					success(res) {
+						if (res.confirm) {
+							uni.navigateTo({
+								url: '../login/login'
+							});
+							return false
+						}
+					}
+				})
+			}
 		},
 		methods: {
 			refreshCircle() {
@@ -123,7 +142,22 @@
 			},
 			tabsChange(index) {
 				let gt = this
-				gt.current = index
+				if(gt.token) {
+					gt.current = index
+				} else {
+					uni.showModal({
+						title: '获取完整体验，请先登录',
+						showCancel: true,
+						success(res) {
+							if (res.confirm) {
+								uni.navigateTo({
+									url: '../login/login'
+								});
+								return false
+							}
+						}
+					})
+				}
 			},
 			animationfinish(e) {
 				let gt = this
@@ -133,13 +167,29 @@
 			},
 			clearUnread() {
 				let gt = this
-				gt.gtRequest.post('/api/applogin/lots_read_message', {
-					platform: 'logistics'
-				}).then(res => {
-					gt.list.type_1.num = 0
-					gt.list.type_2.num = 0
-					gt.list.type_3.num = 0
-				})
+				if(gt.token) {
+					gt.gtRequest.post('/api/applogin/lots_read_message', {
+						platform: 'logistics'
+					}).then(res => {
+						gt.list.type_0.num = 0
+						gt.list.type_1.num = 0
+						gt.list.type_2.num = 0
+						gt.list.type_3.num = 0
+					})
+				} else {
+					uni.showModal({
+						title: '请先登录',
+						showCancel: true,
+						success(res) {
+							if (res.confirm) {
+								uni.navigateTo({
+									url: '../login/login'
+								});
+								return false
+							}
+						}
+					})
+				}
 			},
 			circleMsg() {
 				uni.navigateTo({
@@ -147,29 +197,45 @@
 				})
 			},
 			goDetail(type) {
-				switch (type){
-					case 1:
-						uni.navigateTo({
-							url: './visitorLog'
-						})
-						break;
-					case 2:
-						uni.navigateTo({
-							url: './logisticsInfo'
-						})
-						break;
-					case 3:
-						uni.navigateTo({
-							url: './redEnvelopeWelfare'
-						})
-						break;
-					case 4:
-						uni.navigateTo({
-							url: './serviceNotice'
-						})
-						break;
-					default:
-						break;
+				let gt = this
+				if(gt.token) {
+					switch (type){
+						case 1:
+							uni.navigateTo({
+								url: './visitorLog'
+							})
+							break;
+						case 2:
+							uni.navigateTo({
+								url: './logisticsInfo'
+							})
+							break;
+						case 3:
+							uni.navigateTo({
+								url: './redEnvelopeWelfare'
+							})
+							break;
+						case 4:
+							uni.navigateTo({
+								url: './serviceNotice'
+							})
+							break;
+						default:
+							break;
+					}
+				} else {
+					uni.showModal({
+						title: '请先登录',
+						showCancel: true,
+						success(res) {
+							if (res.confirm) {
+								uni.navigateTo({
+									url: '../login/login'
+								});
+								return false
+							}
+						}
+					})
 				}
 			},
 			formatDate(date) {

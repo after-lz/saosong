@@ -32,7 +32,7 @@
 			let gt = this
 			gt.params = {
 				platform: 'logistics',
-				type: 2,
+				type: 3,
 				page: 1,
 				limit: 20,
 				isEnd: false
@@ -52,7 +52,7 @@
 				let gt = this
 				gt.gtRequest.post('/api/applogin/type_read_message', {
 					platform: 'logistics',
-					type: 2
+					type: 3
 				})
 			},
 			loadingMore() {

@@ -73,9 +73,9 @@
 				</button>
 				<view class="con_agreement_msg">
 					<text>我已阅读并同意</text>
-					<text style="color:#485EF4;" @click="gtCommon.goLicence(licencesObj.logistics_yonghu_xieyi_url)">《用户协议》</text>
+					<text style="color:#485EF4;" @click.stop="gtCommon.goLicence(licencesObj.logistics_yonghu_xieyi_url)">《用户协议》</text>
 					<text>和</text>
-					<text style="color:#485EF4;" @click="gtCommon.goLicence(licencesObj.logistics_yinsi_xieyi_url)">《隐私协议》</text>
+					<text style="color:#485EF4;" @click.stop="gtCommon.goLicence(licencesObj.logistics_yinsi_xieyi_url)">《隐私协议》</text>
 					<text>并授权伞送获得本机号码</text>
 				</view>
 			</view>
@@ -240,10 +240,13 @@
 														title: '登录成功！',
 														type: 'success',
 													});
-													var pages = getCurrentPages();
-													uni.reLaunch({
-														url: pages[0].$page.fullPath
-													});
+													// var pages = getCurrentPages();
+													// uni.reLaunch({
+													// 	url: pages[0].$page.fullPath
+													// });
+													uni.switchTab({
+														url: '/pages/index/index'
+													})
 												}
 											})
 										} else {
@@ -251,10 +254,13 @@
 												title: '登录成功！',
 												type: 'success',
 											});
-											var pages = getCurrentPages();
-											uni.reLaunch({
-												url: pages[0].$page.fullPath
-											});
+											// var pages = getCurrentPages();
+											// uni.reLaunch({
+											// 	url: pages[0].$page.fullPath
+											// });
+											uni.switchTab({
+												url: '/pages/index/index'
+											})
 										}
 									// }
 								})
@@ -300,12 +306,12 @@
 					uni.showModal({
 						title: '请先同意协议',
 						content: '使用本系统前请先同意协议',
-						showCancel: true,
-						cancelText: '不同意',
-						confirmText: '我同意',
+						showCancel: false,
+						// cancelText: '不同意',
+						confirmText: '我知道了',
 						success(res) {
 							if (res.confirm) {
-								gt.agree = true;
+								// gt.agree = true;
 							}
 						}
 					})
@@ -373,10 +379,13 @@
 												title: '登录成功！',
 												type: 'success',
 											});
-											var pages = getCurrentPages();
-											uni.reLaunch({
-												url: pages[0].$page.fullPath
-											});
+											// var pages = getCurrentPages();
+											// uni.reLaunch({
+											// 	url: pages[0].$page.fullPath
+											// });
+											uni.switchTab({
+												url: '/pages/index/index'
+											})
 										}
 									})
 								} else {
@@ -384,10 +393,13 @@
 										title: '登录成功！',
 										type: 'success',
 									});
-									var pages = getCurrentPages();
-									uni.reLaunch({
-										url: pages[0].$page.fullPath
-									});
+									// var pages = getCurrentPages();
+									// uni.reLaunch({
+									// 	url: pages[0].$page.fullPath
+									// });
+									uni.switchTab({
+										url: '/pages/index/index'
+									})
 								}
 							// }
 						})
@@ -439,12 +451,12 @@
 					uni.showModal({
 						title: '请先同意协议',
 						content: '使用本系统前请先同意协议',
-						showCancel: true,
-						cancelText: '不同意',
-						confirmText: '我同意',
+						showCancel: false,
+						// cancelText: '不同意',
+						confirmText: '我知道了',
 						success(res) {
 							if (res.confirm) {
-								gt.agree = true;
+								// gt.agree = true;
 							}
 						}
 					})
@@ -516,21 +528,28 @@
 										title: '登录成功！',
 										type: 'success',
 									});
-									var pages = getCurrentPages();
-									uni.reLaunch({
-										url: pages[0].$page.fullPath
-									});
+								// 	var pages = getCurrentPages();
+								// 	console.debug(pages)
+								// 	uni.reLaunch({
+								// 		url: pages[0].$page.fullPath
+								// 	});
 								}
+								uni.switchTab({
+									url: '/pages/index/index'
+								})
 							})
 						} else {
 							gt.$refs.uToast.show({
 								title: '登录成功！',
 								type: 'success',
 							});
-							var pages = getCurrentPages();
-							uni.reLaunch({
-								url: pages[0].$page.fullPath
-							});
+							// var pages = getCurrentPages();
+							// uni.reLaunch({
+							// 	url: pages[0].$page.fullPath
+							// });
+							uni.switchTab({
+								url: '/pages/index/index'
+							})
 						}
 					// }
 				})

@@ -595,19 +595,18 @@
 			let gt = this;
 			gt.innerAudioContext = uni.createInnerAudioContext();
 			// gt.innerAudioContext = uni.getBackgroundAudioManager();
-			// console.log(gt.$gtWSS.socketTask);
-			var mobile = uni.getStorageSync('mobile');
-			gt.mobile = mobile;
 			// if (mobile) {
 			// gt.gtonMessage();
 			// }
 			uni.setStorageSync('audioStatus', true);
 			// uni.setStorageSync('listenStatus', true);
-			var companyInfo = uni.getStorageSync('companyInfo');
-			gt.logistics_id = companyInfo.logistics_id;
 		},
 		async onShow() {
 			let gt = this;
+			var mobile = uni.getStorageSync('mobile');
+			gt.mobile = mobile;
+			var companyInfo = uni.getStorageSync('companyInfo');
+			gt.logistics_id = companyInfo.logistics_id;
 			gt.clientId = uni.getStorageSync('clientId');
 			uni.setNavigationBarTitle({
 				title: '专线货源',
@@ -619,8 +618,7 @@
 			}
 			gt.listenStatus = uni.getStorageSync('listenStatus');
 			gt.audioStatus = uni.getStorageSync('audioStatus');
-			// var companyAuth = uni.getStorageSync('companyAuth');
-			// gt.companyAuth = companyAuth;
+			gt.companyAuth = uni.getStorageSync('companyAuth');
 			// gt.getLineNum();
 			// var companyInfo = uni.getStorageSync('companyInfo');
 			// if (companyInfo.parkId) {
@@ -628,7 +626,7 @@
 			// } else {
 			// 	gt.joinShow = true;
 			// }
-			gt.getLocation();
+			if(uni.getStorageSync('token')) gt.getLocation();
 			if (gt.mobile) {
 				await gt.getCompanyInfo();
 				if(gt.companyAuth) return

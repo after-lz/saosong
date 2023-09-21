@@ -305,7 +305,8 @@
 					"path": "pages/sansong/companyInfo",
 					"style": {
 						"navigationBarTitleText": "公司详情",
-						"enablePullDownRefresh": false
+						"enablePullDownRefresh": false,
+						"disableScroll": true
 					}
 				},
 				{
@@ -412,6 +413,98 @@
 						"navigationBarTitleText": "调整运单",
 						"enablePullDownRefresh": false
 					}
+				},
+				{
+					"path": "pages/sansong/specialLine",
+					"style": {
+						"navigationBarTitleText": "品质专线",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "pages/sansong/applyReturn",
+					"style": {
+						"navigationBarTitleText": "申请退还",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "pages/sansong/paymentRecord",
+					"style": {
+						"navigationBarTitleText": "缴纳记录",
+						"enablePullDownRefresh": true
+					}
+				},
+				{
+					"path": "pages/sansong/depositDescription",
+					"style": {
+						"navigationBarTitleText": "押金说明",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "pages/sansong/applySuccess",
+					"style": {
+						"navigationBarTitleText": "",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "pages/sansong/settleAccounts",
+					"style": {
+						"navigationBarTitleText": "结算",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "pages/sansong/linePromotion",
+					"style": {
+						"navigationBarTitleText": "专线推广",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "pages/sansong/promotionDetail",
+					"style": {
+						"navigationBarTitleText": "明细",
+						"enablePullDownRefresh": true
+					}
+				},
+				{
+					"path": "pages/sansong/memberLine",
+					"style": {
+						"navigationBarTitleText": "会员专线",
+						"enablePullDownRefresh": false
+						// "disableScroll": true
+					}
+				},
+				{
+					"path": "pages/sansong/abnormalBill",
+					"style": {
+						"navigationBarTitleText": "异常单",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "pages/sansong/abnormalBillDetail",
+					"style": {
+						"navigationBarTitleText": "异常单详情",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "pages/sansong/abnormalBillDispose",
+					"style": {
+						"navigationBarTitleText": "异常单处理",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "pages/sansong/dataBoard",
+					"style": {
+						"navigationBarTitleText": "数据看板",
+						"enablePullDownRefresh": false
+					}
 				}
 			]
 		}, 
@@ -489,7 +582,7 @@
 					"path": "pages/user/moneyList",
 					"style": {
 						"navigationBarTitleText": "我的账单",
-						"enablePullDownRefresh": false
+						"enablePullDownRefresh": true
 					}
 				},
 				{
