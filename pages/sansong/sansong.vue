@@ -144,13 +144,13 @@
 					{
 						id: 1,
 						name: '货车定位',
-						url: './empty'
+						// url: './empty',
+						url: '/subSansong/pages/sansong/truckLocation'
 					},
 					{
 						id: 1,
 						name: '数据看板',
-						url: './empty'
-						// url: '/subSansong/pages/sansong/dataBoard'
+						url: '/subSansong/pages/sansong/dataBoard'
 					},
 				],
 

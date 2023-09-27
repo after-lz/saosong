@@ -6,14 +6,12 @@
 		<view class="con_headBackground"></view>
 		<view class="con_baseInfo" :style="'margin-top:' + (headHeight + 140) + 'rpx'">
 			<view class="con_headImg" @click="goUser">
-				<!-- <image :src="userInfo.headerpic" :src="userInfo.headerpic" mode="widthFix"></image>
-				<image v-else :src="gtCommon.getOssImg('user/defaultHeadImg.png')" mode="widthFix"></image> -->
 				<u-avatar size="large" :src="gtCommon.getOssImg('user/defaultHeadImg.png') && userInfo.headerpic"></u-avatar>
 			</view>
 			<view class="con_name_mobile" @click="goUser">
 				<view class="con_name u-line-1">
 					<text v-if="userInfo.nickname">{{userInfo.nickname}}</text>
-					<text style="color:#252222;line-height: 108rpx;" @click="goLogin" v-else>请先登录</text>
+					<text style="color:#252222; line-height: 108rpx" @click="goLogin" v-else>请先登录</text>
 				</view>
 				<view class="con_mobile_auth" v-if="userInfo.nickname">
 					<view class="con_mobile">
@@ -23,9 +21,6 @@
 					<view class="con_auth" v-if="logisticsInfo.is_company_approve == 1">
 						<image :src="gtCommon.getOssImg('user/auth.png')" mode="widthFix"></image>
 					</view>
-				</view>
-				<view class="con_login" v-else>
-					<!-- <text style="color:#252222;line-height: 108rpx;" @click="goLogin">请先登录</text> -->
 				</view>
 			</view>
 			<view class="con_btns">
@@ -38,7 +33,7 @@
 			</view>
 		</view>
 		<view class="con_nums1">
-			<view class="con_item">
+			<view class="con_item" @click="menuClick_1(0)">
 				<view class="con_num1">
 					<text>{{numArr1[0]}}</text>
 				</view>
@@ -49,7 +44,7 @@
 			<view class="con_line">
 				<u-line color="#F2F2F2" length="80rpx" direction="col" :hair-line="false"></u-line>
 			</view>
-			<view class="con_item">
+			<view class="con_item" @click="menuClick_1(1)">
 				<view class="con_num1">
 					<text>{{numArr1[1]}}</text>
 				</view>
@@ -60,7 +55,7 @@
 			<view class="con_line">
 				<u-line color="#F2F2F2" length="80rpx" direction="col" :hair-line="false"></u-line>
 			</view>
-			<view class="con_item">
+			<view class="con_item" @click="menuClick_1(2)">
 				<view class="con_num1">
 					<text>{{numArr1[2]}}</text>
 				</view>
@@ -71,7 +66,7 @@
 			<view class="con_line">
 				<u-line color="#F2F2F2" length="80rpx" direction="col" :hair-line="false"></u-line>
 			</view>
-			<view class="con_item">
+			<view class="con_item" @click="menuClick_1(3)">
 				<view class="con_num1">
 					<text>{{numArr1[3]}}</text>
 				</view>
@@ -88,7 +83,7 @@
 				<text>我的钱包</text>
 			</view>
 			<view class="con_nums2">
-				<view class="con_item" @click="goFloat">
+				<view class="con_item" @click="menuClick_2(0)">
 					<view class="con_num2">
 						<text>{{numArr2[0]}}</text>
 					</view>
@@ -99,7 +94,7 @@
 				<view class="con_line">
 					<u-line color="#F2F2F2" length="80rpx" direction="col" :hair-line="false"></u-line>
 				</view>
-				<view class="con_item" @click="goWallet">
+				<view class="con_item" @click="menuClick_2(1)">
 					<view class="con_num2">
 						<text>{{numArr2[1]}}</text>
 					</view>
@@ -110,7 +105,7 @@
 				<view class="con_line">
 					<u-line color="#F2F2F2" length="80rpx" direction="col" :hair-line="false"></u-line>
 				</view>
-				<view class="con_item" @click="goPacket">
+				<view class="con_item" @click="menuClick_2(2)">
 					<view class="con_num2">
 						<text>{{numArr2[2]}}</text>
 					</view>
@@ -121,7 +116,7 @@
 				<view class="con_line">
 					<u-line color="#F2F2F2" length="80rpx" direction="col" :hair-line="false"></u-line>
 				</view>
-				<view class="con_item" @click="goBankCard">
+				<view class="con_item" @click="menuClick_2(3)">
 					<view class="con_num2">
 						<text>{{numArr2[3]}}</text>
 					</view>
@@ -136,7 +131,7 @@
 				<text>便捷功能</text>
 			</view>
 			<view class="con_list">
-				<view class="con_item" v-for="(item,index) in menuList1" :key="index" @click="menuClick(item)">
+				<view class="con_item" v-for="(item, index) in menuList1" :key="index" @click="menuClick_3(index)">
 					<view class="con_icon">
 						<image :src="gtCommon.getOssImg('user/' + item.name +'.png')" mode="widthFix">
 						</image>
@@ -152,7 +147,7 @@
 				<text>帮助反馈</text>
 			</view>
 			<view class="con_list">
-				<view class="con_item" v-for="(item,index) in menuList2" :key="index" @click="menuClick1(item)">
+				<view class="con_item" v-for="(item, index) in menuList2" :key="index" @click="menuClick_4(index)">
 					<view class="con_icon">
 						<image :src="gtCommon.getOssImg('user/' + item.name +'.png')" mode="widthFix">
 						</image>
@@ -172,35 +167,16 @@
 				loginStatus: false,
 				headHeight: -60,
 				swiperList: [],
-				menuList1: [{
-						id: 1,
-						name: '我的营收',
-					},
-					{
-						id: 2,
-						name: '我的账单',
-					},
-					{
-						id: 3,
-						name: '发票管理',
-					},
-					{
-						id: 4,
-						name: '员工管理',
-					},
+				menuList1: [
+					{ name: '我的营收' },
+					{ name: '我的账单' },
+					{ name: '发票管理' },
+					{ name: '员工管理' }
 				],
-				menuList2: [{
-						id: 1,
-						name: '常见问题',
-					},
-					{
-						id: 2,
-						name: '联系客服',
-					},
-					{
-						id: 3,
-						name: '意见反馈',
-					},
+				menuList2: [
+					{ name: '常见问题' },
+					{ name: '联系客服' },
+					{ name: '意见反馈' }
 				],
 				logisticsInfo: {},
 				userInfo: {},
@@ -216,32 +192,123 @@
 			// #ifdef APP-PLUS
 			var adType = 'AppLogisticsPersonal'
 			// #endif
-			var url = "/api/appgobal/get_ad_data"
-			var data = {
+			gt.gtRequest.post("/api/appgobal/get_ad_data", {
 				platform: 'logistics',
 				city: '无锡',
 				ad_sign: adType
-			}
-			gt.gtRequest.post(url, data).then(res => {
+			}).then(res => {
 				gt.swiperList = res.list
 			})
 			// #ifdef MP-WEIXIN
-			var menuButtonInfo = uni.getMenuButtonBoundingClientRect()
+			let menuButtonInfo = uni.getMenuButtonBoundingClientRect()
 			gt.headHeight = menuButtonInfo.top + menuButtonInfo.height
 			// #endif
 		},
-		async onShow() {
+		onShow() {
 			let gt = this
-			await gt.getUserInfo()
+			gt.getUserInfo()
 		},
 		methods: {
-			goLogin() {
-				uni.navigateTo({
-					url: '../login/login'
-				})
-				return false
+			/* 行为分/访客量/收藏我/评分 */
+			menuClick_1(type) {
+				let gt = this
+				if(!gt.goLogin()) return
+				let url = ''
+				switch (type) {
+					case 0:
+						url = '/subUser/pages/user/behaviorScore'
+						break;
+					case 1:
+						url = ''
+						break;
+					case 2:
+						url = ''
+						break;
+					case 3:
+						url = ''
+						break;
+					default:
+						break;
+				}
+				if(url) {
+					uni.navigateTo({
+						url: url
+					})
+				}
 			},
-			goQrcode() {
+			/* 在途资金/余额/红包/银行卡 */
+			menuClick_2(type) {
+				let gt = this
+				if(!gt.goLogin()) return
+				let url = ''
+				switch (type) {
+					case 0:
+						url = '/subUser/pages/user/fundFloat'
+						break;
+					case 1:
+						url = '/subUser/pages/user/wallet'
+						break;
+					case 2:
+						url = '/subUser/pages/user/packet'
+						break;
+					case 3:
+						url = '/subUser/pages/user/bankList'
+						break;
+					default:
+						break;
+				}
+				if(url) {
+					uni.navigateTo({
+						url: url
+					})
+				}
+			},
+			/* 我的营收/我的账单/发票管理/员工管理 */
+			menuClick_3(type) {
+				let gt = this
+				if(!gt.goLogin()) return
+				let url = ''
+				switch (type) {
+					case 0:
+						url = './revenue'
+						break;
+					case 1:
+						url = '/subUser/pages/user/moneyList'
+						break;
+					case 2:
+						url = './empty'
+						break;
+					case 3:
+						url = './empty'
+						break;
+					default:
+						break;
+				}
+				if(url) {
+					uni.navigateTo({
+						url: url
+					})
+				}
+			},
+			/* 常见问题/联系客服/意见反馈 */
+			menuClick_4(type) {
+				let gt = this
+				if(!gt.goLogin()) return
+				if(type === 0) {
+					uni.navigateTo({
+						url: '/subUser/pages/user/commonProblem',
+					})
+				} else if(type === 2) {
+					uni.navigateTo({
+						url: '/subUser/pages/user/feedBack',
+					})
+				} else if(type === 1) {
+					uni.makePhoneCall({
+						phoneNumber: '4008899050'
+					})
+				}
+			},
+			goLogin() {
 				let gt = this
 				if(!gt.loginStatus) {
 					uni.showModal({
@@ -249,50 +316,41 @@
 						content:'登录后才能使用此功能',
 						success(res) {
 							if(res.confirm) {
-								gt.goLogin()
+								uni.navigateTo({
+									url: '../login/login'
+								})
 							}
 						}
 					})
-				} else {
-					uni.navigateTo({
-						url: '/subUser/pages/user/qrcode',
-						complete: (res => {
-							console.log(res)
-						})
-					})
-					return false
 				}
+				return gt.loginStatus
 			},
-			goUser() {
+			goQrcode() {
+				let gt = this
+				if(!gt.goLogin()) return
 				uni.navigateTo({
-					url: '../../subUser/pages/user/personalInformation'
+					url: '/subUser/pages/user/qrcode'
 				})
 			},
 			goSetting() {
 				let gt = this
-				if(!gt.loginStatus){
-					uni.showModal({
-						title:'您还未登录',
-						content:'登录后才能使用此功能',
-						success(res) {
-							if(res.confirm) {
-								gt.goLogin()
-							}
-						}
-					})
-					return false
-				}
+				if(!gt.goLogin()) return
 				uni.navigateTo({
 					url: '/subUser/pages/user/setting'
 				})
-				return false
+			},
+			goUser() {
+				let gt = this
+				if(!gt.goLogin()) return
+				uni.navigateTo({
+					url: '../../subUser/pages/user/personalInformation'
+				})
 			},
 			async getUserInfo() {
 				let gt = this
-				var token = await gt.gtRequest.getToken()
+				let token = await gt.gtRequest.getToken()
 				if (token) {
-					var url = "/logistics/user/get_user_info"
-					gt.gtRequest.post(url).then(res => {
+					gt.gtRequest.post("/logistics/user/get_user_info").then(res => {
 						uni.setStorageSync('user_info', res.user_info)
 						gt.userInfo = res.user_info
 						if(res.logistics_info) {
@@ -316,146 +374,12 @@
 							if (res.confirm) {
 								uni.navigateTo({
 									url: '../login/login'
-								});
-								return false
+								})
 							}
 						}
 					})
-					return false
 				}
-			},
-			goFloat() {
-				let gt = this
-				if(!gt.loginStatus) {
-					uni.showModal({
-						title:'您还未登录',
-						content:'登录后才能使用此功能',
-						success(res) {
-							if(res.confirm) {
-								gt.goLogin()
-							}
-						}
-					})
-					return false
-				}
-				uni.navigateTo({
-					url: '/subUser/pages/user/fundFloat'
-				})
-				return false
-			},
-			goWallet() {
-				let gt = this
-				if(!gt.loginStatus) {
-					uni.showModal({
-						title:'您还未登录',
-						content:'登录后才能使用此功能',
-						success(res) {
-							if(res.confirm) {
-								gt.goLogin()
-							}
-						}
-					})
-					return false
-				}
-				uni.navigateTo({
-					url: '/subUser/pages/user/wallet'
-				})
-				return false
-			},
-			goPacket() {
-				let gt = this
-				if(!gt.loginStatus) {
-					uni.showModal({
-						title:'您还未登录',
-						content:'登录后才能使用此功能',
-						success(res) {
-							if(res.confirm) {
-								gt.goLogin()
-							}
-						}
-					})
-					return false
-				}
-				uni.navigateTo({
-					url: '/subUser/pages/user/packet'
-				});
-				return false
-			},
-			goBankCard() {
-				let gt = this
-				if(!gt.loginStatus) {
-					uni.showModal({
-						title:'您还未登录',
-						content:'登录后才能使用此功能',
-						success(res) {
-							if(res.confirm) {
-								gt.goLogin()
-							}
-						}
-					})
-					return false;
-				}
-				uni.navigateTo({
-					url: '/subUser/pages/user/bankList'
-				})
-				return false
-			},
-			menuClick(item) {
-				let gt = this
-				if(!gt.loginStatus) {
-					uni.showModal({
-						title:'您还未登录',
-						content:'登录后才能使用此功能',
-						success(res) {
-							if(res.confirm) {
-								gt.goLogin()
-							}
-						}
-					})
-					return false
-				}
-				if(item.id == 1) {
-					uni.navigateTo({
-						url: './revenue',
-					})
-				} else if(item.id == 2) {
-					uni.navigateTo({
-						url: '/subUser/pages/user/moneyList'
-					})
-				} else {
-					uni.navigateTo({
-						url: './empty'
-					})
-				}
-			},
-			menuClick1(item) {
-				let gt = this
-				if(!gt.loginStatus) {
-					uni.showModal({
-						title:'您还未登录',
-						content:'登录后才能使用此功能',
-						success(res) {
-							if(res.confirm) {
-								gt.goLogin()
-							}
-						}
-					})
-					return false
-				}
-				if(item.id == 1) {
-					uni.navigateTo({
-						url: '/subUser/pages/user/commonProblem',
-					})
-				} else if(item.id == 3) {
-					uni.navigateTo({
-						url: '/subUser/pages/user/feedBack',
-					})
-				} else if(item.id == 2) {
-					uni.makePhoneCall({
-						phoneNumber: '4008899050'
-					})
-				}
-			},
+			}
 		}
 	}
 </script>
@@ -478,11 +402,7 @@
 				display: flex;
 
 				.con_headImg {
-					// width: 108rpx;
-					// height: 108rpx;
 					margin-left: 16rpx;
-					// border-radius: 50%;
-					// overflow: hidden;
 				}
 
 				.con_name_mobile {
@@ -574,7 +494,6 @@
 			.con_swiper {
 				margin: 22rpx 16rpx 22rpx 16rpx;
 				width: 718rpx;
-				// border: 1rpx solid red;
 			}
 
 			.con_wallet {
@@ -675,8 +594,6 @@
 					}
 				}
 			}
-
-
 		}
 	}
 </style>

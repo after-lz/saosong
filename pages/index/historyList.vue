@@ -312,8 +312,11 @@
 				quotationTime: ''
 			}
 		},
-		onLoad() {
+		onLoad(options) {
 			let gt = this;
+			if(options.active) {
+				gt.currentTab = options.active
+			}
 			var companyInfo = uni.getStorageSync('companyInfo');
 			gt.companyInfo = companyInfo;
 			gt.reGetDataList();

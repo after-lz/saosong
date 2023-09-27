@@ -503,7 +503,16 @@
 					"path": "pages/sansong/dataBoard",
 					"style": {
 						"navigationBarTitleText": "数据看板",
-						"enablePullDownRefresh": false
+						"enablePullDownRefresh": false,
+						"disableScroll": true
+					}
+				},
+				{
+					"path": "pages/sansong/truckLocation",
+					"style": {
+						"navigationBarTitleText": "货车定位",
+						"enablePullDownRefresh": false,
+						"disableScroll": true
 					}
 				}
 			]
@@ -737,6 +746,22 @@
 					"style": {
 						"navigationBarTitleText": "提现",
 						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "pages/user/behaviorScore",
+					"style": {
+						"navigationBarTitleText": "行为分",
+						"enablePullDownRefresh": false,
+						"navigationStyle": "custom"
+						// "disableScroll": true
+					}
+				},
+				{
+					"path": "pages/user/behaviorSubrecord",
+					"style": {
+						"navigationBarTitleText": "行为分记录",
+						"enablePullDownRefresh": true
 					}
 				}
 			]
