@@ -498,14 +498,26 @@
 				</swiper-item>
 			</swiper>
 		</view>
+		<dragButton :viewWidth="viewWidth" :viewHeight="viewHeight" :viewTop="viewTop"
+			v-if="img_path && !currentTab" @touchstart='touchstart' @touchend='touchend'>
+			<view class="videoView" :style="{width: viewWidth+'px', height: viewHeight+'px'}">
+				<view class="videoClose">
+					<u-icon name="close" color="#fff" size="28" @click="img_path=''"></u-icon>
+				</view>
+				<video :src="img_path" controls="false" autoplay loop :style="{display: isMove ? '':'none'}">
+					<cover-view class="viewMask" @click="videoMore"></cover-view>
+				</video>
+			</view>
+		</dragButton>
 		<u-toast ref="uToast" />
 	</view>
 </template>
 
 <script>
 	import EvaluateList from './evaluateList'
+	import DragButton from '@/pages/message/dragButton.vue'
 	export default {
-		components: { EvaluateList },
+		components: { EvaluateList, DragButton },
 		data() {
 			return {
 				tabList: [{
@@ -532,7 +544,6 @@
 				lng: '',
 				lat: '',
 				parkName: '',
-
 				data: {},
 				dataList: [],
 				page: 1,
@@ -541,7 +552,13 @@
 				lineIndex: 0,
 				packetList: [],
 				params: {},
-				over: false
+				over: false,
+				videos: [],
+				img_path: '',
+				viewWidth: 180,
+				viewHeight: 130,
+				viewTop: 45,
+				isMove: true
 			}
 		},
 		async onLoad(option) {
@@ -581,6 +598,17 @@
 				gt.params.page++
 				gt.getPacketList()
 			},
+			videoMore() {
+				uni.navigateTo({
+					url: './videoMore?videos=' + encodeURIComponent(JSON.stringify(this.videos))
+				})
+			},
+			touchstart() {
+				this.isMove = false
+			},
+			touchend() {
+				this.isMove = true
+			},
 			preview(e) {
 				let gt = this;
 				// uni.navigateTo({
@@ -617,6 +645,8 @@
 					if(gt.logistics_id == uni.getStorageSync("companyInfo").logistics_id) {
 						uni.setStorageSync('companyInfo', res.company_info)
 					}
+					gt.videos = res.company_imgs.company_viedeos
+					gt.img_path = res.company_imgs.company_viedeos.length ? res.company_imgs.company_viedeos[0].img_path : ''
 					gt.rateNum = gt.data.company_info.grade_score_result
 					// gt.companyImgs = res.company_imgs_all;
 					gt.companyImgs = imgList
@@ -635,14 +665,17 @@
 				});
 			},
 			goScope() {
+				let gt = this;
 				uni.navigateTo({
-					url: './transportScope',
+					url: './transportScope?logistics_id=' + gt.data.company_info.logistics_id
 				});
 				return false;
 			},
 			goScope2(item) {
+				let gt = this;
 				uni.navigateTo({
-					url: './transportScope?lineId=' + item.line_id,
+					// url: './transportScope?lineId=' + item.line_id + '&logistics_id=' + gt.data.company_info.logistics_id,
+					url: './transportScope?logistics_id=' + gt.data.company_info.logistics_id,
 				});
 				return false;
 			},
@@ -734,7 +767,25 @@
 		background: $gtBackgroundColor;
 
 		.gt_content {
-
+			.videoView {
+				position: fixed;
+				background-color: #000000;
+				.videoClose {
+					text-align: right;
+					padding-right: 10rpx;
+				}
+				video {
+					position: relative;
+					width: 100%;
+					// height: 100%;
+					height: calc(100% - 40rpx);
+					.viewMask {
+						position: absolute;
+						width: 100%;
+						height: 100%;
+					}
+				}
+			}
 			.con_swiper {
 				swiper {
 					height: calc(100vh - 88rpx);

@@ -1,6 +1,6 @@
 <template>
 	<view class="circleBox">
-		<dragButton @clickBtn="show = true" v-if="!unid">
+		<dragButton :other="other" :bottomPx='bottomPx' @clickBtn="show = true" v-if="!unid">
 			<image :src="gtCommon.getOssImg('message/action.png')" class="float"></image>
 		</dragButton>
 		<scroll-view scroll-y @scrolltolower="loadingMore" :class="unid ? 'scrollView1' : 'scrollView'">
@@ -9,6 +9,12 @@
 					<view class="user_info" @click="viewCompany()">
 						<view class="userInfo_name">{{ companyInfo.company_name }}</view>
 						<u-avatar :src="companyInfo.company_pic" :size="160"></u-avatar>
+					</view>
+				</view>
+				<view class="newMsg" v-if="newMsgArr.length" @click="circleMsg">
+					<view class="newMsg_content">
+						<u-avatar :src="newMsgArr[newMsgArr.length-1].content.headImg" :size="60"></u-avatar>
+						<view class="newMsg_name">{{ newMsgArr.length + '条新消息' }}</view>
 					</view>
 				</view>
 				<view class="content">
@@ -104,6 +110,10 @@
 			unid: {
 				type: String || Number,
 				default: ''
+			},
+			newMsgArr: {
+				type: Array,
+				default: []
 			}
 		},
 		data() {
@@ -126,12 +136,15 @@
 				longpressData: {},
 				modal_show: false,
 				videoShow: false,
-				videoSrc: ''
+				videoSrc: '',
+				other: 85,
+				bottomPx: 200,
+				// newMsgArr: uni.getStorageSync("newMsgArr")
 			}
 		},
 		mounted() {
 			let gt = this
-			gt.showFn()
+			// gt.showFn()
 		},
 		methods: {
 			showFn() {
@@ -181,6 +194,11 @@
 				let gt = this
 				gt.videoSrc = src
 				gt.videoShow = true
+			},
+			circleMsg() {
+				uni.navigateTo({
+					url: './circleMsg'
+				})
 			},
 			/* 查看圈子详情 */
 			viewDetail(record) {
@@ -431,7 +449,7 @@
 		background-image: url('https://baohusan-uisource.oss-cn-shanghai.aliyuncs.com/mp-transport/message/groupBg.png');
 		background-repeat: no-repeat;
 		background-size: cover;
-		margin-bottom: 140rpx;
+		margin-bottom: 134rpx;
 		.user_info {
 			position: absolute;
 			right: 32rpx;
@@ -444,6 +462,26 @@
 				margin-top: -60rpx;
 			}
 		}
+	}
+	.newMsg {
+		display: flex;
+		justify-content: center;
+		margin-bottom: 72rpx;
+		.newMsg_content {
+			height: 80rpx;
+			display: flex;
+			align-items: center;
+			padding: 10rpx;
+			border-radius: 10rpx;
+			background-color: #575757;
+			.newMsg_name {
+				text-align: center;
+				margin: 0 30rpx 0 40rpx;
+				font-size: 32rpx;
+				color: #fff;
+			}
+		}
+		
 	}
 	.content {
 		.card_ {

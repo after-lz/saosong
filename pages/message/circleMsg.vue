@@ -20,9 +20,8 @@
 							{{ gtCommon.judgeTime(item.create_time) }}
 						</view>
 					</view>
-					<view class="card_img" :style="{backgroundImage: `url(${item.resource})`}">
-						
-					</view>
+					<view class="card_img" :style="{backgroundImage: `url(${item.cover})`}" v-if="item.cover"></view>
+					<view class="card_img" :style="{backgroundImage: `url(${item.resource})`}" v-else></view>
 				</view>
 				<u-loadmore :status="status" />
 			</template>
@@ -45,6 +44,8 @@
 		},
 		onLoad() {
 			let gt = this
+			uni.setStorageSync("isDotCount", false)
+			uni.setStorageSync("newMsgArr", undefined)
 			gt.params = {
 				limit: 10,
 				page: 1
