@@ -120,7 +120,7 @@
 				let gt = this
 				setTimeout(() => {
 					if (type === 1) {
-						gt.form.coupon_min_price = +e > 0 ? +e : undefined
+						gt.form.coupon_min_price = +e > 0 && +e <= 9999 ? +e : undefined
 					} else if(type === 2) {
 						gt.form.coupon_price = +e > 0 && +e < +gt.form.coupon_min_price ? +e : undefined
 					}
