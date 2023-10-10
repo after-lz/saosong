@@ -1,5 +1,9 @@
 <template>
 	<view class="gt_content">
+		<view v-if="showPage">
+			<page-container :show="showPage" :duration="false" :overlay="false" @beforeleave="beforeleave('showPage')"></page-container>
+		</view>
+		<u-navbar :is-back="true" back-text=" " title-color="#000" title="详情" :custom-back='customBack'></u-navbar>
 		<view class="card_">
 			<view class="card_port">
 				<u-avatar :src="data.headerpic" :size="80" @click="viewCompany(data)"></u-avatar>
@@ -17,8 +21,9 @@
 					<u-icon name="play-circle" size="60" color='#FFF' class="playIcon"></u-icon>
 				</view>
 				<view class="imgList" v-else>
-					<view class="imgList" v-if="data.resource.length > 1" @click.stop="previewImage(data.resource)">
-						<view v-for="s in data.resource" :key="s" class="image" :style="{'backgroundImage': `url(${s})`}"></view>
+					<view class="imgList" v-if="data.resource.length > 1">
+						<view v-for="s in data.resource" :key="s" class="image" :style="{'backgroundImage': `url(${s})`}"
+							@click.stop="gtCommon.previewImgs(data.resource, s)"></view>
 					</view>
 					<view class="cover" v-else>
 						<u-image :src="data.resource[0]" mode="widthFix" lazy-load @click.stop="gtCommon.previewImg(data.resource[0])"></u-image>
@@ -32,11 +37,11 @@
 					<view class="footer_right">
 						<view class="comment" @click.stop="commentFn(data)">
 							<u-icon name="more-circle" size="36"></u-icon>
-							<view class="num" v-if="data.judgeCount">{{ data.judgeCount }}</view>
+							<view class="num">{{ data.judgeCount ? data.judgeCount : ' ' }}</view>
 						</view>
 						<view class="thumbsup" @click.stop="likeFn(data)">
 							<u-icon name="thumb-up" :color="data.is_agreed?'#485EF4':''" size="36"></u-icon>
-							<view class="num" v-if="data.agreeCount">{{ data.agreeCount }}</view>
+							<view class="num">{{ data.agreeCount ? data.agreeCount : '' }}</view>
 						</view>
 					</view>
 				</view>
@@ -56,9 +61,7 @@
 		</view>
 		<u-toast ref="uToast" />
 		<!-- 评论 -->
-		<input-box ref='input_box' @submit="submitNote"></input-box>
-		<!-- 播放视频 -->
-		<video-modal :show.sync='videoShow' :src='videoSrc'></video-modal>
+		<input-box ref='input_box' @submit="submitNote" :top='top'></input-box>
 		<!-- 长按菜单 -->
 		<view class="shade" v-show="showShade" @click.stop="hidePop">
 			<view class="pop" :style="popStyle" :class="{'show': showPop}">
@@ -72,11 +75,11 @@
 
 <script>
 	import InputBox from './comment_input.vue'
-	import VideoModal from './videoModal.vue'
 	export default {
-		components: { InputBox, VideoModal },
+		components: { InputBox },
 		data() {
 			return {
+				showPage: true,
 				circleId: 0,
 				logistics_id: 0,
 				role: null,
@@ -98,8 +101,7 @@
 				popStyle: "",
 				/* 长按选中对象*/
 				longpressData: {},
-				videoShow: false,
-				videoSrc: ''
+				top: 50
 			}
 		},
 		onLoad(option) {
@@ -131,6 +133,22 @@
 				uni.previewImage({
 					urls: path
 				})
+			},
+			/* 自定义头部返回方法 */
+			customBack() {
+				uni.switchTab({
+					url: './message',
+					success() {
+						let pages = getCurrentPages()
+						let beforePage = pages[0]
+						beforePage.$vm.refreshCircle()
+					}
+				})
+			},
+			beforeleave() {
+				let gt = this
+				gt.showPage = false  //这个很重要，一定要先把弹框删除掉
+				gt.customBack()
 			},
 			/* 获取窗口尺寸 */
 			getWindowSize() {
@@ -190,9 +208,9 @@
 				})
 			},
 			playVideo(src) {
-				let gt = this
-				gt.videoSrc = src
-				gt.videoShow = true
+				uni.navigateTo({
+					url: "./videoModal?src=" + src
+				})
 			},
 			/* 评论 */
 			commentFn(record) {
@@ -247,8 +265,8 @@
 							gt.longpressData.agreeList.push({
 								circle_id: gt.circleId,
 								logistics_id: gt.companyInfo.logistics_id,
-								name: gt.companyInfo.company_name,
-								headerpic: gt.companyInfo.company_pic
+								name: gt.userInfo.nickname,
+								headerpic: gt.userInfo.headerpic
 							})
 							++gt.longpressData.agreeCount
 						} else {
@@ -406,9 +424,10 @@
 						
 					}
 					.thumbsup {
-						margin-left: 36rpx;
+						margin-left: 16rpx;
 					}
 					.num {
+						min-width: 30rpx;
 						display: inline-block;
 						margin-left: 16rpx;
 					}

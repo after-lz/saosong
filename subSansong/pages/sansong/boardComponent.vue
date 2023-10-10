@@ -59,7 +59,7 @@
 			return {
 				tabs: [
 					{name: '活跃货主'},
-					{name: '签约物流'}
+					{name: '入驻物流'}
 				],
 				current: 0,
 				swiperCurrent: 0, 

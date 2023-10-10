@@ -60,24 +60,14 @@
 		width: 100%;
 		height: 100vh;
 		background-color: #000000;
-		.nav{
-			width: 100%;
-			position: fixed;
-			left: 0;
-			height: 44px;
-			z-index: 99;
-			.left{
-				width: 72rpx;
-				height: 44px;
-			}
-		}
 		.video-view{
 			width: 100%;
-			height: 406rpx;
-			padding-top: 20rpx;
+			height: calc(100% - 380rpx);
+			display: flex;
+			align-items: center;
 			.my-video{
 				width: 100%;
-				height: 406rpx;
+				height: 100%;
 			}
 			.sound-view{
 				position: absolute;
@@ -90,8 +80,6 @@
 			width: 100%;
 			height: 380rpx;
 			background-color: #35393C;
-			position: fixed;
-			left: 0;
 			z-index: 9;
 			.bot-main{
 				padding: 0 24rpx;

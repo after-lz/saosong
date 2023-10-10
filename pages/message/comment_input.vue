@@ -13,6 +13,16 @@
 </template>
 <script>
 	export default {
+		props: {
+			top: {
+				type: Number,
+				default: 0
+			},
+			personTop: {
+				type: Number,
+				default: 0
+			}
+		},
 		data() {
 			return {
 				show: false,
@@ -48,10 +58,10 @@
 				let gt = this
 				let num = gt.flag ? 0 : 50
 				// #ifdef MP-WEIXIN
-				gt.height = (e.detail.height - 10 - num > 0) ? (e.detail.height - 10 - num + '') : '0'
+				gt.height = (e.detail.height - gt.personTop - num > 0) ? (e.detail.height - gt.personTop - num + '') : '0'
 				// #endif
 				// #ifdef APP-PLUS
-				gt.height = (e.detail.height - 50 - num > 0) ? (e.detail.height - 50 - num + '') : '0'
+				gt.height = (e.detail.height - gt.top - num > 0) ? (e.detail.height - gt.top - num + '') : '0'
 				// #endif
 			}
 		}

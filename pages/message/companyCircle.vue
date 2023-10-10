@@ -1,6 +1,6 @@
 <template>
 	<view class="">
-		<circle-box :unid='unid'></circle-box>
+		<circle-box :unid='unid' :info='params' :personTop='personTop'></circle-box>
 	</view>
 </template>
 
@@ -10,12 +10,15 @@
 		components: { CircleBox },
 		data() {
 			return {
-				unid: ''
+				unid: '',
+				params: {},
+				personTop: -50
 			}
 		},
 		onLoad(option) {
 			let gt = this
 			gt.unid = option.unid
+			gt.params = JSON.parse(decodeURIComponent(option.params))
 		}
 	}
 </script>

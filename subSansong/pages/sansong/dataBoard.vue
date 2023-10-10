@@ -16,7 +16,8 @@
 					<view class="card">
 						<view class="card_title">工作简报</view>
 						<view class="card_options">
-							<view class="option" v-for="(item, index) in list" :key="index" @click="goNext(index)">
+							<view class="option" v-for="(item, index) in list" :key="index" @click="goNext(index)"
+								:style="{display: index === 5 ? 'none' : ''}">
 								<view class="option_icon">
 									<u-image :src="gtCommon.getOssImg(`sansong/board0${index+1}.png`)" mode="widthFix" :fade="true" duration="450"></u-image>
 								</view>
@@ -207,7 +208,11 @@ export default {
 			})
 		},
 		goNext(index) {
-			if(index === 4) {
+			if(index === 0) {
+				uni.navigateTo({
+					url: '../../../pages/user/revenue'
+				})
+			} else if(index === 4) {
 				uni.navigateTo({
 					url: '../../../pages/index/historyList?active=1'
 				})

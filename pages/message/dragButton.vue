@@ -125,8 +125,8 @@
 						})
 					}
 					this.isRemove = false
-					this.$emit('touchend')
 				}
+				this.$emit('touchend')
 			},
 			//点击按钮
 			clickBtn() {

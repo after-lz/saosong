@@ -1,32 +1,28 @@
 <template>
-	<u-modal v-model="_show" width='90%'
-			:show-title='false' :show-confirm-button='false' :mask-close-able="true"><!--  :zoom='false' -->
-		<view class="videoModal">
-			<video :src="src" class="myVideo" autoplay :show-mute-btn="true"></video>
+	<view class="videoModal">
+		<view v-if="showPage">
+			<page-container :show="showPage" :duration="false" :overlay="false" @beforeleave="beforeleave('showPage')"></page-container>
 		</view>
-	</u-modal>
+		<video :src="src" class="myVideo" autoplay :show-mute-btn="true"></video>
+	</view>
 </template>
 
 <script>
 	export default {
-		props: {
-			show: {
-				type: Boolean,
-				default: false
-			},
-			src: {
-				type: String,
-				default: ''
+		data() {
+			return {
+				showPage: true,
+				src: ''
 			}
 		},
-		computed: {
-			_show: {
-				get() {
-					return this.show
-				},
-				set(val) {
-					this.$emit('update:show', val)
-				}
+		onLoad(options) {
+			this.src = options.src
+		},
+		methods: {
+			beforeleave() {
+				let that = this
+				that.showPage = false  //这个很重要，一定要先把弹框删除掉
+				uni.navigateBack()
 			}
 		}
 	}
@@ -34,7 +30,7 @@
 
 <style lang="scss" scoped>
 	.videoModal {
-		height: 700rpx;
+		height: 100vh;
 		.myVideo {
 			width: 100%;
 			height: 100%;

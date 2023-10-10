@@ -1,5 +1,9 @@
 <template>
 	<view class="gt_content">
+		<view v-if="showPage">
+			<page-container :show="showPage" :duration="false" :overlay="false" @beforeleave="beforeleave('showPage')"></page-container>
+		</view>
+		<u-navbar :is-back="true" back-text=" " title-color="#000" title="个人中心" :custom-back='customBack'></u-navbar>
 		<view class="head">
 			<u-avatar :src="headerpic" :size="120"></u-avatar>
 			<view class="company_info">
@@ -42,24 +46,26 @@
 	export default {
 		data() {
 			return {
+				params: {},
 				unid: '',
 				headerpic: '',
 				company_name: '',
 				company_address: '',
 				nickname: '',
 				logistics_id: '',
-				list: []
+				list: [],
+				showPage: false
 			}
 		},
 		onLoad(option) {
 			let gt = this
-			let params = JSON.parse(decodeURIComponent(option.params))
-			gt.unid = params.unid
-			gt.nickname = params.nickname
-			gt.headerpic = params.headerpic
-			gt.company_name = params.company_name
-			gt.company_address = params.company_address
-			gt.logistics_id = params.logistics_id
+			gt.params = JSON.parse(decodeURIComponent(option.params))
+			gt.unid = gt.params.unid
+			gt.nickname = gt.params.nickname
+			gt.headerpic = gt.params.headerpic
+			gt.company_name = gt.params.company_name
+			gt.company_address = gt.params.company_address
+			gt.logistics_id = gt.params.logistics_id
 		},
 		onShow() {
 			let gt = this
@@ -90,7 +96,7 @@
 			goCircle() {
 				let gt = this
 				uni.navigateTo({
-					url: "./companyCircle?unid=" + gt.unid
+					url: "./companyCircle?unid=" + gt.unid + '&params=' + encodeURIComponent(JSON.stringify(gt.params))
 				})
 			},
 			goCompanyDetail() {
@@ -99,6 +105,22 @@
 					url: "../../subSansong/pages/sansong/companyInfo?logistics_id=" + gt.logistics_id
 				})
 			},
+			/* 自定义头部返回方法 */
+			customBack() {
+				uni.switchTab({
+					url: './message',
+					success() {
+						let pages = getCurrentPages()
+						let beforePage = pages[0]
+						beforePage.$vm.refreshCircle()
+					}
+				})
+			},
+			beforeleave() {
+				let gt = this
+				gt.showPage = false  //这个很重要，一定要先把弹框删除掉
+				gt.customBack()
+			}
 		}
 	}
 </script>

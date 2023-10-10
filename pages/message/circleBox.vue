@@ -3,20 +3,25 @@
 		<dragButton :other="other" :bottomPx='bottomPx' @clickBtn="show = true" v-if="!unid">
 			<image :src="gtCommon.getOssImg('message/action.png')" class="float"></image>
 		</dragButton>
-		<scroll-view scroll-y @scrolltolower="loadingMore" :class="unid ? 'scrollView1' : 'scrollView'">
+		<scroll-view scroll-y @scrolltolower="loadingMore" :class="unid ? 'scrollView1' : 'scrollView'"
+			 :refresher-enabled="true" :refresher-triggered="refresh" @refresherrefresh="onRefresh">
+			<view class="userInfo">
+				<view class="user_info" v-if="JSON.stringify(info) !== '{}'">
+					<view class="userInfo_name">{{ info.company_name }}</view>
+					<u-avatar :src="info.headerpic" :size="160"></u-avatar>
+				</view>
+				<view class="user_info" v-else @click="viewCompany()">
+					<view class="userInfo_name">{{ companyInfo.company_name }}</view>
+					<u-avatar :src="userInfo.headerpic" :size="160"></u-avatar>
+				</view>
+			</view>
+			<view class="newMsg" v-if="newMsgArr.length" @click="circleMsg">
+				<view class="newMsg_content">
+					<u-avatar :src="newMsgArr[newMsgArr.length-1].content.headImg" :size="60"></u-avatar>
+					<view class="newMsg_name">{{ newMsgArr.length + '条新消息' }}</view>
+				</view>
+			</view>
 			<template v-if="list.length">
-				<view class="userInfo">
-					<view class="user_info" @click="viewCompany()">
-						<view class="userInfo_name">{{ companyInfo.company_name }}</view>
-						<u-avatar :src="companyInfo.company_pic" :size="160"></u-avatar>
-					</view>
-				</view>
-				<view class="newMsg" v-if="newMsgArr.length" @click="circleMsg">
-					<view class="newMsg_content">
-						<u-avatar :src="newMsgArr[newMsgArr.length-1].content.headImg" :size="60"></u-avatar>
-						<view class="newMsg_name">{{ newMsgArr.length + '条新消息' }}</view>
-					</view>
-				</view>
 				<view class="content">
 					<view class="card_" v-for="item in list" :key="item.id">
 						<view class="card_port">
@@ -35,8 +40,9 @@
 								<u-icon name="play-circle" size="60" color='#FFF' class="playIcon"></u-icon>
 							</view>
 							<view class="imgList" v-else>
-								<view class="imgList" v-if="item.resource.length > 1" @click.stop="previewImage(item.resource)">
-									<view v-for="s in item.resource" :key="s" class="image" :style="{'backgroundImage': `url(${s})`}"></view>
+								<view class="imgList" v-if="item.resource.length > 1">
+									<view v-for="s in item.resource" :key="s" class="image" :style="{'backgroundImage': `url(${s})`}"
+										 @click.stop="gtCommon.previewImgs(item.resource, s)"></view>
 								</view>
 								<view class="cover" v-else @click.stop="gtCommon.previewImg(item.resource[0])">
 									<u-image :src="item.resource[0]" mode="widthFix" lazy-load></u-image>
@@ -51,11 +57,11 @@
 								<view class="footer_right">
 									<view class="comment" @click.stop="commentFn(item)">
 										<u-icon name="more-circle" size="36"></u-icon>
-										<view class="num" v-if="item.judgeCount">{{ item.judgeCount }}</view>
+										<view class="num">{{ item.judgeCount ? item.judgeCount : " " }}</view>
 									</view>
 									<view class="thumbsup" @click.stop="likeFn(item)">
 										<u-icon name="thumb-up" :color="item.is_agreed?'#485EF4':''" size="36"></u-icon>
-										<view class="num" v-if="item.agreeCount">{{ item.agreeCount }}</view>
+										<view class="num">{{ item.agreeCount ? item.agreeCount : " " }}</view>
 									</view>
 								</view>
 							</view>
@@ -91,11 +97,9 @@
 			</view>
 		</view>
 		<!-- 评论 -->
-		<input-box ref='input_box' @submit="submitNote"></input-box>
+		<input-box ref='input_box' @submit="submitNote" :top='top' :personTop='personTop'></input-box>
 		<!-- 发布圈子 -->
 		<choose-media :show.sync='show' @chooseMedia='chooseMedia'></choose-media>
-		<!-- 播放视频 -->
-		<video-modal :show.sync='videoShow' :src='videoSrc'></video-modal>
 	</view>
 </template>
 
@@ -103,9 +107,8 @@
 	import InputBox from './comment_input.vue'
 	import DragButton from './dragButton.vue'
 	import ChooseMedia from './chooseMedia.vue'
-	import VideoModal from './videoModal.vue'
 	export default {
-		components: { InputBox, DragButton, ChooseMedia, VideoModal },
+		components: { InputBox, DragButton, ChooseMedia },
 		props: {
 			unid: {
 				type: String || Number,
@@ -113,7 +116,19 @@
 			},
 			newMsgArr: {
 				type: Array,
-				default: []
+				default: ()=> {
+					return []
+				}
+			},
+			info: {
+				type: Object,
+				default: ()=> {
+					return {}
+				}
+			},
+			personTop: {
+				type: Number,
+				default: 10
 			}
 		},
 		data() {
@@ -135,19 +150,18 @@
 				/* 长按选中对象*/
 				longpressData: {},
 				modal_show: false,
-				videoShow: false,
-				videoSrc: '',
 				other: 85,
 				bottomPx: 200,
-				// newMsgArr: uni.getStorageSync("newMsgArr")
+				refresh: false,
+				top: 0
 			}
 		},
 		mounted() {
 			let gt = this
-			// gt.showFn()
+			if(gt.unid) gt.showFn()
 		},
 		methods: {
-			showFn() {
+			async showFn() {
 				let gt = this
 				if(gt.unid) {
 					gt.params = {
@@ -163,14 +177,14 @@
 					}
 				}
 				gt.list = []
-				gt.getList_circle()
+				await gt.getList_circle()
 				gt.getWindowSize()
 				gt.companyInfo = uni.getStorageSync('companyInfo')
-				gt.userInfo = uni.getStorageSync('userInfo')
+				// gt.userInfo = uni.getStorageSync('userInfo')
 			},
-			getList_circle() {
+			async getList_circle() {
 				let gt = this
-				gt.gtRequest.post('/logistics/circle/list', gt.params).then(res => {
+				await gt.gtRequest.post('/logistics/circle/list', gt.params).then(res => {
 					res.list.forEach(obj=> {
 						obj.agreeList.reverse()
 						obj.judgeList.reverse()
@@ -179,21 +193,23 @@
 					gt.status = gt.params.page >= res.totalPage ? 'nomore' : 'loading'
 				})
 			},
+			/* 下拉刷新 */
+			async onRefresh() {
+				let gt = this
+			    gt.refresh = true
+				await gt.showFn()
+			    gt.refresh = false
+			},
 			loadingMore() {
 				let gt = this
 				if(gt.status === 'nomore') return
 				++gt.params.page
 				gt.getList_circle()
 			},
-			previewImage(path) {
-				uni.previewImage({
-					urls: path
-				})
-			},
 			playVideo(src) {
-				let gt = this
-				gt.videoSrc = src
-				gt.videoShow = true
+				uni.navigateTo({
+					url: "./videoModal?src=" + src
+				})
 			},
 			circleMsg() {
 				uni.navigateTo({
@@ -240,7 +256,7 @@
 				} else {
 					params = {
 						unid: gt.userInfo.login_token,
-						headerpic: gt.companyInfo.company_pic,
+						headerpic: gt.userInfo.headerpic,
 						nickname: gt.userInfo.nickname,
 						company_name: gt.companyInfo.company_name,
 						company_address: gt.companyInfo.address,
@@ -290,14 +306,14 @@
 							// 点赞
 							gt.longpressData.agreeList.push({
 								circle_id: gt.longpressData.id,
-								logistics_id: gt.companyInfo.logistics_id,
-								name: gt.companyInfo.company_name,
-								headerpic: gt.companyInfo.company_pic
+								logistics_id: uni.getStorageSync('companyInfo').logistics_id,
+								name: uni.getStorageSync('userInfo').nickname,
+								headerpic: uni.getStorageSync('userInfo').headerpic
 							})
 							++gt.longpressData.agreeCount
 						} else {
 							// 取消点赞
-							gt.longpressData.agreeList = gt.longpressData.agreeList.filter(item=> item.logistics_id != gt.companyInfo.logistics_id)
+							gt.longpressData.agreeList = gt.longpressData.agreeList.filter(item=> item.logistics_id != uni.getStorageSync('companyInfo').logistics_id)
 							--gt.longpressData.agreeCount
 						}
 					})
@@ -307,6 +323,7 @@
 			/* 评论 */
 			commentFn(record) {
 				let gt = this
+				gt.top = JSON.stringify(gt.info) === '{}' ? 50 : 0
 				gt.$refs.input_box.open()
 				gt.longpressData = record
 			},
@@ -350,7 +367,6 @@
 			},
 			updateComment() {
 				let gt = this
-				console.debug(gt.longpressData.circle_id,  gt.longpressData.id,)
 				// 更新当前这条圈子的评论列表
 				gt.gtRequest.post('/logistics/circle/judgeList', {
 					circle_id: gt.longpressData.circle_id || gt.longpressData.id,
@@ -567,9 +583,10 @@
 							
 						}
 						.thumbsup {
-							margin-left: 36rpx;
+							margin-left: 16rpx;
 						}
 						.num {
+							min-width: 30rpx;
 							display: inline-block;
 							margin-left: 16rpx;
 						}

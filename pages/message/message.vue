@@ -109,12 +109,8 @@
 				offset: [10, 0]
 			}
 		},
-		async onShow() {
+		async onLoad() {
 			let gt = this
-			uni.hideTabBarRedDot({ //隐藏红点
-				index: 3
-			})
-			gt.newMsgArr = JSON.parse(uni.getStorageSync('newMsgArr') || '[]')
 			gt.token = await gt.gtRequest.getToken()
 			if(gt.token) {
 				gt.getList()
@@ -134,12 +130,29 @@
 				})
 			}
 		},
+		onShow() {
+			let gt = this
+			uni.hideTabBarRedDot({ //隐藏红点
+				index: 3
+			})
+			gt.newMsgArr = JSON.parse(uni.getStorageSync('newMsgArr') || '[]')
+			gt.$nextTick(()=> {
+				gt.$refs.circleBox.companyInfo = uni.getStorageSync('companyInfo')
+				gt.$refs.circleBox.userInfo = uni.getStorageSync('userInfo')
+			})
+		},
+		// 下拉刷新
+		// onPullDownRefresh() {
+		//     let gt = this
+		// 	gt.current ? gt.refreshCircle() : gt.getList()
+		//     uni.stopPullDownRefresh() // 停止刷新
+		// },
 		methods: {
 			refreshCircle() {
 				let gt = this
-				gt.$nextTick(()=> {
+				// gt.$nextTick(()=> {
 					gt.$refs.circleBox.showFn()
-				})
+				// })
 			},
 			getList() {
 				let gt = this

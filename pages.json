@@ -41,16 +41,23 @@
 			"style": {
 				"navigationBarTitleText": "",
 				"enablePullDownRefresh": false,
-				"navigationStyle": "custom"
+				"navigationStyle": "custom",
+				"disableScroll": true
 			}
 		},
 		{
 			"path": "pages/message/visitorLog",
 			"style": {
 				"navigationBarTitleText": "",
-				"enablePullDownRefresh": false,
 				"navigationStyle": "custom",
 				"enablePullDownRefresh": true
+			}
+		},
+		{
+			"path": "pages/message/videoModal",
+			"style": {
+				"navigationBarTitleText": "",
+				"navigationStyle": "custom"
 			}
 		},
 		{
@@ -77,8 +84,9 @@
 		{
 			"path": "pages/message/viewCompany",
 			"style": {
-				"navigationBarTitleText": "",
-				"enablePullDownRefresh": false
+				// "navigationBarTitleText": "个人中心",
+				"enablePullDownRefresh": false,
+				"navigationStyle": "custom"
 			}
 		},
 		{
@@ -116,8 +124,9 @@
 		{
 			"path": "pages/message/viewCircleDetail",
 			"style": {
-				"navigationBarTitleText": "详情",
-				"enablePullDownRefresh": false
+				// "navigationBarTitleText": "详情",
+				"enablePullDownRefresh": false,
+				"navigationStyle": "custom"
 			}
 		},
 		{

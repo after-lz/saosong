@@ -171,6 +171,8 @@
 				aLiSDKModule.accelerateLoginPage(5000, result => {
 					if ("600000" == result.resultCode) {
 						console.log("加速成功")
+					} else {
+						console.log(result.msg)
 					}
 				})
 				aLiSDKModule.getLoginToken(5000,
@@ -211,6 +213,7 @@
 									uni.setStorageSync('companyAuth', rs.user.is_company_approve);
 									// uni.setStorageSync('token', rs.user.login_token);
 									uni.setStorageSync('userInfo', rs.user);
+									uni.setStorageSync('jpush_alias', rs.user.jpush_alias);
 									if (rs.user.logistics_id) {
 										var url = "/logistics/company/get_company_info";
 										gt.gtRequest.post(url).then(r => {
@@ -350,6 +353,7 @@
 							uni.setStorageSync('userAuth', rs.user.is_approve);
 							uni.setStorageSync('companyAuth', rs.user.is_company_approve);
 							uni.setStorageSync('userInfo', rs.user);
+							uni.setStorageSync('jpush_alias', rs.user.jpush_alias);
 							if (rs.user.logistics_id) {
 								var url = "/logistics/company/get_company_info";
 								gt.gtRequest.post(url).then(r => {
@@ -499,6 +503,7 @@
 					uni.setStorageSync('userAuth', rs.user.is_approve);
 					uni.setStorageSync('companyAuth', rs.user.is_company_approve);
 					uni.setStorageSync('userInfo', rs.user);
+					uni.setStorageSync('jpush_alias', rs.user.jpush_alias);
 					if (rs.user.logistics_id) {
 						var url = "/logistics/company/get_company_info";
 						gt.gtRequest.post(url).then(r => {

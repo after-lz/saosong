@@ -1,27 +1,7 @@
 <template>
 	<view class="gt_content">
-		<u-popup v-model="show" mode="top" :mask='false' :mask-close-able="false" height="276">
-			<view class="card_info">
-				<view class="card_title">
-					<view class="info_status">运输中</view>
-					<view class="info_num">皖A·AV56413</view>
-					<view class="info_close" @click="show = false">
-						<u-icon name="close" size="32"></u-icon>
-					</view>
-				</view>
-				<view class="card_row">
-					<text>更新时间：2023-09-26 09:00</text>
-				</view>
-				<view class="card_row">
-					<text>当前车速：60.0Km/h &nbsp; 行驶方向：西南</text>
-				</view>
-				<view class="card_row">
-					<text>位置信息：安徽省合肥市***</text>
-				</view>
-			</view>
-		</u-popup>
-		<view class="con_map">
-			<map id="myMap" style="width:750rpx;height:100vh;" :markers="covers" :polyline="polyline"
+		<view class="con_map" :style="{'margin-top': top}">
+			<map id="myMap" style="width:750rpx;height:100%;" :markers="covers" :polyline="polyline"
 				:longitude="longitude" :latitude="latitude" :show-location="false">
 				<cover-view slot="callout">
 					<cover-view class="con_cover" :marker-id="item.id" v-for="(item,index) in covers" :key="index">
@@ -38,18 +18,36 @@
 				<view class="card_tab" @click="onChange(2)" :class="active === 2 ? 'active':''">货车轨迹</view>
 			</view>
 			<view class="card_parmas">
-				<u-search shape="square" :show-action="flase" height="88" bg-color="#fff" border-color="#e5e5e5"
-					placeholder="请输入货车车牌查询定位" v-model="value"></u-search>
+				<u-search shape="square" :show-action="false" height="88" bg-color="#fff" border-color="#e5e5e5"
+					placeholder="请输入货车车牌查询定位" v-model="value" disabled @click='keyboard_show = true'></u-search>
 			</view>
 			<view class="card_parmas" v-if="active === 2">
-				<u-search shape="square" :show-action="flase" height="88" bg-color="#fff" border-color="#e5e5e5" v-model="time"
-						placeholder="请选择起始时间" search-icon="clock" disabled @click='calendar_show = true'></u-search>
+				<u-search shape="square" :show-action="false" height="88" bg-color="#fff" border-color="#e5e5e5"
+					placeholder="请选择起始时间" v-model="time" search-icon="clock" disabled @click='calendar_show = true'></u-search>
 			</view>
 			<view class="card_btns">
 				<u-button type="primary" :custom-style="btnStyle" @click="searchLocation" :disabled="_disabled">查询定位</u-button>
 			</view>
 		</view>
+		<cover-view class="card_info" v-show="show">
+			<cover-view class="card_title">
+				<cover-view class="info_status">运输中</cover-view>
+				<cover-view class="info_num">皖A·AV56413</cover-view>
+				<cover-image class="info_close" :src="gtCommon.getOssImg('sansong/close.png')" @click="show = false"></cover-image>
+			</cover-view>
+			<cover-view class="card_row">
+				<cover-view>更新时间：2023-09-26 09:00</cover-view>
+			</cover-view>
+			<cover-view class="card_row">
+				<cover-view>当前车速：60.0Km/h &nbsp; 行驶方向：西南</cover-view>
+			</cover-view>
+			<cover-view class="card_row">
+				<cover-view>位置信息：安徽省合肥市***</cover-view>
+			</cover-view>
+		</cover-view>
 		<u-calendar v-model="calendar_show" mode="range" @change="change"></u-calendar>
+		<u-keyboard ref="uKeyboard" mode="car" v-model="keyboard_show" :mask='false' @change='valChange' @backspace='backspace'></u-keyboard>
+		<u-toast ref="uToast" />
 	</view>
 </template>
 
@@ -75,6 +73,7 @@
 				longitude: 120.301663, // 经度
 				polyline: [],
 				show: false,
+				keyboard_show: false,
 				active: 1,
 				value: '',
 				btnStyle: {
@@ -102,6 +101,17 @@
 				} else if(gt.active === 2) {
 					return gt.value === '' || gt.time === ''
 				}
+			},
+			top() {
+				let gt = this
+				let str = 0
+				if(gt.calendar_show) {
+					str = '-100vh'
+				}
+				if(gt.keyboard_show) {
+					str = '-200rpx'
+				}
+				return str
 			}
 		},
 		methods: {
@@ -206,6 +216,12 @@
 			},
 			searchLocation() {
 				let gt = this
+				if (!gt.$u.test.carNo(gt.value)) {
+					return gt.$refs.uToast.show({
+						title: '车牌号不正确',
+						type: 'error'
+					})
+				}
 				if(gt.active === 1) {
 					gt.polyline = []
 					let coverItem = {
@@ -229,6 +245,14 @@
 					gt.covers = []
 					gt.getDate()
 				}
+			},
+			valChange(val) {
+				let gt = this
+				gt.value += val
+			},
+			backspace() {
+				let gt = this
+				if(gt.value.length) gt.value = gt.value.substr(0, gt.value.length - 1)
 			}
 		}
 	}
@@ -238,13 +262,10 @@
 	page {
 		background: $gtBackgroundColor;
 		.gt_content {
-			.u-drawer {
-				height: 276rpx;
-				.u-mask {
-					display: none;
-				}
-			}
+			position: relative;
+			height: 100vh;
 			.con_map {
+				height: calc(100% - 540rpx);
 				.con_cover {
 					display: flex;
 					box-shadow: 4rpx 4rpx 8rpx 4rpx rgba(0, 0, 0, 0.2);
@@ -253,11 +274,9 @@
 					min-height: 100rpx;
 					justify-content: center;
 					align-items: center;
-			
 					.con_item {
 						background: #fff;
 						border-radius: 16rpx;
-			
 						.con_img {
 							width: 80rpx;
 							height: 80rpx;
@@ -265,7 +284,6 @@
 							margin: 10rpx;
 							overflow: hidden;
 						}
-			
 						.con_text {
 							font-size: 32rpx;
 							font-family: PingFangSC-Regular, PingFang SC;
@@ -278,21 +296,29 @@
 				}
 			}
 			.card_info {
-				font-family: PingFangSC-Regular, PingFang SC;
+				position: absolute;
+				top: 0;
+				width: 100%;
 				color: #000000;
-				padding: 24rpx;
+				box-sizing: border-box;
+				background-color: #fff;
+				font-family: PingFangSC-Regular, PingFang SC;
 				.card_title {
 					position: relative;
 					display: flex;
 					align-items: center;
-					margin-bottom: 24rpx;
+					margin: 0 24rpx 24rpx;
 					.info_status {
+						width: 96rpx;
+						height: 48rpx;
+						text-align: center;
+						line-height: 48rpx;
 						font-size: 24rpx;
 						color: #fff;
-						padding: 8rpx 10rpx;
 						border-radius: 10rpx;
 						background-color: #485EF4;
 						margin-right: 24rpx;
+						box-sizing: border-box;
 					}
 					.info_num {
 						font-size: 36rpx;
@@ -301,21 +327,23 @@
 					.info_close {
 						position: absolute;
 						right: 0;
+						width: 32rpx;
+						height: 32rpx;
 					}
 				}
 				.card_row {
 					font-weight: 400;
-					margin-bottom: 10rpx;
+					margin: 0 24rpx 10rpx;
+					&:nth-last-child(1) {
+						margin-bottom: 34rpx;
+					}
 				}
 			}
-			.card {    
-				position: absolute;
-				bottom: 0;
+			.card {
 				width: 100%;
-				height: 600rpx;
+				height: 540rpx;
 			    border-radius: 32rpx 32rpx 0 0;
 			    background-color: #fff;
-			    overflow: hidden;
 				.card_tabs {
 					height: 100rpx;
 					display: flex;

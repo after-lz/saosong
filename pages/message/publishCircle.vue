@@ -47,16 +47,13 @@
 		</view>
 		<u-toast ref="uToast" />
 		<choose-media :show.sync='show' @chooseMedia='chooseMedia'></choose-media>
-		<!-- 播放视频 -->
-		<video-modal :show.sync='videoShow' :src='videoSrc'></video-modal>
 	</view>
 </template>
 
 <script>
 	import ChooseMedia from './chooseMedia.vue'
-	import VideoModal from './videoModal.vue'
 	export default {
-		components: { ChooseMedia, VideoModal },
+		components: { ChooseMedia },
 		data() {
 			return {
 				fileList: [],
@@ -66,8 +63,6 @@
 				cover: '',
 				maxCount: 9,
 				locationInfo: {},
-				videoShow: false,
-				videoSrc: '',
 				cache: []
 			}
 		},
@@ -231,9 +226,9 @@
 				})
 			},
 			videoPlay(src) {
-				let gt = this
-				gt.videoSrc = src
-				gt.videoShow = true
+				uni.navigateTo({
+					url: "./videoModal?src=" + src
+				})
 			},
 			submit() {
 				let gt = this
@@ -254,16 +249,16 @@
 					    type: "success",
 					    back: true
 					})
-					// setTimeout(()=> {
-					// 	uni.switchTab({
-					// 		url: './message',
-					// 		success() {
-					// 			let pages = getCurrentPages()
-					// 			let beforePage = pages[0]
-					// 			beforePage.$vm.refreshCircle()
-					// 		}
-					// 	})
-					// }, 1500)
+					setTimeout(()=> {
+						uni.switchTab({
+							url: './message',
+							success() {
+								let pages = getCurrentPages()
+								let beforePage = pages[0]
+								beforePage.$vm.refreshCircle()
+							}
+						})
+					}, 1500)
 				})
 			}
 		}

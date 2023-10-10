@@ -332,20 +332,6 @@
                         }
                     }
                 }
-            },
-            "DC-WBOCRServiceV2" : {
-                "__plugin_info__" : {
-                    "name" : "DC-WBOCRServiceV2",
-                    "description" : "OCR 识别SDK，支持银行卡、身份证、驾驶证和行驶证识别。",
-                    "platforms" : "Android,iOS",
-                    "url" : "https://ext.dcloud.net.cn/plugin?id=8994",
-                    "android_package_name" : "",
-                    "ios_bundle_id" : "com.baohusan.transport",
-                    "isCloud" : true,
-                    "bought" : 1,
-                    "pid" : "8994",
-                    "parameters" : {}
-                }
             }
         }
     },
