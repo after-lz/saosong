@@ -67,115 +67,96 @@
 				name: '',
 				idSn: '',
 				flag: '',
-				n: null,
-				gt: null
+				lyBDFaceAuthIOS: null,
+				metaInfo: {},
+				autherInfo: {}
 			}
 		},
 		onLoad(option) {
-			// #ifdef APP-PLUS
-			// gt.n = uni.requireNativePlugin('AP-FaceDetectModule');
-			// #endif
 			let gt = this
 			gt.flag = option.flag
+			// #ifdef APP-PLUS
+			gt.lyBDFaceAuthIOS = uni.requireNativePlugin('AP-FaceDetectModule')
+			gt.metaInfo = gt.lyBDFaceAuthIOS.getMetaInfo()
+			// #endif
 		},
 		methods: {
-			getAuthInfo() {
-				let gt = this;
-				var url = "/logistics/user/get_user_info";
-				gt.gtRequest.post(url).then(res => {
-					if (res.user_info.is_approve != 0) {
-						var jumpUrl = uni.getStorageSync('jumpUrl');
-						var jumpTab = uni.getStorageSync('jumpTab');
-						if (jumpUrl) {
-							if (jumpTab) {
-								uni.switchTab({
-									url: jumpUrl
-								});
-							} else {
-								uni.redirectTo({
-									url: jumpUrl
-								});
-							}
-						} else {
-							uni.switchTab({
-								url: '/pages/index/index'
-							})
-						}
-					}
-				});
-			},
 			submitForm() {
-				let gt = this;
-
+				let gt = this
 				if (gt.$u.test.isEmpty(gt.name)) {
-					gt.$refs.uToast.show({
+					return gt.$refs.uToast.show({
 						title: '真实姓名不能为空',
-						type: 'error',
-					});
-					return false;
+						type: 'error'
+					})
 				}
 				if (gt.$u.test.isEmpty(gt.idSn)) {
-					gt.$refs.uToast.show({
+					return gt.$refs.uToast.show({
 						title: '身份证号码不能为空',
-						type: 'error',
-					});
-					return false;
+						type: 'error'
+					})
 				}
 				if (!gt.$u.test.idCard(gt.idSn)) {
-					gt.$refs.uToast.show({
+					return gt.$refs.uToast.show({
 						title: '身份证号码格式不正确',
-						type: 'error',
-					});
-					return false;
+						type: 'error'
+					})
 				}
-
-				var url = "/logistics/user/people_approve";
-				var data = {
+				let params = {
+					unid: uni.getStorageSync('userInfo').unid,
+					metaInfo: JSON.stringify(gt.metaInfo),
 					truename: gt.name,
 					cardno: gt.idSn,
-				};
-				gt.gtRequest.post(url, data).then(res => {
-					// gt.getMetaInfo()
-					// gt.verifyC()
-					uni.setStorageSync('userAuth', 1);
-					var pages = getCurrentPages();
-					var url = pages[0].$page.fullPath;
-					gt.$refs.uToast.show({
-						title: '提交成功',
-						type: 'success',
-						url: url,
-						isTab:true,
-					});
-					return false;
-				});
+					platform: 'logistics'
+				}
+				gt.gtRequest.post("/api/aliyun/get_init_face_verify", params).then(res => {
+					this.autherInfo = res
+					gt.verifyC(res.CertifyId)
+				})
 			},
 			skip() {
-				var pages = getCurrentPages();
-
+				let pages = getCurrentPages()
 				uni.reLaunch({
 					url: pages[0].$page.fullPath
-				});
+				})
 			},
-			verifyC() {
+			verifyC(certifyId) {
 				let gt = this
-			    gt.n.verify(
-			        {
-			            certifyId: gt.certify
-			        },
-			        function(t) {
-			            uni.showToast({
-			                title: '返回的内容' + t,
-			                icon: 'none'
-			            });
-			        }
-			    );
+			    gt.lyBDFaceAuthIOS.verify({ certifyId }, function(res) {
+					if(res.code === 1000) {
+						gt.result()
+					} else {
+						gt.$refs.uToast.show({
+							title: '实名认证失败',
+							type: 'error'
+						})
+					}
+			    })
 			},
-			//获取环境参数接口。
-			getMetaInfo() {
+			result() {
 				let gt = this
-			    gt.t = gt.n.getMetaInfo()
-				console.debug(gt.t)
-			},
+				gt.gtRequest.post("/api/aliyun/get_describe_face_verify", {
+					unid: uni.getStorageSync('userInfo').unid,
+					...gt.autherInfo
+				}).then(res => {
+					if(res.Code == 200) {
+						uni.setStorageSync('userAuth', 1)
+						// let pages = getCurrentPages()
+						// let url = pages[0].$page.fullPath
+						gt.$refs.uToast.show({
+							title: '实名认证成功',
+							type: 'success',
+							isTab: true,
+							back: true,
+							// url: url
+						})
+					} else {
+						gt.$refs.uToast.show({
+							title: '实名认证失败',
+							type: 'error'
+						})
+					}
+				})
+			}
 		}
 	}
 </script>

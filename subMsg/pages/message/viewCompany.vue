@@ -96,19 +96,19 @@
 			goCircle() {
 				let gt = this
 				uni.navigateTo({
-					url: "./companyCircle?unid=" + gt.unid + '&params=' + encodeURIComponent(JSON.stringify(gt.params))
+					url: "../../../pages/message/companyCircle?unid=" + gt.unid + '&params=' + encodeURIComponent(JSON.stringify(gt.params))
 				})
 			},
 			goCompanyDetail() {
 				let gt = this
 				uni.navigateTo({
-					url: "../../subSansong/pages/sansong/companyInfo?logistics_id=" + gt.logistics_id
+					url: '../../../subSansong/pages/sansong/companyInfo?logistics_id=' + gt.logistics_id
 				})
 			},
 			/* 自定义头部返回方法 */
 			customBack() {
-				uni.switchTab({
-					url: './message',
+				uni.navigateBack({
+					delta: 1,
 					success() {
 						let pages = getCurrentPages()
 						let beforePage = pages[0]

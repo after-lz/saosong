@@ -50,6 +50,7 @@
 				<view class="value">{{record.bank_truename}}</view>
 			</view>
 		</u-modal>
+		<u-modal v-model="aut_show" content="请先完成实名认证" @confirm="aut_confirm" :show-cancel-button="true" confirm-text='去认证'></u-modal>
 	</view>
 </template>
 
@@ -69,7 +70,8 @@
 					},
 				],
 				del_show: false,
-				record: {}
+				record: {},
+				aut_show: false
 			}
 		},
 		onShow() {
@@ -89,11 +91,22 @@
 				});
 			},
 			showAddBankCard() {
+				let gt = this
+				let userAuth = uni.getStorageSync('userAuth')
+				if(userAuth) {
+					uni.navigateTo({
+						url:'./addBankCardPerson',
+					});
+					// let gt = this;
+					// gt.bankCardShow = true;
+				} else {
+					gt.aut_show = true
+				}
+			},
+			aut_confirm() {
 				uni.navigateTo({
-					url:'./addBankCardPerson',
-				});
-				// let gt = this;
-				// gt.bankCardShow = true;
+					url: '../../../pages/login/peopleAuth?flag=' + true
+				})
 			},
 			goAdd(res){
 				if(res[0].value == 1){

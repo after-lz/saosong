@@ -74,7 +74,7 @@
 </template>
 
 <script>
-	import InputBox from './comment_input.vue'
+	import InputBox from '@/components/comment_input.vue'
 	export default {
 		components: { InputBox },
 		data() {
@@ -136,8 +136,8 @@
 			},
 			/* 自定义头部返回方法 */
 			customBack() {
-				uni.switchTab({
-					url: './message',
+				uni.navigateBack({
+					delta: 1,
 					success() {
 						let pages = getCurrentPages()
 						let beforePage = pages[0]
@@ -198,13 +198,13 @@
 					}
 				}
 				uni.navigateTo({
-					url: "./viewCompany?params=" + encodeURIComponent(JSON.stringify(params))
+					url: '../../../subMsg/pages/message/viewCompany?params=' + encodeURIComponent(JSON.stringify(params))
 				})
 			},
 			/* 查看公司详情 */
 			goCompanyDetail(record) {
 				uni.navigateTo({
-					url: "../../subSansong/pages/sansong/companyInfo?logistics_id=" + record.logistics_id
+					url: '../../../subSansong/pages/sansong/companyInfo?logistics_id=' + record.logistics_id
 				})
 			},
 			playVideo(src) {

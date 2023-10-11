@@ -535,7 +535,7 @@
 
 <script>
 	import EvaluateList from './evaluateList'
-	import DragButton from '@/pages/message/dragButton.vue'
+	import DragButton from '@/components/dragButton.vue'
 	export default {
 		components: { EvaluateList, DragButton },
 		data() {

@@ -353,6 +353,7 @@
 					gt.gtRequest.post("/logistics/user/get_user_info").then(res => {
 						uni.setStorageSync('user_info', res.user_info)
 						uni.setStorageSync('userInfo', res.user_info)
+						uni.setStorageSync('userAuth', res.user_info.is_approve)
 						gt.userInfo = res.user_info
 						if(res.logistics_info) {
 							gt.logisticsInfo = res.logistics_info

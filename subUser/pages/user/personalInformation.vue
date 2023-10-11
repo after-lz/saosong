@@ -144,11 +144,9 @@
 		},
 		onLoad() {
 			let gt = this
-			gt.userInfo = uni.getStorageSync('user_info')
-			gt.companyInfo = uni.getStorageSync('companyInfo')
 			// #ifdef APP-PLUS
 			// 扩展API加载完毕后调用onPlusReady回调函数
-			document.addEventListener("plusready", gt.onPlusReady, false)
+			// document.addEventListener("plusready", gt.onPlusReady, false)
 			// #endif
 			uni.getStorage({
 				key: 'pcaList',
@@ -156,6 +154,11 @@
 					gt.provinceCityAreaList = res.data
 				}
 			})
+		},
+		onShow() {
+			let gt = this
+			gt.userInfo = uni.getStorageSync('user_info')
+			gt.companyInfo = uni.getStorageSync('companyInfo')
 		},
 		computed: {
 			headerpic() {
@@ -176,7 +179,8 @@
 			},
 			is_approve() {
 				let gt = this
-				return gt.userInfo.is_approve ? '已认证' : '去认证'
+				// return gt.userInfo.is_approve ? '已认证' : '去认证'
+				return uni.getStorageSync('userAuth') ? '已认证' : '去认证'
 			},
 			is_company_approve() {
 				let gt = this

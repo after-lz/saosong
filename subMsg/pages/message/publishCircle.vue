@@ -51,7 +51,7 @@
 </template>
 
 <script>
-	import ChooseMedia from './chooseMedia.vue'
+	import ChooseMedia from '@/components/chooseMedia.vue'
 	export default {
 		components: { ChooseMedia },
 		data() {

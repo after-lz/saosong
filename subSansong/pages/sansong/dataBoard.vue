@@ -89,11 +89,11 @@ export default {
 				},
 				{
 					num: 0,
-					name: "接单总金额（元）"
+					name: "抢单总金额（元）"
 				},
 				{
 					num: 0,
-					name: "接单总数量（笔）"
+					name: "抢单总数量（笔）"
 				},
 				{
 					num: 0,
@@ -223,11 +223,11 @@ export default {
 				})
 			} else if(index === 6) {
 				uni.navigateTo({
-					url: '../../../pages/message/visitorLog'
+					url: '../../../subMsg/pages/message/visitorLog'
 				})
 			} else if(index === 7) {
 				uni.navigateTo({
-					url: '../../../pages/message/visitorLog?active=1'
+					url: '../../../subMsg/pages/message/visitorLog?active=1'
 				})
 			}
 		},

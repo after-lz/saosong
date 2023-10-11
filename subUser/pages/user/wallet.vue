@@ -23,6 +23,7 @@
 		<view class="con_tip">
 			<text>本服务由伞送提供</text>
 		</view>
+		<u-modal v-model="aut_show" content="请先完成实名认证" @confirm="aut_confirm" :show-cancel-button="true" confirm-text='去认证'></u-modal>
 	</view>
 </template>
 
@@ -31,42 +32,46 @@
 		data() {
 			return {
 				money: 0,
+				aut_show: false
 			}
 		},
 		onShow() {
-			let gt = this;
-			gt.getUserInfo();
-			
+			let gt = this
+			gt.getUserInfo()
 		},
 		methods: {
 			goCharge() {
 				uni.navigateTo({
-					url: './charge',
-				});
-				return false;
+					url: './charge'
+				})
 			},
-			goWithdrawal(){
-				let gt = this;
-				
+			goWithdrawal() {
+				let gt = this
+				let userAuth = uni.getStorageSync('userAuth')
+				if(userAuth) {
+					uni.navigateTo({
+						url: './withdrawal?totalMoney=' + gt.money
+					})
+				} else {
+					gt.aut_show = true
+				}
+			},
+			aut_confirm() {
 				uni.navigateTo({
-					url: './withdrawal?totalMoney=' + gt.money,
-				});
-				return false;
+					url: '../../../pages/login/peopleAuth?flag=' + true
+				})
 			},
-			getUserInfo(){
-				let gt = this;
-				var url = "/logistics/user/get_user_info";
-				
-				gt.gtRequest.post(url).then(res=>{
-					gt.money = res.logistics_info.money01;
-				});
+			getUserInfo() {
+				let gt = this
+				gt.gtRequest.post("/logistics/user/get_user_info").then(res=>{
+					gt.money = res.logistics_info.money01
+				})
 			},
-			goList(){
-				let gt = this;
+			goList() {
+				let gt = this
 				uni.navigateTo({
-					url:'./moneyList',
-				});
-				return false;
+					url:'./moneyList'
+				})
 			}
 		}
 	}

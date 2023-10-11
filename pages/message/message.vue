@@ -215,7 +215,7 @@
 			},
 			circleMsg() {
 				uni.navigateTo({
-					url: './circleMsg'
+					url: '../../subMsg/pages/message/circleMsg'
 				})
 			},
 			goDetail(type) {
@@ -224,22 +224,22 @@
 					switch (type){
 						case 1:
 							uni.navigateTo({
-								url: './visitorLog'
+								url: '../../subMsg/pages/message/visitorLog'
 							})
 							break;
 						case 2:
 							uni.navigateTo({
-								url: './logisticsInfo'
+								url: '../../subMsg/pages/message/logisticsInfo'
 							})
 							break;
 						case 3:
 							uni.navigateTo({
-								url: './redEnvelopeWelfare'
+								url: '../../subMsg/pages/message/redEnvelopeWelfare'
 							})
 							break;
 						case 4:
 							uni.navigateTo({
-								url: './serviceNotice'
+								url: '../../subMsg/pages/message/serviceNotice'
 							})
 							break;
 						default:

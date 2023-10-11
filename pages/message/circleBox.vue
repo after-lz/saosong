@@ -7,11 +7,11 @@
 			 :refresher-enabled="true" :refresher-triggered="refresh" @refresherrefresh="onRefresh">
 			<view class="userInfo">
 				<view class="user_info" v-if="JSON.stringify(info) !== '{}'">
-					<view class="userInfo_name">{{ info.company_name }}</view>
+					<view class="userInfo_name">{{ info.company_name || info.nickname }}</view>
 					<u-avatar :src="info.headerpic" :size="160"></u-avatar>
 				</view>
 				<view class="user_info" v-else @click="viewCompany()">
-					<view class="userInfo_name">{{ companyInfo.company_name }}</view>
+					<view class="userInfo_name">{{ companyInfo.company_name || userInfo.nickname }}</view>
 					<u-avatar :src="userInfo.headerpic" :size="160"></u-avatar>
 				</view>
 			</view>
@@ -104,9 +104,9 @@
 </template>
 
 <script>
-	import InputBox from './comment_input.vue'
-	import DragButton from './dragButton.vue'
-	import ChooseMedia from './chooseMedia.vue'
+	import InputBox from '@/components/comment_input.vue'
+	import DragButton from '@/components/dragButton.vue'
+	import ChooseMedia from '@/components/chooseMedia.vue'
 	export default {
 		components: { InputBox, DragButton, ChooseMedia },
 		props: {
@@ -208,18 +208,18 @@
 			},
 			playVideo(src) {
 				uni.navigateTo({
-					url: "./videoModal?src=" + src
+					url: '../../subMsg/pages/message/videoModal?src=' + src
 				})
 			},
 			circleMsg() {
 				uni.navigateTo({
-					url: './circleMsg'
+					url: '../../subMsg/pages/message/circleMsg'
 				})
 			},
 			/* 查看圈子详情 */
 			viewDetail(record) {
 				uni.navigateTo({
-					url: './viewCircleDetail?id=' + record.id + '&logistics_id=' + record.logistics_id + '&role=' + record.role
+					url: '../../subMsg/pages/message/viewCircleDetail?id=' + record.id + '&logistics_id=' + record.logistics_id + '&role=' + record.role
 				})
 			},
 			/* 查看公司详情 */
@@ -264,7 +264,7 @@
 					}
 				}
 				uni.navigateTo({
-					url: "./viewCompany?params=" + encodeURIComponent(JSON.stringify(params))
+					url: '../../subMsg/pages/message/viewCompany?params=' + encodeURIComponent(JSON.stringify(params))
 				})
 			},
 			/* 删除圈子 */
@@ -433,7 +433,7 @@
 						maxDuration: 30,
 						success: function (res) {
 							uni.navigateTo({
-								url: './publishCircle?type=1&fileList=' + res.tempFilePath
+								url: '../../subMsg/pages/publishCircle?type=1&fileList=' + res.tempFilePath
 							})
 						}
 					})
@@ -444,7 +444,7 @@
 						sourceType: ['album', 'camera'], //从相册选择
 						success: function (res) {
 							uni.navigateTo({
-								url: './publishCircle?type=0&fileList=' + res.tempFilePaths
+								url: '../../subMsg/pages/publishCircle?type=0&fileList=' + res.tempFilePaths
 							})
 						}
 					})
