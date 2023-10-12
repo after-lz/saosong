@@ -433,7 +433,7 @@
 						maxDuration: 30,
 						success: function (res) {
 							uni.navigateTo({
-								url: '../../subMsg/pages/publishCircle?type=1&fileList=' + res.tempFilePath
+								url: '../../subMsg/pages/message/publishCircle?type=1&fileList=' + res.tempFilePath
 							})
 						}
 					})
@@ -444,7 +444,7 @@
 						sourceType: ['album', 'camera'], //从相册选择
 						success: function (res) {
 							uni.navigateTo({
-								url: '../../subMsg/pages/publishCircle?type=0&fileList=' + res.tempFilePaths
+								url: '../../subMsg/pages/message/publishCircle?type=0&fileList=' + res.tempFilePaths
 							})
 						}
 					})

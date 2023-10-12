@@ -11,12 +11,12 @@
 			<view class="con_item">
 				<text>城市</text>
 			</view>
-			<view class="con_item">
+			<view class="con_item" v-if="!hideDC">
 				<text>区县</text>
 			</view>
 		</view>
 		<view class="con_list" :style="[listStyle]">
-			<view class="con_pca">
+			<view class="con_pca" :style="{width: hideDC ? '50%' : '33.3%'}">
 				<scroll-view :scroll-y="true" :scroll-into-view="provinceScrollInto">
 					<view class="con_item u-line-1" :class="item.selected ? 'item_selected' : ''"
 						v-for="(item,index) in provinceList" :key="index" :id="'pScroll_' + item.cityCode"
@@ -40,7 +40,7 @@
 					</u-checkbox-group> -->
 				</scroll-view>
 			</view>
-			<view class="con_pca">
+			<view class="con_pca" :style="{width: hideDC ? '50%' : '33.3%'}">
 				<scroll-view :scroll-y="true" :scroll-into-view="cityScrollInto">
 					<view class="con_item u-line-1" :class="item.selected ? 'item_selected' : ''"
 						v-for="(item,index) in cityList" :key="index" :id="'cScroll_' + item.cityCode"
@@ -56,7 +56,7 @@
 					</view>
 				</scroll-view>
 			</view>
-			<view class="con_pca">
+			<view class="con_pca" v-if="!hideDC">
 				<scroll-view :scroll-y="true" :scroll-into-view="areaScrollInto">
 					<view class="con_item u-line-1" :class="item.selected ? 'item_selected' : ''"
 						v-for="(item,index) in areaList" :key="index" :id="'aScroll_' + item.cityCode"
@@ -104,6 +104,10 @@
 					return [];
 				}
 			},
+			hideDC: {
+				type: Boolean,
+				default: false
+			}
 		},
 		data() {
 			return {
@@ -118,7 +122,7 @@
 				provinceSelected: [],
 				citySelected: [],
 				areaSelected: [],
-				break: false,
+				break: false
 			};
 		},
 		watch: {
@@ -540,7 +544,8 @@
 			border-bottom: 2rpx solid #E5E5E5;
 
 			.con_item {
-				width: 250rpx;
+				// width: 250rpx;
+				flex: 1;
 				font-size: 32rpx;
 				font-family: PingFangSC-Medium, PingFang SC;
 				font-weight: 500;
@@ -551,11 +556,12 @@
 		}
 
 		.con_list {
+			width: 100%;
 			display: flex;
 			overflow: hidden;
 
 			.con_pca {
-				width: 250rpx;
+				// width: 250rpx;
 
 				scroll-view {
 					height: 100%;
@@ -567,11 +573,15 @@
 						color: #000000;
 						line-height: 80rpx;
 						margin: 0 40rpx;
-						width: 170rpx;
+						// width: 170rpx;
 
 						// border: 1rpx solid red;
 						.con_icon_text {
 							display: flex;
+							width: 100%;
+							.con_text {
+								width: calc(100% - 44rpx);
+							}
 						}
 					}
 
@@ -585,6 +595,10 @@
 				border-left: 2rpx solid #E5E5E5;
 				border-right: 2rpx solid #E5E5E5;
 			}
+		}
+			
+		.con_item {
+			width: 100%;
 		}
 	}
 </style>

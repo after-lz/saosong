@@ -140,6 +140,9 @@
 				}).then(res => {
 					if(res.Code == 200) {
 						uni.setStorageSync('userAuth', 1)
+						let userInfo = uni.getStorageSync('userInfo')
+						userInfo.truename = gt.name
+						uni.setStorageSync('userInfo', userInfo)
 						// let pages = getCurrentPages()
 						// let url = pages[0].$page.fullPath
 						gt.$refs.uToast.show({

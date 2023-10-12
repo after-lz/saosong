@@ -76,15 +76,7 @@
 			},
 			inputChange(e) {
 				let gt = this
-				setTimeout(() => {
-					if(+e > 0.01) {
-						gt.money = e.match(/\d+\.?\d{0,2}/, '')[0]
-					} else if(+e > 0 && +e < 0.01) {
-						gt.money = 0.01
-					}  else {
-						gt.money = 0
-					}
-				}, 0)
+				gt.money = +e > 0 ? e.match(/\d+\.?\d{0,2}/, '')[0] : 0
 			},
 			submit() {
 				let gt = this

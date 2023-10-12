@@ -7,12 +7,12 @@
 			<u-form-item label="满足金额" required prop="coupon_price" :border-bottom="false">
 				<view class="row">
 					<view class="col">
-						<u-input v-model.number="form.coupon_min_price" type="digit" placeholder="金额" @input="(e)=>inputChange(e, 1)" />
+						<u-input v-model.number="form.coupon_min_price" type="digit" placeholder="金额" @blur="(e)=>inputChange(e, 1)" />
 						<view class="msg1">元</view>
 					</view>
 					<view class="msg">减</view>
 					<view class="col">
-						<u-input v-model.number="form.coupon_price" type="digit" placeholder="金额" @input="(e)=>inputChange(e, 2)" />
+						<u-input v-model.number="form.coupon_price" type="digit" placeholder="金额" @blur="(e)=>inputChange(e, 2)" />
 						<view class="msg1">元</view>
 					</view>
 				</view>
@@ -120,9 +120,9 @@
 				let gt = this
 				setTimeout(() => {
 					if (type === 1) {
-						gt.form.coupon_min_price = +e > 0 && +e <= 9999 ? +e : undefined
+						gt.form.coupon_min_price = +e > 0 && +e <= 9999 ? parseFloat(e.match(/\d+\.?\d{0,2}/, '')[0]) : undefined
 					} else if(type === 2) {
-						gt.form.coupon_price = +e > 0 && +e < +gt.form.coupon_min_price ? +e : undefined
+						gt.form.coupon_price = +e > 0 && +e < +gt.form.coupon_min_price ? parseFloat(e.match(/\d+\.?\d{0,2}/, '')[0]) : undefined
 					}
 				}, 0)
 			},

@@ -27,12 +27,12 @@
 			//按钮默认位置离底部距离（px）
 			bottomPx: {
 				type: Number,
-				default: 400
+				default: 200
 			},
 			//按钮默认位置离右边距离（px）
 			rightPx: {
 				type: Number,
-				default: 5
+				default: 0
 			},
 			viewWidth: {
 				type: Number || String,

@@ -532,7 +532,7 @@
 
 		<view class="con_popup">
 			<view class="con_GTPCA">
-				<u-popup v-model="GTPCAShowS" mode="bottom" height="600" :mask-close-able='false'>
+				<u-popup v-model="GTPCAShowS" mode="bottom" height="668" :mask-close-able='false'>
 					<view class="confirm">
 						<view class="close" @click="confirm(false, 'GTPCAShowS')">取消</view>
 						<view class="ok" @click="confirm(true, 'GTPCAShowS')">确认</view>
@@ -542,7 +542,7 @@
 				</u-popup>
 			</view>
 			<view class="con_GTPCA">
-				<u-popup v-model="GTPCAShowE" mode="bottom" height="600" :mask-close-able='false'>
+				<u-popup v-model="GTPCAShowE" mode="bottom" height="668" :mask-close-able='false'>
 					<view class="confirm">
 						<view class="close" @click="confirm(false, 'GTPCAShowE')">取消</view>
 						<view class="ok" @click="confirm(true, 'GTPCAShowE')">确认</view>
@@ -552,7 +552,7 @@
 				</u-popup>
 			</view>
 			<view class="con_GTPCA">
-				<u-popup v-model="GTPCAShow" mode="bottom" height="600" :mask-close-able='false'>
+				<u-popup v-model="GTPCAShow" mode="bottom" height="668" :mask-close-able='false'>
 					<view class="confirm">
 						<view class="close" @click="confirm(false, 'GTPCAShow')">取消</view>
 						<view class="ok" @click="confirm(true, 'GTPCAShow')">确认</view>
@@ -926,7 +926,7 @@
 			},
 			showGTPCA(str) {
 				let gt = this;
-				gt.height = '534rpx';
+				gt.height = '600rpx';
 				if(str == 's' && (gt.isAdd || gt.isEdit)) return;
 				if(gt.isEdit && str == 'e') {
 					let editProvince = gt.provinceCityAreaList.filter(item=> item.city_code == gt.toPca[0][0].cityCode)

@@ -251,7 +251,7 @@
 					})
 					setTimeout(()=> {
 						uni.switchTab({
-							url: './message',
+							url: '../../../pages/message/message',
 							success() {
 								let pages = getCurrentPages()
 								let beforePage = pages[0]

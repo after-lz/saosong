@@ -12,7 +12,7 @@
 					<text>￥</text>
 				</view>
 				<view class="con_input">
-					<u-input v-model.number="money" type="digit" placeholder="最低提现金额20元" height="40" />
+					<u-input v-model.number="money" maxlength='7' type="digit" placeholder="最低提现金额20元" height="40" @blur="inputChange" />
 				</view>
 			</view>
 			<view class="con_line">
@@ -65,7 +65,7 @@
 				</view>
 				<view class="left_item">
 					<text>预计到账：￥</text>
-					<text v-if="money >= 20">{{ money - serviceCharge || '' }}</text>
+					<text v-if="money >= 20">{{ (money - serviceCharge).toFixed(2) || '' }}</text>
 				</view>
 			</view>
 			<view class="right">
@@ -160,8 +160,11 @@
 			},
 			serviceCharge() {
 				let gt = this
-				let min = gt.money * 0.001 >= 1 ? gt.money * 0.001 : 1
-				return gt.money * 0.01 + min
+				
+					let num = gt.money || 0
+					let min = num * 0.001 >= 1 ? num * 0.001 : 1
+					return parseFloat((num * 0.01).toFixed(2)) + parseFloat(min.toFixed(2))
+				
 			}
 		},
 		methods: {
@@ -174,11 +177,14 @@
 				};
 				gt.gtRequest.post(url, data).then(res => {
 					for (var i = 0; i < res.list.length; i++) {
-						res.list[i].bankNameNum = res.list[i].bank_name + '(' + res.list[i].bank_number.substr(-
-							4) + ')';
+						res.list[i].bankNameNum = res.list[i].bank_name + '(' + res.list[i].bank_number.substr(-4) + ')';
 					}
 					gt.bankList = res.list;
 				});
+			},
+			inputChange(e) {
+				let gt = this
+				gt.money = +e > 0 ? e.match(/\d+\.?\d{0,2}/, '')[0] : 0
 			},
 			allWithdrawal() {
 				let gt = this;
