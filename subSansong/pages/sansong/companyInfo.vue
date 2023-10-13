@@ -523,7 +523,7 @@
 							<u-icon name="close" color="#fff" size="28"></u-icon>
 						</view>
 					</view>
-					<video :src="img_path" :controls="false" autoplay loop :muted="true" :style="{display: isMove ? '':'none'}">
+					<video :src="img_path" :controls="false" autoplay loop object-fit='cover' :muted="true" :style="{display: isMove ? '':'none'}">
 						<cover-view class="viewMask" @click.stop="videoMore"></cover-view>
 					</video>
 				</view>
