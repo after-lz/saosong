@@ -35,8 +35,7 @@
 			</view>
 			<view class="row">
 				<view class="row_label">货物信息</view>
-				<view class="row_value" v-if="record.deliver_info">{{record.deliver_info.goods_name}}/{{record.deliver_info.goods_number}}件/
-				{{parseFloat(record.deliver_info.goods_weight)}}吨/{{parseFloat(record.deliver_info.goods_volume)}}</view>
+				<view class="row_value" v-if="record.deliver_info">{{record.deliver_info.goods_name}}/{{record.deliver_info.goods_number}}件/{{parseFloat(record.deliver_info.goods_weight)}}吨/{{parseFloat(record.deliver_info.goods_volume)}}方</view>
 			</view>
 			<view class="row">
 				<view class="row_label">交货方式</view>

@@ -242,10 +242,10 @@
 											<u-icon name="play-right-fill" color="#000" size="32" v-else></u-icon>
 										</view>
 
-										<view class="con_title">
-											<text>{{cityHide(item.start_city)}}-{{cityHide(item.end_city)}}</text>
-										</view>
-										<view class="con_labels">
+										<view class="con_title" :style="{display: lineIndex == index ? '':'flex'}">
+											<text :class="lineIndex == index ? '':'con_title_name'">
+												{{cityHide(item.start_city)}}-{{cityHide(item.end_city + item.end_city)}}
+											</text>
 											<view class="con_label" v-if="item.member_status === '1'">
 												<text>会员专线</text>
 											</view>
@@ -261,6 +261,22 @@
 												<text>银卡推广</text>
 											</view>
 										</view>
+										<!-- <view class="con_labels">
+											<view class="con_label" v-if="item.member_status === '1'">
+												<text>会员专线</text>
+											</view>
+											<view class="con_label" style="background: #485EF4;" v-if="item.deposit_status === '1'">
+												<text>品质专线</text>
+											</view>
+											<view class="con_label" style="background: #FFF700;color: #000000;"
+												v-if="item.promote_type === '1' || item.promote_type === '2' || item.promote_type === '3'">
+												<text>金卡推广</text>
+											</view>
+											<view class="con_label" style="background: #C7D1DB;color: #000000;"
+												v-if="item.promote_type === '6' || item.promote_type === '7' || item.promote_type === '8'">
+												<text>银卡推广</text>
+											</view>
+										</view> -->
 									</view>
 								</view>
 								<view class="con_body" v-if="lineIndex == index">
@@ -498,14 +514,30 @@
 				</swiper-item>
 			</swiper>
 		</view>
+		<view class="" v-if="img_path && !currentTab">
+			<dragButton :viewWidth="viewWidth" :viewHeight="viewHeight" :viewTop="viewTop"
+				 @touchstart='touchstart' @touchend='touchend' :canDocking='false'>
+				<view class="videoView" :style="{width: viewWidth+'px', height: viewHeight+'px'}">
+					<view class="videoClose">
+						<view class="closeIcon" @click.stop="closeVideo">
+							<u-icon name="close" color="#fff" size="28"></u-icon>
+						</view>
+					</view>
+					<video :src="img_path" :controls="false" autoplay loop object-fit='cover' :muted="true" :style="{display: isMove ? '':'none'}">
+						<cover-view class="viewMask" @click.stop="videoMore"></cover-view>
+					</video>
+				</view>
+			</dragButton>
+		</view>
 		<u-toast ref="uToast" />
 	</view>
 </template>
 
 <script>
 	import EvaluateList from './evaluateList'
+	import DragButton from '@/components/dragButton.vue'
 	export default {
-		components: { EvaluateList },
+		components: { EvaluateList, DragButton },
 		data() {
 			return {
 				tabList: [{
@@ -532,7 +564,6 @@
 				lng: '',
 				lat: '',
 				parkName: '',
-
 				data: {},
 				dataList: [],
 				page: 1,
@@ -541,7 +572,13 @@
 				lineIndex: 0,
 				packetList: [],
 				params: {},
-				over: false
+				over: false,
+				videos: [],
+				img_path: '',
+				viewWidth: 180,
+				viewHeight: 130,
+				viewTop: 45,
+				isMove: true
 			}
 		},
 		async onLoad(option) {
@@ -581,6 +618,20 @@
 				gt.params.page++
 				gt.getPacketList()
 			},
+			videoMore() {
+				uni.navigateTo({
+					url: './videoMore?videos=' + encodeURIComponent(JSON.stringify(this.videos))
+				})
+			},
+			closeVideo() {
+				this.img_path = ''
+			},
+			touchstart() {
+				this.isMove = false
+			},
+			touchend() {
+				this.isMove = true
+			},
 			preview(e) {
 				let gt = this;
 				// uni.navigateTo({
@@ -617,6 +668,8 @@
 					if(gt.logistics_id == uni.getStorageSync("companyInfo").logistics_id) {
 						uni.setStorageSync('companyInfo', res.company_info)
 					}
+					gt.videos = res.company_imgs.company_viedeos
+					gt.img_path = res.company_imgs.company_viedeos.length ? res.company_imgs.company_viedeos[0].img_path : ''
 					gt.rateNum = gt.data.company_info.grade_score_result
 					// gt.companyImgs = res.company_imgs_all;
 					gt.companyImgs = imgList
@@ -635,14 +688,17 @@
 				});
 			},
 			goScope() {
+				let gt = this;
 				uni.navigateTo({
-					url: './transportScope',
+					url: './transportScope?logistics_id=' + gt.data.company_info.logistics_id
 				});
 				return false;
 			},
 			goScope2(item) {
+				let gt = this;
 				uni.navigateTo({
-					url: './transportScope?lineId=' + item.line_id,
+					// url: './transportScope?lineId=' + item.line_id + '&logistics_id=' + gt.data.company_info.logistics_id,
+					url: './transportScope?logistics_id=' + gt.data.company_info.logistics_id,
 				});
 				return false;
 			},
@@ -734,7 +790,37 @@
 		background: $gtBackgroundColor;
 
 		.gt_content {
-
+			.videoView {
+				position: fixed;
+				background-color: #000000;
+				padding-bottom: 10rpx;
+				border-radius: 8rpx;
+				overflow: hidden;
+				.videoClose {
+					height: 60rpx;
+					line-height: 60rpx;
+					text-align: right;
+					.closeIcon {
+						display: inline-block;
+						width: 60rpx;
+						height: 60rpx;
+						text-align: center;
+					}
+				}
+				video {
+					position: relative;
+					width: 100%;
+					// height: 100%;
+					height: calc(100% - 60rpx);
+					margin: 0 auto;
+					display: block;
+					.viewMask {
+						position: absolute;
+						width: 100%;
+						height: 100%;
+					}
+				}
+			}
 			.con_swiper {
 				swiper {
 					height: calc(100vh - 88rpx);
@@ -936,39 +1022,47 @@
 
 										.con_icon_title_labels {
 											display: flex;
-
+											
 											.con_icon {
 												margin-top: 6rpx;
 											}
 
 											.con_title {
+											    width: calc(100% - 16rpx - 32rpx);
 												font-size: 32rpx;
 												font-family: PingFangSC-Medium, PingFang SC;
 												font-weight: 500;
 												color: #000000;
 												line-height: 44rpx;
 												margin-left: 16rpx;
-												white-space: nowrap;
-												text-overflow: ellipsis;
-												overflow: hidden;
+												.con_title_name {
+													display: inline-block;
+													// width: calc(100% - 78px - 78px - 78px) !important;
+													width: auto !important;
+													white-space: nowrap;
+													text-overflow: ellipsis;
+													overflow: hidden;
+												}
 											}
 
 											.con_labels {
-												display: flex;
-
-												.con_label {
-													width: 136rpx;
-													height: 40rpx;
-													background: #FF6067;
-													border-radius: 8rpx;
-													font-size: 24rpx;
-													font-family: PingFangSC-Regular, PingFang SC;
-													font-weight: 400;
-													color: #FFFFFF;
-													line-height: 40rpx;
-													text-align: center;
-													margin: 4rpx 0 0 16rpx;
-												}
+												display: flex;	
+											}
+											.con_label {
+												display: inline-block;
+												// width: 136rpx;
+												height: 40rpx;
+												background: #FF6067;
+												border-radius: 8rpx;
+												font-size: 24rpx;
+												font-family: PingFangSC-Regular, PingFang SC;
+												font-weight: 400;
+												color: #FFFFFF;
+												line-height: 40rpx;
+												text-align: center;
+												margin: 4rpx 0 0 16rpx;
+												padding: 0 20rpx;
+												white-space: nowrap;
 											}
 										}
 									}
@@ -1068,6 +1162,8 @@
 												font-weight: 400;
 												color: #000000;
 												line-height: 40rpx;
+												white-space: nowrap;
+												margin-right: 16rpx;
 											}
 
 											.con_val {

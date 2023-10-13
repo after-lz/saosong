@@ -7,7 +7,7 @@
 			</view>
 			<view class="info_bottom">
 				<view class="balance">{{ data.money02.toFixed(2) }}</view>
-				<view class="con_btnItem" @click="goBalance" :class="data.zhuanyueeSwitch ? '' : 'dis'">
+				<view class="con_btnItem" @click="goBalance" :class="data.zhuanyueeSwitch ? '' : 'dis'" v-if="data.zhuanyueeSwitch">
 					<text>转到余额</text>
 				</view>
 			</view>
@@ -43,6 +43,10 @@
 			</view>
 		</view>
 		<view class="msg" v-html="data.ruleStr"></view>
+		<view class="rule">
+			<text>详细规则请阅读</text>
+			<text class="ruleDetail" @click="read">《红包使用规则》</text>
+		</view>
 	</view>
 </template>
 
@@ -88,7 +92,7 @@
 				gt.flag = res.list.length
 			})
 		},
-		mounted() {
+		onShow() {
 			let gt = this
 			gt.getList()
 		},
@@ -172,6 +176,10 @@
 				uni.navigateTo({
 					url: './packetRules'
 				})
+			},
+			read() {
+				let gt = this
+				gt.gtCommon.goLicence('https://saasdemo.sansongkeji.com/adminsite/#/agreement/logistics')
 			}
 		}
 	}
@@ -272,6 +280,13 @@
 		}
 		.dis {
 			color: #909399 !important;
+		}
+		.rule {
+			margin-top: 40rpx;
+			color: #909399;
+			.ruleDetail {
+				color: $gtProjectColor;
+			}
 		}
 	}
 </style>

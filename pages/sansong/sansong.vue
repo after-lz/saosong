@@ -3,36 +3,6 @@
 		<view class="con_swiper">
 			<u-swiper :list="swiperList" name="picurl" height="360"></u-swiper>
 		</view>
-
-		<view class="con_order" style="display: none;">
-			<view class="con_title">
-				<text>即时单</text>
-			</view>
-			<view class="con_line">
-				<u-line color="#545566" length="670rpx" margin="14rpx 24rpx 0 24rpx" />
-			</view>
-			<view class="con_from_distance">
-				<view class="con_from u-line-1">
-					<text class="con_dot"></text>
-					<text>梁溪区-金桥商贸城副食品城</text>
-				</view>
-				<view class="con_distance">
-					<text>距您8.8公里</text>
-				</view>
-			</view>
-			<view class="con_to_price">
-				<view class="con_to u-line-1">
-					<text class="con_dot"></text>
-					<text>梁溪区-广瑞路842</text>
-				</view>
-				<view class="con_price">
-					<text>23.49</text>
-					<text>元</text>
-				</view>
-			</view>
-		</view>
-
-
 		<view class="con_menu">
 			<view class="con_list">
 				<view class="con_item" v-for="(item,index) in menuList" :key="index" @click="menuClick(item)">
@@ -84,7 +54,6 @@
 				</view>
 			</view>
 		</view>
-
 	</view>
 </template>
 
@@ -144,13 +113,13 @@
 					{
 						id: 1,
 						name: '货车定位',
-						url: './empty'
+						url: './empty',
+						// url: '/subSansong/pages/sansong/truckLocation'
 					},
 					{
 						id: 1,
 						name: '数据看板',
-						url: './empty'
-						// url: '/subSansong/pages/sansong/dataBoard'
+						url: '/subSansong/pages/sansong/dataBoard'
 					},
 				],
 

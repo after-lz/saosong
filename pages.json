@@ -41,82 +41,14 @@
 			"style": {
 				"navigationBarTitleText": "",
 				"enablePullDownRefresh": false,
-				"navigationStyle": "custom"
-			}
-		},
-		{
-			"path": "pages/message/visitorLog",
-			"style": {
-				"navigationBarTitleText": "",
-				"enablePullDownRefresh": false,
 				"navigationStyle": "custom",
-				"enablePullDownRefresh": true
-			}
-		},
-		{
-			"path": "pages/message/logisticsInfo",
-			"style": {
-				"navigationBarTitleText": "物流信息",
-				"enablePullDownRefresh": true
-			}
-		},
-		{
-			"path": "pages/message/redEnvelopeWelfare",
-			"style": {
-				"navigationBarTitleText": "红包福利",
-				"enablePullDownRefresh": true
-			}
-		},
-		{
-			"path": "pages/message/serviceNotice",
-			"style": {
-				"navigationBarTitleText": "服务通知",
-				"enablePullDownRefresh": true
-			}
-		},
-		{
-			"path": "pages/message/viewCompany",
-			"style": {
-				"navigationBarTitleText": "",
-				"enablePullDownRefresh": false
-			}
-		},
-		{
-			"path": "pages/message/publishCircle",
-			"style": {
-				"navigationBarTitleText": "",
-				"enablePullDownRefresh": false
+				"disableScroll": true
 			}
 		},
 		{
 			"path": "pages/message/companyCircle",
 			"style": {
 				"navigationBarTitleText": "圈子",
-				"enablePullDownRefresh": false
-			}
-		},
-		{
-			"path": "pages/message/circleMsg",
-			"style": {
-				"navigationBarTitleText": "消息",
-				"enablePullDownRefresh": true,
-				"app-plus": {
-				    "bounce": "none",
-				    "titleNView": {
-				        "buttons": [
-				            {
-				                "fontSize": "26rpx",
-				                "text": "清空"
-				            }
-				        ]
-				    }
-				}
-			}
-		},
-		{
-			"path": "pages/message/viewCircleDetail",
-			"style": {
-				"navigationBarTitleText": "详情",
 				"enablePullDownRefresh": false
 			}
 		},
@@ -305,6 +237,14 @@
 					"path": "pages/sansong/companyInfo",
 					"style": {
 						"navigationBarTitleText": "公司详情",
+						"enablePullDownRefresh": false,
+						"disableScroll": true
+					}
+				},
+				{
+					"path": "pages/sansong/videoMore",
+					"style": {
+						"navigationBarTitleText": "",
 						"enablePullDownRefresh": false,
 						"disableScroll": true
 					}
@@ -503,7 +443,16 @@
 					"path": "pages/sansong/dataBoard",
 					"style": {
 						"navigationBarTitleText": "数据看板",
-						"enablePullDownRefresh": false
+						"enablePullDownRefresh": false,
+						"disableScroll": true
+					}
+				},
+				{
+					"path": "pages/sansong/truckLocation",
+					"style": {
+						"navigationBarTitleText": "货车定位",
+						"enablePullDownRefresh": false,
+						"disableScroll": true
 					}
 				}
 			]
@@ -737,6 +686,104 @@
 					"style": {
 						"navigationBarTitleText": "提现",
 						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "pages/user/behaviorScore",
+					"style": {
+						"navigationBarTitleText": "行为分",
+						"enablePullDownRefresh": false,
+						"navigationStyle": "custom"
+						// "disableScroll": true
+					}
+				},
+				{
+					"path": "pages/user/behaviorSubrecord",
+					"style": {
+						"navigationBarTitleText": "行为分记录",
+						"enablePullDownRefresh": true
+					}
+				}
+			]
+		},
+		{
+			"root": "subMsg",
+			"pages": [
+				{
+					"path": "pages/message/serviceNotice",
+					"style": {
+						"navigationBarTitleText": "服务通知",
+						"enablePullDownRefresh": true
+					}
+				},
+				{
+					"path": "pages/message/redEnvelopeWelfare",
+					"style": {
+						"navigationBarTitleText": "红包福利",
+						"enablePullDownRefresh": true
+					}
+				},
+				{
+					"path": "pages/message/logisticsInfo",
+					"style": {
+						"navigationBarTitleText": "物流信息",
+						"enablePullDownRefresh": true
+					}
+				},
+				{
+					"path": "pages/message/publishCircle",
+					"style": {
+						"navigationBarTitleText": "",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "pages/message/circleMsg",
+					"style": {
+						"navigationBarTitleText": "消息",
+						"enablePullDownRefresh": true,
+						"app-plus": {
+						    "bounce": "none",
+						    "titleNView": {
+						        "buttons": [
+						            {
+						                "fontSize": "26rpx",
+						                "text": "清空"
+						            }
+						        ]
+						    }
+						}
+					}
+				},
+				{
+					"path": "pages/message/visitorLog",
+					"style": {
+						"navigationBarTitleText": "",
+						"navigationStyle": "custom",
+						"enablePullDownRefresh": true
+					}
+				},
+				{
+					"path": "pages/message/videoModal",
+					"style": {
+						"navigationBarTitleText": "",
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "pages/message/viewCompany",
+					"style": {
+						// "navigationBarTitleText": "个人中心",
+						"enablePullDownRefresh": false,
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "pages/message/viewCircleDetail",
+					"style": {
+						// "navigationBarTitleText": "详情",
+						"enablePullDownRefresh": false,
+						"navigationStyle": "custom"
 					}
 				}
 			]

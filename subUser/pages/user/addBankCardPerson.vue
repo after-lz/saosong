@@ -30,7 +30,7 @@
 				</view>
 				<view class="con_val">
 					<view class="con_input">
-						<u-input v-model="name" placeholder="请输入持卡人姓名" height="40" :clearable="false" />
+						<u-input v-model="name" disabled placeholder="请输入持卡人姓名" height="40" :clearable="false" />
 					</view>
 				</view>
 			</view>
@@ -72,6 +72,7 @@
 		},
 		onLoad() {
 			let gt = this
+			gt.name = uni.getStorageSync('userInfo').truename
 			gt.getList()
 		},
 		methods: {

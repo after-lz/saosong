@@ -24,8 +24,15 @@ if(uni.getSystemInfoSync().platform != 'devtools'){
 	// console.log = () =>{};
 }
 
-
-
+// 手机号脱敏('13912345678' 转换成 '139****5678') 第3位开始替换4个
+Vue.filter('telHide', (value)=>{
+	 if (!value) {
+	 	return ''
+	 }else{
+	 	let data = value.replace(/(\d{3})\d{4}(\d*)/, '$1****$2')
+	 	return data
+	 }
+})
 
 let mpShare = require('static/uview/libs/mixin/mpShare.js');
 Vue.mixin(mpShare)

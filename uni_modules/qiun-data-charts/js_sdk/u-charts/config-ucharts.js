@@ -67,7 +67,9 @@ const cfu = {
       }
     },
     "pieDemo":function(val, index, series, opts){
-      if(index !== undefined){
+	  if(val.name.split('/')[0]=="自定义1") {
+		return "自定义1/" + index + '/总单量：'+opts.series[0].data[series]+'/总金额：'+opts.series[0].sum[series]
+	  } else if(index !== undefined){
         return series[index].name+'：'+series[index].data+'元'
       }
     },

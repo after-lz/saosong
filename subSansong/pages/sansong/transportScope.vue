@@ -89,7 +89,6 @@
 			}
 		},
 		onLoad(options) {
-			console.log(options.lineId);
 			let gt = this;
 			if (options.lineId) {
 				gt.lineId = options.lineId;
@@ -97,7 +96,7 @@
 					gt.getLineInfo();
 				}, 500);
 			}
-			gt.getDataList();
+			gt.getDataList(options.logistics_id);
 		},
 		methods: {
 			getLineInfo() {
@@ -121,10 +120,12 @@
 					}
 				})
 			},
-			getDataList() {
+			getDataList(id) {
 				let gt = this;
 				var url = "/logistics/specialline/get_special_line_range";
-				gt.gtRequest.post(url).then(res => {
+				gt.gtRequest.post(url, {
+					logistics_id: id
+				}).then(res => {
 					var list = [];
 					for (var i = 0; i < res.range.length; i++) {
 						var item1 = {

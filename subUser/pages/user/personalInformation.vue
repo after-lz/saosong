@@ -92,15 +92,23 @@
 			</view>
 		</u-popup>
 		<u-select v-model="show_sex" :list="sexList" @confirm="sexConfirm"></u-select>
-		<u-popup v-model="show_pca" mode="bottom" height="600" :mask-close-able='false'>
+		<u-popup v-model="show_pca" mode="bottom" height="668" :mask-close-able='false'>
 			<view class="confirm">
 				<view class="close" @click="confirm(false)">取消</view>
 				<view class="ok" @click="confirm(true)">确认</view>
 			</view>
 			<gtPCA :pcaList="provinceCityAreaList" height="600rpx" :show="show_pca" :selectedList="fromPca"
-				   :allArea="false" @gtPCASelect="gtPCASelect"></gtPCA>
+				   :allArea="false" @gtPCASelect="gtPCASelect" :hideDC="true"></gtPCA>
 		</u-popup>
 		<u-toast ref="uToast" />
+		<!-- #ifdef MP-WEIXIN -->
+		<u-modal v-model="aut_show" :show-title='false' confirm-text='确认'>
+			<view class="slot-content aut_info">
+				<view class="aut_title">请下载伞送物流App</view>
+				<view class="aut_content">为提供更好的服务,请下载伞送物流App</view>
+			</view>
+		</u-modal>
+		<!-- #endif -->
 	</view>
 </template>
 
@@ -139,16 +147,15 @@
 						cityName: '',
 					}],
 				],
-				flag: false
+				flag: false,
+				aut_show: false
 			}
 		},
 		onLoad() {
 			let gt = this
-			gt.userInfo = uni.getStorageSync('user_info')
-			gt.companyInfo = uni.getStorageSync('companyInfo')
 			// #ifdef APP-PLUS
 			// 扩展API加载完毕后调用onPlusReady回调函数
-			document.addEventListener("plusready", gt.onPlusReady, false)
+			// document.addEventListener("plusready", gt.onPlusReady, false)
 			// #endif
 			uni.getStorage({
 				key: 'pcaList',
@@ -156,6 +163,11 @@
 					gt.provinceCityAreaList = res.data
 				}
 			})
+		},
+		onShow() {
+			let gt = this
+			gt.userInfo = uni.getStorageSync('user_info')
+			gt.companyInfo = uni.getStorageSync('companyInfo')
 		},
 		computed: {
 			headerpic() {
@@ -176,7 +188,8 @@
 			},
 			is_approve() {
 				let gt = this
-				return gt.userInfo.is_approve ? '已认证' : '去认证'
+				// return gt.userInfo.is_approve ? '已认证' : '去认证'
+				return uni.getStorageSync('userAuth') ? '已认证' : '去认证'
 			},
 			is_company_approve() {
 				let gt = this
@@ -311,12 +324,21 @@
 			},
 			goAuth() {
 				let gt = this
-				if(gt.userInfo.is_approve) return
+				if(gt.userInfo.is_approve) return gt.$refs.uToast.show({
+					title: '已认证'
+				})
+				// #ifdef MP-WEIXIN
+				gt.aut_show = true
+				// #endif
+				// #ifdef APP-PLUS
 				uni.navTo('/pages/login/peopleAuth?flag=true')
+				// #endif
 			},
 			goCompanyAuth() {
 				let gt = this
-				if(gt.companyInfo.is_company_approve) return
+				if(gt.companyInfo.is_company_approve) return gt.$refs.uToast.show({
+					title: '已认证'
+				})
 				uni.navigateTo({
 					url: '/pages/login/companyAuth?flag=true'
 				})
@@ -346,7 +368,7 @@
 				})
 				gt.userInfo.city = gt.fromPca[1][0].cityName
 				gt.updateStorage()
-			},
+			}
 		}
 	}
 </script>
@@ -375,7 +397,7 @@
 				.con_item {
 					display: flex;
 					justify-content: space-between;
-					padding: 0 40rpx;
+					margin: 0 40rpx;
 					.con_text {
 						font-size: 32rpx;
 						font-weight: 400;
@@ -432,6 +454,20 @@
 				.ok {
 					color: rgb(41, 121, 255);
 				}
+			}
+			.aut_info {
+				padding: 40rpx 40rpx 100rpx 40rpx;
+			}
+			.aut_title {
+				font-size: 40rpx;
+				text-align: center;
+				font-weight: 700;
+				font-family: PingFangSC-Medium, PingFang SC;
+			}
+			.aut_content {
+				text-align: center;
+				margin-top: 40rpx;
+				font-family: PingFangSC-Medium, PingFang SC;
 			}
 		}
 	}

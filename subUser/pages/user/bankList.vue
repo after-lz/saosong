@@ -50,6 +50,17 @@
 				<view class="value">{{record.bank_truename}}</view>
 			</view>
 		</u-modal>
+		<!-- #ifdef APP-PLUS -->
+		<u-modal v-model="aut_show" content="请先完成实名认证" @confirm="aut_confirm" :show-cancel-button="true" confirm-text='去认证'></u-modal>
+		<!-- #endif -->
+		<!-- #ifdef MP-WEIXIN -->
+		<u-modal v-model="aut_show" :show-title='false' confirm-text='确认'>
+			<view class="slot-content">
+				<view class="aut_title">请下载伞送物流App</view>
+				<view class="aut_content">为提供更好的服务,请下载伞送物流App</view>
+			</view>
+		</u-modal>
+		<!-- #endif -->
 	</view>
 </template>
 
@@ -69,7 +80,8 @@
 					},
 				],
 				del_show: false,
-				record: {}
+				record: {},
+				aut_show: false
 			}
 		},
 		onShow() {
@@ -89,11 +101,22 @@
 				});
 			},
 			showAddBankCard() {
+				let gt = this
+				let userAuth = uni.getStorageSync('userAuth')
+				if(userAuth) {
+					uni.navigateTo({
+						url:'./addBankCardPerson',
+					});
+					// let gt = this;
+					// gt.bankCardShow = true;
+				} else {
+					gt.aut_show = true
+				}
+			},
+			aut_confirm() {
 				uni.navigateTo({
-					url:'./addBankCardPerson',
-				});
-				// let gt = this;
-				// gt.bankCardShow = true;
+					url: '../../../pages/login/peopleAuth?flag=' + true
+				})
 			},
 			goAdd(res){
 				if(res[0].value == 1){
@@ -241,6 +264,17 @@
 					font-size: 26rpx;
 					color: #999;
 				}
+			}
+			.aut_title {
+				font-size: 40rpx;
+				text-align: center;
+				font-weight: 700;
+				font-family: PingFangSC-Medium, PingFang SC;
+			}
+			.aut_content {
+				text-align: center;
+				margin-top: 40rpx;
+				font-family: PingFangSC-Medium, PingFang SC;
 			}
 		}
 	}

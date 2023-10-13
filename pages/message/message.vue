@@ -3,7 +3,10 @@
 		<view class="gt_title">
 			<view class="gt_title_name" @click="clearUnread" :style="{'display': current === 0 ? '': 'none'}">清除未读</view>
 			<view class="gt_title_name" @click="circleMsg" :style="{'display': current === 1 ? '': 'none'}">
-				<u-icon name="bell" size="36"></u-icon>
+				<view class="gt_title_icon">
+					<u-badge type="error" absolute :is-dot="true" :offset='offset' :count='newMsgArr.length'></u-badge>
+					<u-icon name="bell" size="36"></u-icon>
+				</view>
 			</view>
 			<view class="gt_title_swiper">
 				<u-tabs-swiper ref="uTabs" :list="tabs" :current="current" @change="tabsChange" :is-scroll="false"
@@ -80,7 +83,7 @@
 				</scroll-view>
 			</swiper-item>
 			<swiper-item class="swiper-item circle" id="circle" catchtouchmove="stopTouchMove">
-				<circle-box ref="circleBox"></circle-box>
+				<circle-box ref="circleBox" :newMsgArr='newMsgArr'></circle-box>
 			</swiper-item>
 		</swiper>
 	</view>
@@ -101,10 +104,12 @@
 					type_2: {},
 					type_3: {}
 				},
-				token: ''
+				token: '',
+				newMsgArr: [],
+				offset: [10, 0]
 			}
 		},
-		async onShow() {
+		async onLoad() {
 			let gt = this
 			gt.token = await gt.gtRequest.getToken()
 			if(gt.token) {
@@ -125,12 +130,29 @@
 				})
 			}
 		},
+		onShow() {
+			let gt = this
+			uni.hideTabBarRedDot({ //隐藏红点
+				index: 3
+			})
+			gt.newMsgArr = JSON.parse(uni.getStorageSync('newMsgArr') || '[]')
+			gt.$nextTick(()=> {
+				gt.$refs.circleBox.companyInfo = uni.getStorageSync('companyInfo')
+				gt.$refs.circleBox.userInfo = uni.getStorageSync('userInfo')
+			})
+		},
+		// 下拉刷新
+		// onPullDownRefresh() {
+		//     let gt = this
+		// 	gt.current ? gt.refreshCircle() : gt.getList()
+		//     uni.stopPullDownRefresh() // 停止刷新
+		// },
 		methods: {
 			refreshCircle() {
 				let gt = this
-				gt.$nextTick(()=> {
+				// gt.$nextTick(()=> {
 					gt.$refs.circleBox.showFn()
-				})
+				// })
 			},
 			getList() {
 				let gt = this
@@ -193,7 +215,7 @@
 			},
 			circleMsg() {
 				uni.navigateTo({
-					url: './circleMsg'
+					url: '../../subMsg/pages/message/circleMsg'
 				})
 			},
 			goDetail(type) {
@@ -202,22 +224,22 @@
 					switch (type){
 						case 1:
 							uni.navigateTo({
-								url: './visitorLog'
+								url: '../../subMsg/pages/message/visitorLog'
 							})
 							break;
 						case 2:
 							uni.navigateTo({
-								url: './logisticsInfo'
+								url: '../../subMsg/pages/message/logisticsInfo'
 							})
 							break;
 						case 3:
 							uni.navigateTo({
-								url: './redEnvelopeWelfare'
+								url: '../../subMsg/pages/message/redEnvelopeWelfare'
 							})
 							break;
 						case 4:
 							uni.navigateTo({
-								url: './serviceNotice'
+								url: '../../subMsg/pages/message/serviceNotice'
 							})
 							break;
 						default:
@@ -299,11 +321,16 @@
 				z-index: 999;
 				background-color: #fff;
 				.gt_title_name {
+					position: relative;
 					width: 120rpx;
 					height: 80rpx;
 					line-height: 80rpx;
 					margin-left: 24rpx;
 					white-space: nowrap;
+				}
+				.gt_title_icon {
+					position: relative;
+					width: 40rpx;
 				}
 				.gt_title_swiper {
 					margin-left: 140rpx;

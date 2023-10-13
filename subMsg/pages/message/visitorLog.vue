@@ -104,8 +104,12 @@
 				status2: 'loading'
 			}
 		},
-		onLoad() {
+		onLoad(options) {
 			let gt = this
+			if(options.active) {
+				gt.current = options.active
+				gt.swiperCurrent = options.active
+			}
 			gt.params1 = {
 				page: 1,
 				limit: 20,

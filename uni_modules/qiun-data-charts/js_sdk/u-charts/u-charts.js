@@ -2806,6 +2806,23 @@ function drawToolTip(textList, offset, opts, config, context, eachSpacing, xAxis
   if(toolTipOption.showCategory==true && opts.categories){
     textList.unshift({text:opts.categories[opts.tooltip.index],color:null})
   }
+  if(textList[0].text.split('/')[0]=="自定义1") {
+	let newTextList=[
+		{
+			"color": "#fff",
+			"text": textList[0].text.split("/")[1]
+		},
+		{
+			"color": "#fff",
+			"text": textList[0].text.split("/")[2]
+		},
+		{
+			"color": "#fff",
+			"text": textList[0].text.split("/")[3]
+		}
+	]
+	textList = newTextList
+  }
   var fontSize = toolTipOption.fontSize * opts.pix;
   var lineHeight = toolTipOption.lineHeight * opts.pix;
   var boxPadding = toolTipOption.boxPadding * opts.pix;

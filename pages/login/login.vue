@@ -92,10 +92,8 @@
 <script>
 	import gtCommon from "../../common/gtCommon.js";
 	// #ifdef APP-PLUS
-	var aLiSDKModule = uni.requireNativePlugin('AliCloud-NirvanaPns')
-	// console.log(101, aLiSDKModule);
+	const aLiSDKModule = uni.requireNativePlugin('AliCloud-NirvanaPns')
 	let platform = uni.getSystemInfoSync().platform
-	// console.log(platform);
 	// sdkInfo 是从阿里云控制台获取的秘钥
 	if(platform == 'android'){
 		var sdkInfo = 'XWWadiXN9QMYtCvhf1VpPHn8M/n6Sbi6ccumZdQ/DlLOQ6efO2q0x079orWTgxjz+911RkUFkGMrIY+WtUA5Njs4iAHds+HsU1HYNLTSOhnzBb9OsWeRjJGNrhr6H4iXwjDdyNyMV5QYyoFlBlui7+53D1n7lsyvrZwqGbua8zzbB2zf4xLZlMZhi26w6rbdK5iKwCC9lSUjM5lM7QOeNLiJqRZqWpuUfUyVVtsrpxNwk8ksOGLByWGu3Frg6/Iv9VAQEE7mv3PE0Bv0tGxTI+GFgt7smrfsDm7H36lImGapbB+P7jTela731ykDFhP4';
@@ -143,7 +141,7 @@
 			}
 		},
 		onLoad() {
-			let gt = this;
+			let gt = this
 			// gt.licencesObj = uni.getStorageSync('licencesObj');
 			gt.licencesObj = {
 				logistics_yinsi_xieyi_url: 'https://saasdemo.sansongkeji.com/adminsite/#/agreement/privacyPolicy',
@@ -152,80 +150,70 @@
 		},
 		onShow(){
 			// #ifdef APP-PLUS
-			let gt = this;
-			// gt.goMobileLogin();
-			// gt.type = 3;
-			gt.getLoginToken_ali();
+			let gt = this
+			gt.getLoginToken_ali()
 			// #endif
 		},
 		methods: {
 			onChange(e) {
-				let gt = this
 				uni.setStorageSync('environment', e[0].label)
-				uni.setStorageSync('apiDomain', e[0].value);
+				uni.setStorageSync('apiDomain', e[0].value)
 			},
 			getLoginToken_ali() {
 				// 这里我是用了一个按钮触发这个方法，你也可以选择页面加载后就执行。
-				let gt = this;
-				// console.log('authUiConfig:', gt.authUiConfig);
+				let gt = this
 				aLiSDKModule.accelerateLoginPage(5000, result => {
 					if ("600000" == result.resultCode) {
 						console.log("加速成功")
+					} else {
+						console.log(result.msg)
 					}
 				})
 				aLiSDKModule.getLoginToken(5000,
 					gt.authUiConfig,
 					tokenResult => {
-						// console.log(tokenResult, 'tokenResult');
 						if ("600001" == tokenResult.resultCode) {
-							// console.log("授权页拉起成功")
+							// 授权页拉起成功
 						} else if ("600000" == tokenResult.resultCode) {
-							// console.log("获取Token成功，接下来拿着结果里面的Token去服务端换取手机号码，SDK服务到此结束")
-							var url = "/api/aliyun/get_mobile";
-							var data = {
-								platform:'logistics',
-								accessToken:tokenResult.token
-							};
-							gt.gtRequest.post(url,data).then(res=>{
-								// console.log(res);
-								var url = "/api/applogin/login_post";
-								var data = {
+							// 获取Token成功，接下来拿着结果里面的Token去服务端换取手机号码，SDK服务到此结束
+							gt.gtRequest.post("/api/aliyun/get_mobile", {
+								platform: 'logistics',
+								accessToken: tokenResult.token
+							}).then(res=>{
+								gt.gtRequest.post("/api/applogin/login_post", {
 									platform: 'logistics',
 									login_type: 1,
-									mobile: res.mobile,
-								};
-								gt.gtRequest.post(url, data).then(rs => {
-									// console.log(rs);
-									//手动关闭授权页
+									mobile: res.mobile
+								}).then(rs => {
+									// 手动关闭授权页
 									aLiSDKModule.quitLoginPage()
-									var tokenStr = 'token_d';
-									var tokenValidStr = 'tokenValid_d';
-									var environment = uni.getStorageSync('environment');
+									var tokenStr = 'token_d'
+									var tokenValidStr = 'tokenValid_d'
+									var environment = uni.getStorageSync('environment')
 									if (environment == 'prod') {
 										tokenStr = 'token';
 										tokenValidStr = 'tokenValid';
 									}
-									uni.setStorageSync(tokenStr, rs.user.login_token);
-									uni.setStorageSync('mobile', rs.user.mobile);
-									uni.setStorageSync('userAuth', rs.user.is_approve);
-									uni.setStorageSync('companyAuth', rs.user.is_company_approve);
-									// uni.setStorageSync('token', rs.user.login_token);
-									uni.setStorageSync('userInfo', rs.user);
+									uni.setStorageSync(tokenStr, rs.user.login_token)
+									uni.setStorageSync('mobile', rs.user.mobile)
+									uni.setStorageSync('userAuth', rs.user.is_approve)
+									uni.setStorageSync('companyAuth', rs.user.is_company_approve)
+									uni.setStorageSync('userInfo', rs.user)
+									uni.setStorageSync('jpush_alias', rs.user.jpush_alias)
 									if (rs.user.logistics_id) {
-										var url = "/logistics/company/get_company_info";
-										gt.gtRequest.post(url).then(r => {
-											uni.setStorageSync('companyInfo', r.company_info);
-										});
+										gt.gtRequest.post("/logistics/company/get_company_info").then(r => {
+											uni.setStorageSync('companyInfo', r.company_info)
+										})
 									}
 									let ws_url = uni.getStorageSync('environment') == 'prod' ? 'wss://saasdemo.sansongkeji.com:3021' : 'wss://test.sansongkeji.com:8021'
-									gt.gtWSS.setWsUrl(ws_url);
-									gt.gtWSS.init();
+									gt.gtWSS.setWsUrl(ws_url)
+									gt.gtWSS.init()
 									// if (rs.user.is_approve == 0) {
 									// 	gt.$refs.uToast.show({
 									// 		title: '登录成功！',
 									// 		type: 'success',
-									// 		url: 'pages/login/peopleAuth',
-									// 	});
+									// 		url: 'pages/login/peopleAuth'
+									// 	})
 									// } else {
 										if (rs.user.is_company_approve == 0 || rs.user.is_company_approve == null) {
 											gt.gtRequest.post("/logistics/company/get_company_approve_info").then(res => {
@@ -233,17 +221,13 @@
 													gt.$refs.uToast.show({
 														title: '登录成功！',
 														type: 'success',
-														url: 'pages/login/companyAuth',
-													});
+														url: 'pages/login/companyAuth'
+													})
 												} else {
 													gt.$refs.uToast.show({
 														title: '登录成功！',
-														type: 'success',
-													});
-													// var pages = getCurrentPages();
-													// uni.reLaunch({
-													// 	url: pages[0].$page.fullPath
-													// });
+														type: 'success'
+													})
 													uni.switchTab({
 														url: '/pages/index/index'
 													})
@@ -252,12 +236,8 @@
 										} else {
 											gt.$refs.uToast.show({
 												title: '登录成功！',
-												type: 'success',
-											});
-											// var pages = getCurrentPages();
-											// uni.reLaunch({
-											// 	url: pages[0].$page.fullPath
-											// });
+												type: 'success'
+											})
 											uni.switchTab({
 												url: '/pages/index/index'
 											})
@@ -266,11 +246,11 @@
 								})
 							})
 						} else if ("600007" == tokenResult.resultCode) {
-							gt.type = 2;
+							gt.type = 2
 						} else {
-							//其他失败情况，手动关闭授权页
+							// 其他失败情况，手动关闭授权页
 							aLiSDKModule.quitLoginPage()
-							gt.type = 2;
+							gt.type = 2
 						}
 					},
 					clickResult => {
@@ -280,12 +260,12 @@
 								break
 							case "700001":
 								// console.log("用户切换其他登录方式")
-								gt.type = 2;
+								gt.type = 2
 								aLiSDKModule.quitLoginPage()
 								break
 							case "700002":
 								// console.log("用户点击登录按钮")
-								// gt.showAgreeTip();
+								// gt.showAgreeTip()
 								break
 							case "700003":
 								// console.log("用户点击checkBox")
@@ -296,75 +276,70 @@
 						}
 					},
 					customUiResult => {
-						//这里回调的是自定义控件的点击事件，通过 customUiResult.widgetId 来识别自定义控件，然后做一些自己的处理
+						// 这里回调的是自定义控件的点击事件，通过 customUiResult.widgetId 来识别自定义控件，然后做一些自己的处理
 					}
 				)
 			},
 			showAgreeTip() {
-				let gt = this;
+				let gt = this
 				if (!gt.agree) {
 					uni.showModal({
 						title: '请先同意协议',
 						content: '使用本系统前请先同意协议',
 						showCancel: false,
-						// cancelText: '不同意',
 						confirmText: '我知道了',
 						success(res) {
 							if (res.confirm) {
-								// gt.agree = true;
+								// gt.agree = true
 							}
 						}
 					})
-					return false;
+					return false
 				}
 			},
 			getPhoneNumberCode(e) {
-				let gt = this;
+				let gt = this
 				if (e.detail.errMsg == 'getPhoneNumber:ok') {
-					var code = e.detail.code;
-					var url = "/api/wechat/get_miniprogram_phone";
-					var data = {
+					gt.gtRequest.post("/api/wechat/get_miniprogram_phone", {
 						platform: 'logistics',
-						code: code,
-					};
-					gt.gtRequest.post(url, data).then(res => {
-						var url = "/api/applogin/login_post";
-						var data = {
+						code: e.detail.code
+					}).then(res => {
+						let data = {
 							platform: 'logistics',
 							login_type: 1,
-							mobile: res.result.phone_info.phoneNumber,
-						};
+							mobile: res.result.phone_info.phoneNumber
+						}
 						// #ifdef MP-WEIXIN
-						data.openid = uni.getStorageSync('openId');
+						data.openid = uni.getStorageSync('openId')
 						// #endif
-						gt.gtRequest.post(url, data).then(rs => {
-							var tokenStr = 'token_d';
-							var tokenValidStr = 'tokenValid_d';
-							var environment = uni.getStorageSync('environment');
+						gt.gtRequest.post("/api/applogin/login_post", data).then(rs => {
+							var tokenStr = 'token_d'
+							var tokenValidStr = 'tokenValid_d'
+							var environment = uni.getStorageSync('environment')
 							if (environment == 'prod') {
-								tokenStr = 'token';
-								tokenValidStr = 'tokenValid';
+								tokenStr = 'token'
+								tokenValidStr = 'tokenValid'
 							}
-							uni.setStorageSync(tokenStr, rs.user.login_token);
-							uni.setStorageSync('mobile', rs.user.mobile);
-							uni.setStorageSync('userAuth', rs.user.is_approve);
-							uni.setStorageSync('companyAuth', rs.user.is_company_approve);
-							uni.setStorageSync('userInfo', rs.user);
+							uni.setStorageSync(tokenStr, rs.user.login_token)
+							uni.setStorageSync('mobile', rs.user.mobile)
+							uni.setStorageSync('userAuth', rs.user.is_approve)
+							uni.setStorageSync('companyAuth', rs.user.is_company_approve)
+							uni.setStorageSync('userInfo', rs.user)
+							uni.setStorageSync('jpush_alias', rs.user.jpush_alias)
 							if (rs.user.logistics_id) {
-								var url = "/logistics/company/get_company_info";
-								gt.gtRequest.post(url).then(r => {
-									uni.setStorageSync('companyInfo', r.company_info);
-								});
+								gt.gtRequest.post("/logistics/company/get_company_info").then(r => {
+									uni.setStorageSync('companyInfo', r.company_info)
+								})
 							}
 							let ws_url = uni.getStorageSync('environment') == 'prod' ? 'wss://saasdemo.sansongkeji.com:3021' : 'wss://test.sansongkeji.com:8021'
-							gt.gtWSS.setWsUrl(ws_url);
-							gt.gtWSS.init();
+							gt.gtWSS.setWsUrl(ws_url)
+							gt.gtWSS.init()
 							// if (rs.user.is_approve == 0) {
 							// 	gt.$refs.uToast.show({
 							// 		title: '登录成功！',
 							// 		type: 'success',
-							// 		url: 'pages/login/peopleAuth',
-							// 	});
+							// 		url: 'pages/login/peopleAuth'
+							// 	})
 							// } else {
 								if (rs.user.is_company_approve == 0 || rs.user.is_company_approve == null) {
 									gt.gtRequest.post("/logistics/company/get_company_approve_info").then(res => {
@@ -372,17 +347,13 @@
 											gt.$refs.uToast.show({
 												title: '登录成功！',
 												type: 'success',
-												url: 'pages/login/companyAuth',
-											});
+												url: 'pages/login/companyAuth'
+											})
 										} else {
 											gt.$refs.uToast.show({
 												title: '登录成功！',
-												type: 'success',
-											});
-											// var pages = getCurrentPages();
-											// uni.reLaunch({
-											// 	url: pages[0].$page.fullPath
-											// });
+												type: 'success'
+											})
 											uni.switchTab({
 												url: '/pages/index/index'
 											})
@@ -391,12 +362,8 @@
 								} else {
 									gt.$refs.uToast.show({
 										title: '登录成功！',
-										type: 'success',
-									});
-									// var pages = getCurrentPages();
-									// uni.reLaunch({
-									// 	url: pages[0].$page.fullPath
-									// });
+										type: 'success'
+									})
 									uni.switchTab({
 										url: '/pages/index/index'
 									})
@@ -407,43 +374,36 @@
 				}
 			},
 			goMobileLogin() {
-				// uni.navigateTo({
-				// 	url: './mobileLogin',
-				// });
-				// return false;
-				let gt = this;
-				gt.type = 2;
+				let gt = this
+				gt.type = 2
 			},
 			sendCode() {
-				let gt = this;
+				let gt = this
 				if (gt.second != 60) {
-					return false;
+					return false
 				}
 				if (!gt.$u.test.mobile(gt.mobile)) {
-					gt.$refs.uToast.show({
+					return gt.$refs.uToast.show({
 						title: '手机号格式不正确！',
-						type: 'error',
-					});
-					return false;
+						type: 'error'
+					})
 				}
-				var url = "/api/applogin/get_verify_code";
-				var data = {
+				gt.gtRequest.post("/api/applogin/get_verify_code", {
 					type: 1,
-					mobile: gt.mobile,
-				};
-				gt.gtRequest.post(url, data).then(res => {
-					gt.timeOut();
-				});
+					mobile: gt.mobile
+				}).then(res => {
+					gt.timeOut()
+				})
 			},
 			timeOut() {
-				let gt = this;
+				let gt = this
 				var sid = setInterval(function() {
-					gt.second--;
+					gt.second--
 					if (gt.second == 0) {
-						gt.second = 60;
-						clearInterval(sid);
+						gt.second = 60
+						clearInterval(sid)
 					}
-				}, 1000);
+				}, 1000)
 			},
 			submitForm() {
 				let gt = this;
@@ -452,68 +412,64 @@
 						title: '请先同意协议',
 						content: '使用本系统前请先同意协议',
 						showCancel: false,
-						// cancelText: '不同意',
 						confirmText: '我知道了',
 						success(res) {
 							if (res.confirm) {
-								// gt.agree = true;
+								// gt.agree = true
 							}
 						}
 					})
-					return false;
+					return false
 				}
 				if (!gt.$u.test.mobile(gt.mobile)) {
-					gt.$refs.uToast.show({
+					return gt.$refs.uToast.show({
 						title: '手机号格式不正确！',
-						type: 'error',
-					});
-					return false;
+						type: 'error'
+					})
 				}
 				if (!gt.$u.test.code(gt.code, 4)) {
-					gt.$refs.uToast.show({
+					return gt.$refs.uToast.show({
 						title: '验证码格式不正确！',
-						type: 'error',
-					});
-					return false;
+						type: 'error'
+					})
 				}
-				var url = "/api/applogin/login_post";
-				var data = {
+				let data = {
 					platform: 'logistics',
 					login_type: 2,
 					mobile: gt.mobile,
-					verify_code: gt.code,
-				};
+					verify_code: gt.code
+				}
 				// #ifdef MP-WEIXIN
-				data.openid = uni.getStorageSync('openId');
+				data.openid = uni.getStorageSync('openId')
 				// #endif
-				gt.gtRequest.post(url, data).then(rs => {
-					var tokenStr = 'token_d';
-					var tokenValidStr = 'tokenValid_d';
-					var environment = uni.getStorageSync('environment');
+				gt.gtRequest.post("/api/applogin/login_post", data).then(rs => {
+					var tokenStr = 'token_d'
+					var tokenValidStr = 'tokenValid_d'
+					var environment = uni.getStorageSync('environment')
 					if (environment == 'prod') {
-						tokenStr = 'token';
-						tokenValidStr = 'tokenValid';
+						tokenStr = 'token'
+						tokenValidStr = 'tokenValid'
 					}
-					uni.setStorageSync(tokenStr, rs.user.login_token);
-					uni.setStorageSync('mobile', rs.user.mobile);
-					uni.setStorageSync('userAuth', rs.user.is_approve);
-					uni.setStorageSync('companyAuth', rs.user.is_company_approve);
-					uni.setStorageSync('userInfo', rs.user);
+					uni.setStorageSync(tokenStr, rs.user.login_token)
+					uni.setStorageSync('mobile', rs.user.mobile)
+					uni.setStorageSync('userAuth', rs.user.is_approve)
+					uni.setStorageSync('companyAuth', rs.user.is_company_approve)
+					uni.setStorageSync('userInfo', rs.user)
+					uni.setStorageSync('jpush_alias', rs.user.jpush_alias)
 					if (rs.user.logistics_id) {
-						var url = "/logistics/company/get_company_info";
-						gt.gtRequest.post(url).then(r => {
-							uni.setStorageSync('companyInfo', r.company_info);
-						});
+						gt.gtRequest.post("/logistics/company/get_company_info").then(r => {
+							uni.setStorageSync('companyInfo', r.company_info)
+						})
 					}
 					let ws_url = uni.getStorageSync('environment') == 'prod' ? 'wss://saasdemo.sansongkeji.com:3021' : 'wss://test.sansongkeji.com:8021'
-					gt.gtWSS.setWsUrl(ws_url);
-					gt.gtWSS.init();
+					gt.gtWSS.setWsUrl(ws_url)
+					gt.gtWSS.init()
 					// if (rs.user.is_approve == 0) {
 					// 	gt.$refs.uToast.show({
 					// 		title: '登录成功！',
 					// 		type: 'success',
-					// 		url: 'pages/login/peopleAuth',
-					// 	});
+					// 		url: 'pages/login/peopleAuth'
+					// 	})
 					// } else {
 						if (rs.user.is_company_approve == 0 || rs.user.is_company_approve == null) {
 							gt.gtRequest.post("/logistics/company/get_company_approve_info").then(res => {
@@ -521,39 +477,30 @@
 									gt.$refs.uToast.show({
 										title: '登录成功！',
 										type: 'success',
-										url: 'pages/login/companyAuth',
-									});
+										url: 'pages/login/companyAuth'
+									})
 								} else {
 									gt.$refs.uToast.show({
 										title: '登录成功！',
-										type: 'success',
-									});
-								// 	var pages = getCurrentPages();
-								// 	console.debug(pages)
-								// 	uni.reLaunch({
-								// 		url: pages[0].$page.fullPath
-								// 	});
+										type: 'success'
+									})
+									uni.switchTab({
+										url: '/pages/index/index'
+									})
 								}
-								uni.switchTab({
-									url: '/pages/index/index'
-								})
 							})
 						} else {
 							gt.$refs.uToast.show({
 								title: '登录成功！',
-								type: 'success',
-							});
-							// var pages = getCurrentPages();
-							// uni.reLaunch({
-							// 	url: pages[0].$page.fullPath
-							// });
+								type: 'success'
+							})
 							uni.switchTab({
 								url: '/pages/index/index'
 							})
 						}
 					// }
 				})
-			},
+			}
 		}
 	}
 </script>

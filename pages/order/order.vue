@@ -351,6 +351,7 @@
 			return {
 				// refreshStatus:false,
 				searchVal: '',
+				searchStatus: '',
 				historyShow: false,
 				historyList: [],
 				screenShow: false,
@@ -476,8 +477,12 @@
 		onShow() {
 			let gt = this;
 			var orderSearchVal = uni.getStorageSync('orderSearchVal');
+			var orderSearchStatus = uni.getStorageSync('orderSearchStatus');
 			gt.searchVal = orderSearchVal;
 			uni.removeStorageSync('orderSearchVal');
+			gt.currentTab = orderSearchStatus
+			gt.statusIndex = orderSearchStatus
+			uni.removeStorageSync('orderSearchStatus');
 			setTimeout(function() {
 				gt.reGetOrderList();
 			}, 500);
@@ -710,7 +715,7 @@
 				var data = {
 					page: gt.page,
 					limit: gt.size,
-					search_key: gt.searchVal,
+					search_key: gt.searchVal
 				};
 				if (gt.currentTab == 1) {
 					data.pay_status = 0;

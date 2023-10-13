@@ -1,17 +1,56 @@
 
 <script>
+	// #ifdef APP-PLUS
+	const jpushModule = uni.requireNativePlugin('JG-JPush')
+	// #endif
 	export default {
 		onLaunch: function(options) {
-			var userAuth = uni.getStorageSync('userAuth')
-			var companyAuth = uni.getStorageSync('companyAuth')
-			var checkStatus = uni.getStorageSync('checkStatus')
-			if(!userAuth && !companyAuth && (checkStatus === '' || checkStatus === 2)) {
-				// #ifdef APP-PLUS
+			// #ifdef APP-PLUS
+			let token_d = uni.getStorageSync('token_d')
+			if(!token_d) {
 				uni.reLaunch({
 					url: "/pages/login/login"
 				})
-				// #endif
 			}
+			/* 极光推送 */
+			jpushModule.setLoggerEnable(true)
+			jpushModule.initJPushService()
+			jpushModule.addConnectEventListener(result=>{
+				let connectEnable = result.connectEnable
+				console.log("jpush连接", result.connectEnable)
+			})
+			jpushModule.addNotificationListener(result=>{
+				let notificationEventType = result.notificationEventType
+				let messageID = result.messageID
+				let title = result.title
+				let content = result.content
+				let extras = result.extras
+				// if (result.notificationEventType == "notificationOpened") {
+				//     // 点击窗口通知栏推送的消息 跳转指定页面
+				// 	uni.switchTab({
+				// 		url: "/pages/message/message"
+				// 	})
+				// }
+			})
+			jpushModule.getRegistrationID(result => {
+				console.log("注册ID", result.registerID)
+				if(result.registerID){
+					uni.setStorageSync("register_id", result.registerID)
+				}
+			})
+			jpushModule.addCustomMessageListener(result=>{
+				console.log("自定义消息", result)
+				let newArr = JSON.parse(uni.getStorageSync("newMsgArr") || '[]')
+				if(!newArr.find(item=> item.messageID == result.messageID)) {
+					uni.showTabBarRedDot({ // 显示红点
+						index: 3
+					})
+					result.content = JSON.parse(result.content) 
+					newArr.push(result)
+					uni.setStorageSync("newMsgArr", JSON.stringify(newArr))
+				}
+			})
+			// #endif
 			uni.loadFontFace({
 				global: true,
 				family: 'PingFangSC-Medium',
@@ -94,13 +133,11 @@
 			
 			let gt = this;
 			// uni.setStorageSync('audioStatus', false);
-			
 
 			// #ifdef APP-PLUS
 			plus.screen.lockOrientation("portrait-primary")
 			// #endif
-
-
+			
 			// var url = "/logistics/app/get_global_data";
 			// uni.request({
 			// 	url: apiDomain + url,
@@ -112,7 +149,6 @@
 			// 		}
 			// 	}
 			// })
-			
 			
 			// #ifdef MP-WEIXIN
 				var openId = uni.getStorageSync('openId');
@@ -152,7 +188,15 @@
 		},
 		onShow: function(options) {
 			let gt = this;
-			
+			// #ifdef APP-PLUS
+			let jpush_alias = uni.getStorageSync('jpush_alias');
+			if (jpush_alias) {
+				jpushModule.setAlias({
+					'alias': jpush_alias,
+					'sequence': 1
+				})
+			}
+			// #endif
 			var pcaList = uni.getStorageSync('pcaList');
 			if (!pcaList) {
 				let baseUrl = uni.getStorageSync('apiDomain')
