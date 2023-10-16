@@ -514,16 +514,16 @@
 				</swiper-item>
 			</swiper>
 		</view>
-		<view class="" v-if="img_path && !currentTab">
+		<view v-if="img_path" :style="{display: !currentTab ? '' : 'none'}">
 			<dragButton :viewWidth="viewWidth" :viewHeight="viewHeight" :viewTop="viewTop"
 				 @touchstart='touchstart' @touchend='touchend' :canDocking='false'>
 				<view class="videoView" :style="{width: viewWidth+'px', height: viewHeight+'px'}">
 					<view class="videoClose">
-						<view class="closeIcon" @click.stop="closeVideo">
-							<u-icon name="close" color="#fff" size="28"></u-icon>
-						</view>
+						<cover-view class="closeIcon" @click.stop="closeVideo" :style="{display: isMove ? '':'none'}">
+							<cover-image class="closeImg" :src="gtCommon.getOssImg('sansong/close1.png')"></cover-image>
+						</cover-view>
 					</view>
-					<video :src="img_path" :controls="false" autoplay loop object-fit='cover' :muted="true" :style="{display: isMove ? '':'none'}">
+					<video :src="img_path" :controls="false" autoplay loop object-fit='fill' :muted="true" :style="{display: isMove ? '':'none'}">
 						<cover-view class="viewMask" @click.stop="videoMore"></cover-view>
 					</video>
 				</view>
@@ -575,8 +575,8 @@
 				over: false,
 				videos: [],
 				img_path: '',
-				viewWidth: 180,
-				viewHeight: 130,
+				viewWidth: 150,
+				viewHeight: 210,
 				viewTop: 45,
 				isMove: true
 			}
@@ -797,14 +797,18 @@
 				border-radius: 8rpx;
 				overflow: hidden;
 				.videoClose {
-					height: 60rpx;
-					line-height: 60rpx;
-					text-align: right;
+					display: flex;
+					justify-content: flex-end;
 					.closeIcon {
-						display: inline-block;
-						width: 60rpx;
+						width: 80rpx;
 						height: 60rpx;
-						text-align: center;
+						display: flex;
+						align-items: center;
+						justify-content: center;
+						.closeImg {
+							width: 30rpx;
+							height: 30rpx;
+						}
 					}
 				}
 				video {
