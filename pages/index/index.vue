@@ -3,50 +3,35 @@
 		<view class="con_toast">
 			<u-toast ref="uToast" />
 		</view>
-
 		<view class="con_mask">
 			<u-mask :show="maskShow"></u-mask>
 		</view>
 		<view class="con_listenStatus_tabSwiper">
 			<view class="con_listenAudio">
 				<view class="con_listenStatus" @click="changeListenStatus" v-if="companyAuth">
-					<view class="con_listen" v-if="listenStatus">
+					<view class="con_listen" :style="{display: listenStatus ? '':'none'}">
 						<view class="con_text">
 							<text>听单中 ·</text>
 						</view>
-						<view class="con_icon">
-
-						</view>
 					</view>
-					<view class="con_unListen" v-else>
+					<view class="con_unListen" :style="{display: listenStatus ? 'none':''}">
 						<view class="con_text">
 							<text>未听单 ·</text>
 						</view>
-						<view class="con_icon">
-
-						</view>
 					</view>
 				</view>
-				<view class="con_audioStatus" @click="audioSwitch" v-if="listenStatus">
-					<image :src="gtCommon.getOssImg('index/openAudio.png')" mode="widthFix" v-if="audioStatus"></image>
-					<image :src="gtCommon.getOssImg('index/closeAudio.png')" mode="widthFix" v-else></image>
+				<view class="con_audioStatus" @click="audioSwitch" :style="{display: listenStatus ? '':'none'}">
+					<!-- <image :src="gtCommon.getOssImg('index/openAudio.png')" mode="widthFix" :style="{display: audioStatus ? '':'none'}"></image>
+					<image :src="gtCommon.getOssImg('index/closeAudio.png')" mode="widthFix" :style="{display: audioStatus ? 'none':''}"></image> -->
+					<view class="openAudio" :style="{backgroundImage: `url(${gtCommon.getOssImg('index/openAudio.png')})`,display: audioStatus ? '':'none'}"></view>
+					<view class="closeAudio" :style="{backgroundImage: `url(${gtCommon.getOssImg('index/closeAudio.png')})`,display: audioStatus ? 'none':''}"></view>
 				</view>
-				<!-- <view class="mobile">
-					<text>{{lng}}</text>
-					<text>-{{lat}}</text>
-				</view> -->
-				<!-- {{clientId}} -->
 			</view>
-
 			<view class="con_tabs">
 				<u-tabs-swiper ref="uTabs" :list="tabList" :current="currentTab" @change="tabsChange" :is-scroll="false"
 					swiperWidth="750"></u-tabs-swiper>
 			</view>
 		</view>
-
-		<!-- <view class="con_notice">
-			<u-notice-bar mode="horizontal" :list="noticeList" color="#fff" bg-color="#FF6067"></u-notice-bar>
-		</view> -->
 		<view class="con_tip">
 			<view class="con_tipItem" v-if="!companyAuth && checkStatus === 0">
 				<view class="con_iconText">
@@ -536,7 +521,6 @@
 					name: '指派'
 				}],
 				currentTab: 0,
-				noticeList: [],
 				companyAuth: false,
 				lineNum: 0,
 				page: 1,
@@ -1121,6 +1105,13 @@
 						width: 64rpx;
 						height: 64rpx;
 						margin: 16rpx 8rpx;
+						.openAudio,
+						.closeAudio {
+							width: 100%;
+							height: 100%;
+							background-size: cover;
+							background-repeat: no-repeat;
+						}
 					}
 				}
 				.u-tabs-item {

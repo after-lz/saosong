@@ -1,7 +1,7 @@
 <template>
 	<view class="gt_content">
 		<view class="con_swiper">
-			<u-swiper :list="swiperList" name="picurl" height="360"></u-swiper>
+			<u-swiper :list="swiperList" name="picurl" height="380" img-mode='scaleToFill'></u-swiper>
 		</view>
 		<view class="con_menu">
 			<view class="con_list">
