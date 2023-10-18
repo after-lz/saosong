@@ -34,7 +34,7 @@
 				<scroll-view scroll-y style="height: 100%">
 					<view class="card card0">
 						<view class="card_title">下单量</view>
-						<data-chart height="500" :opts='opts' :chartData='chartData'></data-chart>
+						<data-chart height="500" :opts='opts' :chartData='chartData' :pieDemo="pieDemo"></data-chart>
 					</view>
 					<view class="row">
 						<view class="card">
@@ -130,7 +130,8 @@ export default {
 				{
 					name: "自定义1/总单量",
 					data: [],
-					sum: []
+					sum: [],
+					format: 'yAxisDemo1'
 				}
 			]
 		}
@@ -138,8 +139,10 @@ export default {
 			categories: [],
 			series: [
 				{
-					name: "下单量",
-					data: []
+					name: "自定义2/下单量",
+					data: [],
+					sum: [],
+					format: 'yAxisDemo1'
 				}
 			]
 		}

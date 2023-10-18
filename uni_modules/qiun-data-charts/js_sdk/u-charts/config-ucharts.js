@@ -54,7 +54,7 @@ const cfu = {
   "option":{},
   //下面是自定义format配置，因除H5端外的其他端无法通过props传递函数，只能通过此属性对应下标的方式来替换
   "formatter":{
-    "yAxisDemo1":function(val, index, opts){return val+'元'},
+    "yAxisDemo1":function(val, index, opts){return ''},
     "yAxisDemo2":function(val, index, opts){return val.toFixed(2)},
     "xAxisDemo1":function(val, index, opts){return val+'年';},
     "xAxisDemo2":function(val, index, opts){return formatDateTime(val,'h:m')},
@@ -69,6 +69,8 @@ const cfu = {
     "pieDemo":function(val, index, series, opts){
 	  if(val.name.split('/')[0]=="自定义1") {
 		return "自定义1/" + index + '/总单量：'+opts.series[0].data[series]+'/总金额：'+opts.series[0].sum[series]
+	  } else if(val.name.split('/')[0]=="自定义2") {
+		return index + ' 下单量：'+opts.series[0].data[series]
 	  } else if(index !== undefined){
         return series[index].name+'：'+series[index].data+'元'
       }

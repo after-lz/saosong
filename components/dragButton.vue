@@ -126,7 +126,9 @@
 					}
 					this.isRemove = false
 				}
-				this.$emit('touchend')
+				setTimeout(()=> {
+					this.$emit('touchend')
+				}, 0)
 			},
 			//点击按钮
 			clickBtn() {
