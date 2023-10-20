@@ -7,7 +7,7 @@
 		<view class="con_swiper">
 			<swiper :current="currentTab" @animationfinish="animationfinish">
 				<swiper-item class="swiper-item" id="companyInfo">
-					<scroll-view scroll-y="true" class="con_scrollView">
+					<scroll-view scroll-y="true" class="con_scrollView" :class="flag ? 'cHeight':''">
 						<view class="con_swiper">
 							<u-swiper :list="companyImgs" mode="number" indicator-pos="bottomRight" height="400"
 								border-radius="0" @click="preview"></u-swiper>
@@ -220,6 +220,42 @@
 							</view>
 						</view>
 					</scroll-view>
+					<view class="con_bottom" v-if="flag">
+						<view class="flex_left">
+							<view class="left_icon" @click="toMapApp">
+								<view class="left_img">
+									<u-image :src="gtCommon.getOssImg('message/navigation.png')" mode="widthFix"></u-image>
+								</view>
+								<view class="left_name">
+									<text>导航</text>
+								</view>
+							</view>
+							<view class="left_icon" @click="starChange">
+								<view v-show="!starTrue">
+									<u-icon name="star" size="50"></u-icon>
+								</view>
+								<view v-show="starTrue">
+									<u-icon name="star-fill" size="50" color="#FFBF27"></u-icon>
+								</view>
+								<view class="left_name">
+									<text>收藏</text>
+								</view>
+							</view>
+							<view class="left_icon" @click="callPhone('(0510)83742099')">
+								<view class="left_img">
+									<u-image :src="gtCommon.getOssImg('message/service.png')" mode="widthFix"></u-image>
+								</view>
+								<view class="left_name">
+									<text>客服</text>
+								</view>
+							</view>
+						</view>
+						<view class="flex_right">
+							<view class="right_btn" @click="callModal">
+								<text>立即联系</text>
+							</view>
+						</view>
+					</view>
 				</swiper-item>
 				<swiper-item class="swiper-item" id="lineInfo">
 					<view class="con_empty" v-if="dataList.length == 0">
@@ -514,8 +550,8 @@
 				</swiper-item>
 			</swiper>
 		</view>
-		<view v-if="img_path" :style="{display: !currentTab ? '' : 'none'}">
-			<dragButton :viewWidth="viewWidth" :viewHeight="viewHeight" :viewTop="viewTop"
+		<view v-if="showVideo && img_path" :style="{display: !currentTab ? '' : 'none'}">
+			<dragButton :viewWidth="viewWidth" :viewHeight="viewHeight" :viewTop="viewTop" :other='other'
 				 @touchstart='touchstart' @touchend='touchend' :canDocking='false'>
 				<view class="videoView" :style="{width: viewWidth+'px', height: viewHeight+'px'}">
 					<view class="videoClose">
@@ -530,12 +566,171 @@
 			</dragButton>
 		</view>
 		<u-toast ref="uToast" />
+		<!-- 电话弹层 -->
+		<u-popup v-model="showCall" @close="closeCall" mode="bottom" border-radius="14">
+		    <view class="call_view">
+		       <view class="call_item" v-if="name" @click="gtCommon.callMobile(mobile)">
+					<view class="item_name">
+						<text>负责人</text>
+					</view>
+					<view class="item_val">
+						<text>{{mobile}}</text>
+					</view>
+		       </view>
+			   <view class="call_item" v-if="phone" @click="callPhone(phone)">
+					<view class="item_name">
+						<text>座机</text>
+					</view>
+					<view class="item_val">
+						<text>{{phone}}</text>
+					</view>
+			   </view>
+			   <view class="call_item" @click="closeCall">
+					<view class="item_name">
+						<text>取消</text>
+					</view>			
+			   </view>
+			</view>
+		</u-popup>
+		<!-- 分享 -->
+		<u-popup v-model="showShare" mode="bottom" border-radius="14" :mask-close-able='false' :mask="false">
+			<view class="share_modal">
+				<view class="share_top">
+					<view class="top_title">
+						<text>分享</text>
+					</view>
+					<view @click="closeShare">
+						<u-icon name="close" color="#000000" size="30"></u-icon>
+					</view>
+				</view>
+				<view class="share_but">
+					<view class="but_content" v-if="showType">
+						<view class="item-share" @click="generateCard">
+							<view class="share-icon">
+								<image :src="gtCommon.getOssImg('sansong/shareMp.png')"></image>
+							</view>
+							<view>
+								<text>生成名片</text>
+							</view>
+						</view>
+						<view class="item-share" @click="html2canvas.create">
+							<view class="share-icon">
+								<image :src="gtCommon.getOssImg('sansong/shareHb.png')"></image>
+							</view>
+							<view>
+								<text>生成海报</text>
+							</view>
+						</view>
+					</view>
+					<view class="but_content" v-else>
+						<view class="item-share" @click="shareFriend">
+							<view class="share-icon">
+								<image :src="gtCommon.getOssImg('sansong/shareWx.png')"></image>
+							</view>
+							<view>
+								<text>微信</text>
+							</view>
+						</view>
+						<view class="item-share" @click="shareGroup">
+							<view class="share-icon">
+								<image :src="gtCommon.getOssImg('sansong/sharePy.png')"></image>
+							</view>
+							<view>
+								<text>朋友圈</text>
+							</view>
+						</view>
+						<view class="item-share" @click="saveImg">
+							<view class="share-icon">
+								<image :src="gtCommon.getOssImg('sansong/shareBc.png')"></image>
+							</view>
+							<view>
+								<text>保存</text>
+							</view>
+						</view>
+					</view>
+				</view>
+			</view>
+		</u-popup>
+		<!-- 海报 -->
+		<u-mask :show="showPoster">	
+			<view class="poster-modal">
+				<view class="poster-view">
+					<view class="main-view" id="poster">
+						<view class="top-view" id="topPic">
+							<u-image :src="posterShareImg" width="100%" height="360" v-if="data.company_info"></u-image>
+						</view>
+						<view class="bot-view">
+							<view class="company-view">
+								<view class="left">
+									<u-image :src="posterShareImg" width="136" height="136" v-if="data.company_info"></u-image>
+								</view>
+								<view class="right">
+									<view class="poster-cop">{{ companyName }}</view>
+									<view class="poster-num" v-if="data.company_info">
+										<view class="item-num">完单量 {{ data.company_info.order_count }}</view>
+										<view class="item-num">浏览量 {{ data.company_info.visitor_count }}</view>
+										<view class="item-num">收藏量 {{ data.company_info.collect_count }}</view>
+									</view>
+								</view>
+							</view>
+							<view class="other-view">
+								<view class="left">
+									<u-image :src="zxImg" width="40" height="40"></u-image>
+								</view>
+								<view class="right">
+									热门专线: {{ lines.join('、') || [] }}
+								</view>
+							</view>
+							<view class="other-view">
+								<view class="left">
+									<u-image :src="dhImg" width="40" height="40"></u-image>
+								</view>
+								<view class="right">
+									联系电话: {{ mobile }} {{ phone }}
+								</view>
+							</view>
+							<view class="other-view">
+								<view class="left">
+									<u-image :src="dzImg" width="40" height="40"></u-image>
+								</view>
+								<view class="right">
+									<text>公司地址: {{ address }}</text>
+								</view>
+							</view>
+							<view class="share-but-view">
+								<view class="left">
+									<view class="flex-con">
+										<u-image :src="companyImg" width="180" height="180"></u-image>
+									</view>
+									<view class="tip">
+										<text>扫码查看物流公司</text>
+									</view>
+								</view>
+								<view class="right">
+									<view class="flex-con">
+										<u-image :src="dcImg" width="180" height="180"></u-image>
+									</view>
+									<view class="tip">
+										<text>发货取货,立即查询</text>
+									</view>
+								</view>
+							</view>
+							<view class="flex-con">发货 找物流 就上 伞送</view>
+						</view>
+					</view>
+				</view>
+			</view>
+		</u-mask>
+		<canvas canvas-id="qrcodeCompany" :style="{width: `${qrcodeSize}px`, height: `${qrcodeSize}px`}" />
+		<canvas canvas-id="qrcodePick" :style="{width: `${qrcodeSize}px`, height: `${qrcodeSize}px`}" />
 	</view>
 </template>
 
 <script>
 	import EvaluateList from './evaluateList'
 	import DragButton from '@/components/dragButton.vue'
+	import uQRCode from '@/common/uqrcode.js'
+	import { base64ToPath, pathToBase64 } from '@/common/image-tools.js'
 	export default {
 		components: { EvaluateList, DragButton },
 		data() {
@@ -578,14 +773,81 @@
 				viewWidth: 150,
 				viewHeight: 210,
 				viewTop: 45,
-				isMove: true
+				other: 0,
+				isMove: true,
+				starTrue: false,
+				flag: false,
+				showCall: false,
+				showShare: false,
+				showType: true,
+				posterUrl: '',
+				showPoster: false,
+				zxImg: '',
+				dhImg: '',
+				dzImg: '',
+				companyImg: '',
+				posterShareImg: '',
+				dcImg: '',
+				qrcodeSize: 100,
+				inviteCompanyUrl: '',
+				invitePickUpUrl: '',
+				showVideo: true,
+				lines: []
 			}
+		},
+		onNavigationBarButtonTap(e) {
+			const that = this
+			uni.showLoading({
+				title: '二维码生成中',
+				mask: true
+			})
+			uQRCode.make({
+				canvasId: 'qrcodeCompany',
+				text: that.inviteCompanyUrl,
+				size: that.qrcodeSize,
+				margin: 10,
+				success: res => {
+					// console.log("----", res)
+					// that.turnBase64Image(res, 'companyImg')
+					that.companyImg = res
+					uQRCode.make({
+						canvasId: 'qrcodePick',
+						text: that.invitePickUpUrl,
+						size: that.qrcodeSize,
+						margin: 10,
+						success: async re => {
+							// that.turnBase64Image(re, 'dcImg')
+							await that.getLineInfo()
+							that.dcImg = re
+							that.showShare = true
+							that.showPoster = true
+							that.showVideo = false
+							var webView = this.$mp.page.$getAppWebview()
+							let titleNView = webView.getTitleNView()
+							titleNView && titleNView.hide()
+						},
+						fail: () => {
+							uni.hideLoading()
+						}
+					})
+				}
+			})
 		},
 		async onLoad(option) {
 			let gt = this;
-			gt.logistics_id = option.logistics_id ? option.logistics_id : uni.getStorageSync("companyInfo").logistics_id
+			if(option.logistics_id) {
+				gt.logistics_id = option.logistics_id
+				if(gt.logistics_id != uni.getStorageSync("companyInfo").logistics_id) {
+					gt.flag = true
+					gt.other = 66
+				}
+			} else {
+				gt.logistics_id = uni.getStorageSync("companyInfo").logistics_id
+			}
 			// gt.tabList[2].name = `评价（${uni.getStorageSync("companyInfo").comment_num}）`
 			let url = gt.logistics_id ? "/logistics/company/get_company_infother" : "/logistics/company/get_company_info"
+			gt.inviteCompanyUrl = "https://saasdemo.sansongkeji.com/company?logistics_id="+gt.logistics_id
+			gt.invitePickUpUrl = "https://saasdemo.sansongkeji.com/order?logistics_id="+gt.logistics_id
 			await gt.getCompanyInfo(url);
 			if(url == '/logistics/company/get_company_info') {
 				gt.logistics_id = gt.data.company_info.logistics_id
@@ -599,6 +861,9 @@
 			}
 			gt.gtLineList();
 			gt.getPacketList()
+			gt.turnBase64Image("../../../static/img/shareZx.png", 'zxImg')
+			gt.turnBase64Image("../../../static/img/shareDh.png", 'dhImg')
+			gt.turnBase64Image("../../../static/img/shareDz.png", 'dzImg')
 		},
 		methods: {
 			getPacketList() {
@@ -611,6 +876,182 @@
 					gt.packetList = [...gt.packetList, ...res.list]
 					if(res.list.length < gt.params.limit) gt.over = true
 				})
+			},
+			// 导航
+			toMapApp() {
+				let gt = this
+				gt.gtCommon.openLocation(+gt.data.company_info.latitude, +gt.data.company_info.longitude)
+			},
+			// 收藏
+			starChange() {
+				let gt = this
+				gt.starTrue = !gt.starTrue
+			},
+			// 立即联系
+			callModal() {
+				this.showVideo = false
+				this.showCall = true
+			},
+			// app端 关闭分享弹层
+			closeShare() {
+				this.showShare = false
+				var webView = this.$mp.page.$getAppWebview()
+				let titleNView = webView.getTitleNView()
+				titleNView && titleNView.show()
+				this.showType = true
+				this.showPoster = false
+				// this.showVideo = true
+			},
+			// app端 生成名片分享
+			generateCard() {
+				let gt = this
+				uni.share({
+					provider: 'weixin',
+					scene: "WXSceneSession",
+					type: 5,
+					imageUrl: gt.data.company_info.company_pic,
+					title: '伞送货运',
+					miniProgram:{
+						id: 'gh_f6589072e372',
+						path: "page_order/companyDetails/index?logistics_id="+gt.logistics_id+"&all_outlets=0",
+						type: 0,
+						webUrl: "http://uniapp.dcloud.io"
+					},
+					complete:function(res){
+						// console.log("success:" + JSON.stringify(res))
+						gt.closeShare()
+					}
+				})
+			},
+			// 分享时获取专线信息
+			async getLineInfo() {
+				let gt = this
+				gt.lines = []
+				await gt.gtRequest.post("/logistics/specialline/get_special_line_range", {
+					logistics_id: gt.logistics_id
+				}).then(res => {
+					res.range.forEach(item=> {
+						item.child.forEach(obj=> {
+							gt.lines.push(obj.name)
+						})
+					})
+				})
+			},
+			// 分享给 微信好友
+			shareFriend() {
+				uni.share({
+					provider:'weixin',
+					scene:"WXSceneSession",
+					type: 2,
+					imageUrl: this.posterUrl,
+					success:function(res){
+						// console.log("success:" + JSON.stringify(res), this.posterUrl)
+					},
+					fail:function(err){
+						// console.log("fail:" + JSON.stringify(err), this.posterUrl)
+						if (err.errCode === 2) {
+						    // 微信未登录，唤起登录
+						    uni.login({
+						        provider: 'weixin',
+						        success: (re) => {
+						            console.log("登录成功！")
+						        },
+						        fail: (er) => {
+						            // 登录失败回调
+									console.log("登录失败！")
+						        }
+						    })
+						}
+					},
+					complete:function(res){
+						this.closeShare()
+					}
+				})
+			},
+			// 分享给 微信朋友圈
+			shareGroup() {
+				uni.share({
+					provider:'weixin',
+					scene:"WXSceneTimeline",
+					type: 2,
+					imageUrl: this.posterUrl,
+					success:function(res){
+						// console.log("success:" + JSON.stringify(res))
+					},
+					fail:function(err){
+						// console.log("fail:" + JSON.stringify(err))
+						if (err.errCode === 2) {
+						    // 微信未登录，唤起登录
+						    uni.login({
+						        provider: 'weixin',
+						        success: (re) => {
+						            console.log("登录成功！")
+						        },
+						        fail: (er) => {
+						            // 登录失败回调
+									console.log("登录失败！")
+						        }
+						    })
+						}
+					},
+					complete:function(res){
+						this.closeShare()
+					}
+				})
+			},
+			// 保存图片
+			saveImg() {
+				//获取相册授权
+				const _self = this
+				uni.showModal({
+					title: '提示',
+					content: '确定保存到相册吗',
+					success: function (res) {
+						if (res.confirm) {
+							uni.saveImageToPhotosAlbum({
+								filePath: _self.posterUrl,
+								success: (res) => {
+									uni.showModal({
+										title: '保存成功！',
+										content: '图片已保存到本地相册',
+										showCancel: false,
+										success: (res) => {
+											if (res.confirm) {
+												uni.showToast({
+													title: '图片保存成功'
+												})
+											}
+										}
+									})
+								},
+								fail: (err) => {
+									console.log(err)
+								}
+							})						
+						}
+					}
+				})							
+			},
+			// 将图片转为base 64 位url
+			turnBase64Image(img, key) {
+				uni.getImageInfo({
+					src: img,
+					success: image => {
+						pathToBase64(image.path).then(base64 => {
+							this[key] = base64
+							// console.log("转换成功", base64)
+						}).catch(error => {
+							console.log('转换失败', error)
+						})
+					},
+					fail: err => {
+					  console.log('将本地图片转为base 64报错', err)
+					}
+				})
+			},
+			closeCall() {
+				this.showCall =false
+				// this.showVideo = true
 			},
 			loadMore() {
 				let gt = this
@@ -656,6 +1097,7 @@
 				gt.gtRequest.post(url, {
 					logistics_id: gt.logistics_id
 				}).then(res => {
+					gt.turnBase64Image(res.company_info.company_pic, 'posterShareImg')
 					var imgList = [];
 					res.company_imgs_all.map(item => {
 						item = item + '?x-oss-process=style/sansong_app';
@@ -779,6 +1221,69 @@
 						city = value
 					}
 					return city
+				}
+			},
+			showLoading() {
+				uni.showLoading({
+					title: '正在生成海报',
+					mask: true
+				})	
+			},
+			async renderFinish(base64) {
+				let gt = this
+				let oImg = base64.replace(/[\r\n]/g, '')
+				// base64ToPath(oImg).then(res=> {
+				// 	console.log("*****", res)
+				// 	uni.getImageInfo({
+				// 		src: res,
+				// 		success: (re)=> {
+				// 			console.log("/////", re.path)
+				// 			gt.gtRequest.upload(re.path).then(r => {
+				// 				console.log("-----", r)
+				// 				gt.posterUrl = r.src
+				// 				gt.showType = false
+				// 			})
+				// 		}
+				// 	})
+				// })
+				await base64ToPath(oImg).then(res => {
+					gt.posterUrl = res
+					gt.showType = false
+					uni.hideLoading()
+				})	
+			}
+		}
+	}
+</script>
+
+<script module="html2canvas" lang="renderjs">
+import html2canvas from 'html2canvas'
+	export default {
+		data() {
+			return {
+				
+			}
+		},
+		methods: {
+			async create() {
+				try {
+					this.$ownerInstance.callMethod('showLoading', true);
+					const timeout = setTimeout(async ()=> {
+						const shareContent = document.querySelector("#poster")
+						const canvas = await html2canvas(shareContent,{
+							width: shareContent.clientWidth,//设置canvas尺寸与所截图尺寸相同，防止白边
+							height: shareContent.clientHeight,//防止白边
+							scrollY: 0,
+							scrollX: 0,
+							useCORS: true,
+							allowTaint: true
+						});
+						const base64 = canvas.toDataURL('image/jpeg', 0.5);
+						this.$ownerInstance.callMethod('renderFinish', base64);
+						clearTimeout(timeout);
+					}, 500);
+				} catch(error){
+					console.log(error)
 				}
 			}
 		}
@@ -929,7 +1434,6 @@
 								background: #fff;
 								padding: 1rpx;
 								margin-top: 20rpx;
-
 								.con_title {
 									font-size: 32rpx;
 									font-family: PingFangSC-Medium, PingFang SC;
@@ -985,6 +1489,52 @@
 											}
 										}
 									}
+								}
+							}
+						}
+						.cHeight {
+							height: calc(100vh - 88rpx - 132rpx);
+						}
+						.con_bottom {
+							height: 132rpx;
+							position: fixed;
+							width: 100%;
+							bottom: 0;
+							background-color: #fff;
+							display: flex;
+							align-items: center;
+							padding: 0 16rpx;
+							.flex_left {
+								display: flex;
+								align-items: center;
+								.left_icon {
+									width: 110rpx;
+									display: flex;
+									flex-wrap: wrap;
+									justify-content: center;
+									.left_img {
+										width: 40rpx;
+										height: 40rpx;
+									}
+									.left_name {
+										width: 100%;
+										color: #909399;
+										text-align: center;
+										margin-top: 8rpx;
+									}
+								}
+							}
+							.flex_right {
+								width: 100%;
+								.right_btn {
+									width: fit-content;
+									height: 100rpx;
+									line-height: 100rpx;
+									background-color: #FFBF27;
+									color: #fff;
+									padding: 0 44rpx;
+									border-radius: 16rpx;
+									margin: 0 auto;
 								}
 							}
 						}
@@ -1189,6 +1739,144 @@
 										}
 									}
 								}
+							}
+						}
+					}
+				}
+			}
+			.call_view {
+				padding-top: 8rpx;
+				.call_item {
+					padding: 32rpx 0;
+					border-bottom: 1rpx solid #e5e5e5;
+					&:last-child {
+						border-bottom: none;
+					}
+					.item_name {
+						text-align: center;
+					}
+					.item_val {
+						text-align: center;
+						color: $gtProjectColor;
+					}
+				}
+			}
+			.share_modal {
+				height: 250rpx;
+				padding: 20rpx 40rpx;
+				font-family: PingFangSC-Medium, PingFang SC;
+				.share_top {
+					display: flex;
+					align-items: center;
+					justify-content: space-between;
+					margin-bottom: 40rpx;
+					.top_title {
+						font-size: 32rpx;
+						font-weight: 700;
+					}
+				}
+				.share_but {
+					padding: 0 100rpx;
+					.but_content {
+						display: flex;
+						justify-content: space-between;
+						align-items: center;
+						.share-icon {
+							width: 64rpx;
+							height: 64rpx;
+							margin: 0 auto 20rpx;
+							image {
+								width: 100%;
+								height: 100%;
+							}
+						}
+					}
+				}
+			}
+			.poster-modal{
+				width: 100%;
+				height: 100vh;
+				display: flex;
+				justify-content: center;
+				margin-top: 20rpx;
+				font-family: PingFangSC-Medium, PingFang SC;
+				.poster-view{
+					width: 700rpx;
+					// height: calc(100% - 270rpx);
+					height: auto;
+					overflow: hidden;
+					background-color: #485EF4;
+					.main-view{
+						margin: 30rpx;
+						border-radius: 32rpx;
+						background-color: #FFFFFF;
+						overflow: hidden;
+						.bot-view {
+							padding: 24rpx;
+							.company-view{
+								width: 100%;
+								height: 136rpx;
+								margin-bottom: 24rpx;
+								display: flex;
+								.left{
+									width: 136rpx;
+									height: 136rpx;
+									margin-right: 24rpx;
+									border-radius: 8rpx;
+									overflow: hidden;
+								}
+								.right {
+									flex: 1;
+									padding: 15rpx 0;
+									.poster-cop {
+										font-size: 32rpx;
+										font-weight: 700;
+									}
+									.poster-num{
+										display: flex;
+										margin-top: 28rpx;
+										.item-num {
+											margin-right: 15rpx;
+											font-size: 24rpx;
+											color: #909399;
+										}
+									}
+								}
+							}
+							.other-view {
+								width: 100%;
+								margin-bottom: 16rpx;
+								display: flex;
+								justify-content: space-between;
+								// align-items: center;
+								font-size: 24rpx;
+								.left{
+									width: 40rpx;
+									height: 40rpx;
+									margin-right: 24rpx;
+								}
+								.right{
+									flex: 1;
+								}
+							}
+							.share-but-view {
+								width: 100%;
+								padding-bottom: 24rpx;
+								display: flex;
+								justify-content: space-between;
+								.left {
+									flex: 1;
+								}
+								.right {
+									flex: 1;
+								}
+								.tip {
+									text-align: center;
+								}
+							}
+							.flex-con {
+								display: flex;
+								justify-content: center;
 							}
 						}
 					}

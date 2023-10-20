@@ -49,7 +49,9 @@
 			if(gt.manageStatus) {
 				gt.getDataList()
 			} else {
-				gt.imgArr = JSON.parse(decodeURIComponent(options.imgs))
+				gt.imgArr = JSON.parse(decodeURIComponent(options.imgs)).map(item=> {
+					return item += '?x-oss-process=style/sansong_app'
+				})
 			}
 		},
 		methods: {
@@ -60,7 +62,7 @@
 					gt.imgArr = res.company_imgs.insurance_pics;
 					for (var i = 0; i < res.company_imgs.insurance_pics.length; i++) {
 						gt.imgs.push({
-							url: res.company_imgs.insurance_pics[i]
+							url: res.company_imgs.insurance_pics[i] + '?x-oss-process=style/sansong_app'
 						})
 					}
 				});

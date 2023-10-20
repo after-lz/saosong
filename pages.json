@@ -238,7 +238,19 @@
 					"style": {
 						"navigationBarTitleText": "公司详情",
 						"enablePullDownRefresh": false,
-						"disableScroll": true
+						"disableScroll": true,
+						"app-plus": {
+						    "bounce": "none",
+						    "titleNView": {
+						        "buttons": [
+						            {
+						                "fontSize": "32rpx",
+						                "text": "\ue655",
+										"fontSrc": "/static/uniicons.ttf"
+						            }
+						        ]
+						    }
+						}
 					}
 				},
 				{
@@ -701,7 +713,14 @@
 					"path": "pages/user/behaviorSubrecord",
 					"style": {
 						"navigationBarTitleText": "行为分记录",
-						"enablePullDownRefresh": true
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "pages/user/behaviorSubrule",
+					"style": {
+						"navigationBarTitleText": "",
+						"enablePullDownRefresh": false
 					}
 				}
 			]

@@ -76,7 +76,7 @@
 			</view>
 		</view>
 		<view class="con_swiper">
-			<u-swiper :list="swiperList" name="picurl" height="200"></u-swiper>
+			<u-swiper :list="swiperList" name="picurl" height="240"></u-swiper>
 		</view>
 		<view class="con_wallet">
 			<view class="con_title">
@@ -216,7 +216,7 @@
 				let url = ''
 				switch (type) {
 					case 0:
-						url = '/subUser/pages/user/behaviorScore'
+						url = '/subUser/pages/user/behaviorScore?score=' + gt.numArr1[0]
 						break;
 					case 1:
 						url = ''
@@ -357,7 +357,7 @@
 						gt.userInfo = res.user_info
 						if(res.logistics_info) {
 							gt.logisticsInfo = res.logistics_info
-							gt.numArr1[0] = res.logistics_info.credit_score
+							gt.numArr1[0] = res.logistics_info.money03
 							gt.numArr1[1] = res.logistics_info.visitor_count
 							gt.numArr1[2] = res.logistics_info.collect_count
 							gt.numArr1[3] = gt.gtCommon.floatNum((parseFloat(res.logistics_info.grade_score) || 5) / (res.logistics_info.comment_num+1 || 1), 1)

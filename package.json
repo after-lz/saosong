@@ -17,5 +17,8 @@
     },
     "dependencies": {
         "lodash": "^4.17.21"
+    },
+    "devDependencies": {
+        "html2canvas": "^1.4.1"
     }
 }

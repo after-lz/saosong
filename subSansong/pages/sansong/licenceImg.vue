@@ -16,7 +16,7 @@
 		onLoad(options) {
 			let gt = this;
 			if(options.img) {
-				gt.imgPath = options.img
+				gt.imgPath = options.img + '?x-oss-process=style/sansong_app'
 			} else {
 				gt.getDataInfo()
 			}
@@ -25,9 +25,8 @@
 			getDataInfo(){
 				let gt = this;
 				var url = "/logistics/company/get_company_img";
-				
 				gt.gtRequest.post(url).then(res=>{
-					gt.imgPath = res.company_imgs.license_pic[0];
+					gt.imgPath = res.company_imgs.license_pic[0] + '?x-oss-process=style/sansong_app';
 				});
 			},
 			previewImg(){

@@ -324,7 +324,7 @@
 			},
 			goAuth() {
 				let gt = this
-				if(gt.userInfo.is_approve) return gt.$refs.uToast.show({
+				if(uni.getStorageSync('userAuth')) return gt.$refs.uToast.show({
 					title: '已认证'
 				})
 				// #ifdef MP-WEIXIN

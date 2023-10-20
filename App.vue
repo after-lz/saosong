@@ -6,12 +6,6 @@
 	export default {
 		onLaunch: function(options) {
 			// #ifdef APP-PLUS
-			let token_d = uni.getStorageSync('token_d')
-			if(!token_d) {
-				uni.reLaunch({
-					url: "/pages/login/login"
-				})
-			}
 			/* 极光推送 */
 			jpushModule.setLoggerEnable(true)
 			jpushModule.initJPushService()
@@ -116,10 +110,16 @@
 			
 			
 			// #ifdef APP-PLUS
-			// var apiDomain = 'http://test.sansongkeji.com';
-			// uni.setStorageSync('environment', 'dev');
-			var apiDomain = 'https://saasdemo.sansongkeji.com';
-			uni.setStorageSync('environment', 'prod');
+			var apiDomain = 'http://test.sansongkeji.com';
+			uni.setStorageSync('environment', 'dev');
+			// var apiDomain = 'https://saasdemo.sansongkeji.com';
+			// uni.setStorageSync('environment', 'prod');
+			let n = uni.getStorageSync('environment') === 'prod' ? 'token' : 'token_d'
+			if(!uni.getStorageSync(n)) {
+				uni.reLaunch({
+					url: "/pages/login/login"
+				})
+			}
 			// #endif
 
 			var apiDomainStorage = uni.getStorageSync('apiDomain');

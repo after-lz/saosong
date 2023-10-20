@@ -141,7 +141,6 @@ export default {
 				{
 					name: "自定义2/下单量",
 					data: [],
-					sum: [],
 					format: 'yAxisDemo1'
 				}
 			]

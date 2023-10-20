@@ -65,7 +65,7 @@
 			gt.params = {
 				page: 1,
 				limit: 10,
-				wallet_type: 'money01',
+				wallet_type: 'money03',
 				data_type:1
 			}
 			gt.getList()
