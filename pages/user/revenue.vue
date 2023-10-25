@@ -62,14 +62,14 @@
 						<view class="analyse_left">
 							<view class="subtotal_label">已完成运输的订单</view>
 							<!-- <view class="subtotal_value">{{ data1.complete_num }}</view> -->
-							<u-count-to :start-val="0" :end-val="data.complete_num || 0" font-size='32' :bold='true'></u-count-to>
+							<u-count-to :start-val="0" :end-val="data1.complete_num || 0" font-size='32' :bold='true'></u-count-to>
 						</view>
 					</view>
 					<view class="subtotal_item">
 						<view class="analyse_left">
 							<view class="subtotal_label">未完成运输的订单</view>
 							<!-- <view class="subtotal_value">{{ data1.onway_num }}</view> -->
-							<u-count-to :start-val="0" :end-val="data.onway_num || 0" font-size='32' :bold='true'></u-count-to>
+							<u-count-to :start-val="0" :end-val="data1.onway_num || 0" font-size='32' :bold='true'></u-count-to>
 						</view>
 					</view>
 				</view>

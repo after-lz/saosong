@@ -115,7 +115,7 @@
 			let gt = this
 			gt.token = await gt.gtRequest.getToken()
 			if(gt.token) {
-				gt.getList()
+				// gt.getList()
 				gt.refreshCircle()
 			} else {
 				uni.showModal({
@@ -134,6 +134,7 @@
 		},
 		onShow() {
 			let gt = this
+			gt.getList()
 			uni.hideTabBarRedDot({ //隐藏红点
 				index: 3
 			})

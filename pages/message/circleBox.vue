@@ -8,11 +8,15 @@
 			<view class="userInfo" @click.stop="updateCircleBg" :style="{backgroundImage: `url(${bgMsg})`}">
 				<view class="user_info" v-if="JSON.stringify(info) !== '{}'">
 					<view class="userInfo_name">{{ info.company_name || info.nickname }}</view>
-					<u-avatar :src="info.headerpic" :size="160"></u-avatar>
+					<view class="userInfo_pic">
+						<u-avatar :src="info.headerpic" :size="160"></u-avatar>
+					</view>
 				</view>
 				<view class="user_info" v-else @click.stop="viewCompany()">
 					<view class="userInfo_name">{{ companyInfo.company_name || userInfo.nickname }}</view>
-					<u-avatar :src="userInfo.headerpic" :size="160"></u-avatar>
+					<view class="userInfo_pic">
+						<u-avatar :src="userInfo.headerpic" :size="160"></u-avatar>
+					</view>
 				</view>
 			</view>
 			<view class="newMsg" v-if="newMsgArr.length" @click="circleMsg">
@@ -515,15 +519,26 @@
 		background-size: cover;
 		margin-bottom: 134rpx;
 		.user_info {
+			width: 100%;
 			position: absolute;
-			right: 32rpx;
-			bottom: -80rpx;
+			bottom: 0;
 			display: flex;
-			align-items: center;
+			align-items: flex-start;
+			justify-content: flex-end;
 			.userInfo_name {
+			    width: 100%;
+				height: 92rpx;
+				line-height: 110rpx;
 				font-weight: 700;
-				margin-right: 20rpx;
-				margin-top: -60rpx;
+			    text-align: right;
+				padding-right: 200rpx;
+				color: #fff;
+				background: linear-gradient(to top, #000 -100%, transparent);
+			}
+			.userInfo_pic {
+				position: absolute;
+				top: 0;
+				right: 30rpx;
 			}
 		}
 	}

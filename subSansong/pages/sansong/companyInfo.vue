@@ -671,7 +671,7 @@
 		<!-- 海报 -->
 		<u-mask :show="showPoster">	
 			<view class="poster-modal">
-				<view class="poster-view">
+				<view class="poster-view" id="poster-view">
 					<view class="main-view" id="poster">
 						<view class="top-view" id="topPic">
 							<u-image :src="posterShareImg" width="100%" height="360" v-if="data.company_info"></u-image>
@@ -684,8 +684,8 @@
 								<view class="right">
 									<view class="poster-cop">{{ companyName }}</view>
 									<view class="poster-num" v-if="data.company_info">
-										<view class="item-num">完单量 {{ data.company_info.order_count }}</view>
 										<view class="item-num">浏览量 {{ data.company_info.visitor_count }}</view>
+										<view class="item-num">完单量 {{ data.company_info.order_count }}</view>
 										<view class="item-num">收藏量 {{ data.company_info.collect_count }}</view>
 									</view>
 								</view>
@@ -738,8 +738,8 @@
 				</view>
 			</view>
 		</u-mask>
-		<canvas canvas-id="qrcodeCompany" :style="{width: `${qrcodeSize}px`, height: `${qrcodeSize}px`}" />
-		<canvas canvas-id="qrcodePick" :style="{width: `${qrcodeSize}px`, height: `${qrcodeSize}px`}" />
+		<canvas canvas-id="qrcodeCompany" :style="{width: `${qrcodeSize}px`, height: `${qrcodeSize}px`}" class="canvasq" />
+		<canvas canvas-id="qrcodePick" :style="{width: `${qrcodeSize}px`, height: `${qrcodeSize}px`}" class="canvasq" />
 	</view>
 </template>
 
@@ -946,7 +946,7 @@
 					},
 					complete:function(res){
 						// console.log("success:" + JSON.stringify(res))
-						gt.closeShare()
+						// gt.closeShare()
 					}
 				})
 			},
@@ -966,11 +966,12 @@
 			},
 			// 分享给 微信好友
 			shareFriend() {
+				let gt = this
 				uni.share({
 					provider:'weixin',
 					scene:"WXSceneSession",
 					type: 2,
-					imageUrl: this.posterUrl,
+					imageUrl: gt.posterUrl,
 					success:function(res){
 						// console.log("success:" + JSON.stringify(res), this.posterUrl)
 					},
@@ -991,17 +992,18 @@
 						}
 					},
 					complete:function(res){
-						this.closeShare()
+						// gt.closeShare()
 					}
 				})
 			},
 			// 分享给 微信朋友圈
 			shareGroup() {
+				let gt = this
 				uni.share({
 					provider:'weixin',
 					scene:"WXSceneTimeline",
 					type: 2,
-					imageUrl: this.posterUrl,
+					imageUrl: gt.posterUrl,
 					success:function(res){
 						// console.log("success:" + JSON.stringify(res))
 					},
@@ -1022,7 +1024,7 @@
 						}
 					},
 					complete:function(res){
-						this.closeShare()
+						// gt.closeShare()
 					}
 				})
 			},
@@ -1307,7 +1309,7 @@ import html2canvas from 'html2canvas'
 				try {
 					this.$ownerInstance.callMethod('showLoading', true);
 					const timeout = setTimeout(async ()=> {
-						const shareContent = document.querySelector("#poster")
+						const shareContent = document.querySelector("#poster-view")
 						const canvas = await html2canvas(shareContent,{
 							width: shareContent.clientWidth,//设置canvas尺寸与所截图尺寸相同，防止白边
 							height: shareContent.clientHeight,//防止白边
@@ -1333,6 +1335,11 @@ import html2canvas from 'html2canvas'
 		background: $gtBackgroundColor;
 
 		.gt_content {
+			.canvasq {
+				position: absolute;
+				top: -1000px;
+				left: -1000px;
+			}
 			.videoView {
 				position: fixed;
 				background-color: #000000;
@@ -1860,8 +1867,8 @@ import html2canvas from 'html2canvas'
 				font-family: PingFangSC-Medium, PingFang SC;
 				.poster-view{
 					width: 700rpx;
-					// height: calc(100% - 270rpx);
-					height: auto;
+					height: calc(100% - 250rpx);
+					// height: auto;
 					overflow: hidden;
 					background-color: #485EF4;
 					.main-view{
