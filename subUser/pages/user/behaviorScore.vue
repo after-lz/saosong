@@ -158,27 +158,27 @@
 				} else if(num > 0 && num < 41) {
 					obj = {
 						manifestation: '极差',
-						interests: '延长3至30天到账|每天限制5单|完成订单不再得到红包'
+						interests: '延长3至30天到账 | 每天限制5单 | 完成订单不再得到红包'
 					}
 				} else if(num >= 41 && num < 61) {
 					obj = {
 						manifestation: '较差',
-						interests: '延长至7天到账|能接单能抢单|完成订单不再得到红包'
+						interests: '延长至7天到账 | 能接单能抢单 | 完成订单不再得到红包'
 					}
 				} else if(num >= 61 && num < 81) {
 					obj = {
 						manifestation: '一般',
-						interests: '正常到账|正常接单正常抢单|不再得红包'
+						interests: '正常到账 | 正常接单正常抢单 | 不再得红包'
 					}
 				} else if(num >= 81 && num < 100) {
 					obj = {
 						manifestation: '良好',
-						interests: '正常到账|正常接单正常抢单|正常得红包'
+						interests: '正常到账 | 正常接单正常抢单 | 正常得红包'
 					}
 				} else if(num >= 100) {
 					obj = {
 						manifestation: '优秀',
-						interests: '正常到账|正常接单正常抢单|正常得红包'
+						interests: '正常到账 | 正常接单正常抢单 | 正常得红包'
 					}
 				}
 				return obj
@@ -227,11 +227,15 @@
 					color: #909399;
 					position: absolute;
 					transform: translate(-50%, -50%);
+					width: 60rpx;
+					text-align: center;
 				}
 				.progress_right {
 					color: #909399;
 					position: absolute;
 					transform: translate(50%, -50%);
+					width: 60rpx;
+					text-align: center;
 				}
 				.progress_40 {
 					bottom: 80rpx;

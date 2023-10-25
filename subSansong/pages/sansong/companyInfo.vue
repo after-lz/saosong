@@ -9,8 +9,25 @@
 				<swiper-item class="swiper-item" id="companyInfo">
 					<scroll-view scroll-y="true" class="con_scrollView" :class="flag ? 'cHeight':''">
 						<view class="con_swiper">
-							<u-swiper :list="companyImgs" mode="number" indicator-pos="bottomRight" height="400"
-								border-radius="0" @click="preview"></u-swiper>
+							<!-- <u-swiper :list="companyImgs" mode="number" indicator-pos="bottomRight" height="400"
+								border-radius="0" @click="preview"></u-swiper> -->
+							<swiper class="swiper" circular :autoplay="true" interval="2000"
+								duration="200" style="height: 200px;" @change="swiperChange">
+								<swiper-item v-if="isShowVideo" @click="preview(-1)" style="position: relative">
+									<!-- <video :src="data.company_imgs.company_viedeos[0].img_path" autoplay loop :muted="true"
+										 :controls="false" style="width: 100%;height: 200px;"></video> -->
+									<u-image :src='data.company_imgs.company_viedeos[0].cover' height="400" width="750"></u-image>
+									<view class="playVideo">
+										<u-icon name="play-circle" color="#fff" size="80"></u-icon>
+									</view>
+								</swiper-item>
+								<swiper-item v-for="(item, i) in data.company_imgs_all" :key="item" @click="preview(i)">
+									<u-image :src='item' height="400" width="750"></u-image>
+								</swiper-item>
+							</swiper>
+							<view class="tip-view">
+								{{ currentNum + '/' + totalNum }}
+							</view>
 						</view>
 						<view class="con_companyName">
 							<view class="con_name_icons">
@@ -280,7 +297,7 @@
 
 										<view class="con_title" :style="{display: lineIndex == index ? '':'flex'}">
 											<text :class="lineIndex == index ? '':'con_title_name'">
-												{{cityHide(item.start_city)}}-{{cityHide(item.end_city + item.end_city)}}
+												{{cityHide(item.start_city)}}-{{cityHide(item.end_city)}}
 											</text>
 											<view class="con_label" v-if="item.member_status === '1'">
 												<text>会员专线</text>
@@ -550,7 +567,7 @@
 				</swiper-item>
 			</swiper>
 		</view>
-		<view v-if="showVideo && img_path" :style="{display: !currentTab ? '' : 'none'}">
+		<!-- <view v-if="showVideo && img_path" :style="{display: !currentTab ? '' : 'none'}">
 			<dragButton :viewWidth="viewWidth" :viewHeight="viewHeight" :viewTop="viewTop" :other='other'
 				 @touchstart='touchstart' @touchend='touchend' :canDocking='false'>
 				<view class="videoView" :style="{width: viewWidth+'px', height: viewHeight+'px'}">
@@ -564,7 +581,7 @@
 					</video>
 				</view>
 			</dragButton>
-		</view>
+		</view> -->
 		<u-toast ref="uToast" />
 		<!-- 电话弹层 -->
 		<u-popup v-model="showCall" @close="closeCall" mode="bottom" border-radius="14">
@@ -792,7 +809,10 @@
 				inviteCompanyUrl: '',
 				invitePickUpUrl: '',
 				showVideo: true,
-				lines: []
+				lines: [],
+				isShowVideo: false,
+				currentNum: 1,
+				totalNum: 0
 			}
 		},
 		onNavigationBarButtonTap(e) {
@@ -885,7 +905,14 @@
 			// 收藏
 			starChange() {
 				let gt = this
-				gt.starTrue = !gt.starTrue
+				gt.gtRequest.post('/logistics/User/collect_other_logistics', {
+					logistics_id: gt.logistics_id
+				}).then(res => {
+					gt.starTrue = !gt.starTrue
+					gt.$refs.uToast.show({
+						title: gt.starTrue ? '收藏成功' : '取消收藏'
+					})
+				})
 			},
 			// 立即联系
 			callModal() {
@@ -1074,11 +1101,15 @@
 				this.isMove = true
 			},
 			preview(e) {
-				let gt = this;
-				// uni.navigateTo({
-				// 	url: './companyImg',
-				// });
-				gt.gtCommon.previewImgs(gt.companyImgs, e)
+				let gt = this
+				if(e === -1) {
+					gt.videoMore()
+				} else {
+					gt.gtCommon.previewImgs(gt.data.company_imgs_all, e)
+				}
+			},
+			swiperChange(e) {
+				this.currentNum = e.detail.current + 1
 			},
 			tabsChange(index) {
 				let gt = this;
@@ -1097,12 +1128,14 @@
 				gt.gtRequest.post(url, {
 					logistics_id: gt.logistics_id
 				}).then(res => {
+					gt.starTrue = res.collect_status ? true : false
 					gt.turnBase64Image(res.company_info.company_pic, 'posterShareImg')
 					var imgList = [];
-					res.company_imgs_all.map(item => {
-						item = item + '?x-oss-process=style/sansong_app';
-						imgList.push(item);
-					});
+					res.company_imgs_all.forEach(item => {
+						imgList.push(item += '?x-oss-process=style/sansong_app')
+					})
+					res.company_imgs_all = [...imgList]
+					gt.totalNum = res.company_imgs_all.length
 					/* 计算公司评分 */
 					let num = parseFloat(res.company_info.grade_score) / (res.company_info.comment_num + 1)
 					res.company_info.grade_score_result = gt.gtCommon.floatNum(num, 1)
@@ -1114,7 +1147,12 @@
 					gt.img_path = res.company_imgs.company_viedeos.length ? res.company_imgs.company_viedeos[0].img_path : ''
 					gt.rateNum = gt.data.company_info.grade_score_result
 					// gt.companyImgs = res.company_imgs_all;
-					gt.companyImgs = imgList
+					// if(res.company_imgs.company_viedeos.length) imgList.unshift(res.company_imgs.company_viedeos[0].cover + '?x-oss-process=style/sansong_app')
+					if(res.company_imgs.company_viedeos.length) {
+						gt.isShowVideo = true
+						++gt.totalNum
+					}
+					// gt.companyImgs = imgList
 					gt.companyName = res.company_info.company_name;
 					gt.authStatus = res.company_info.is_company_approve;
 					gt.notice = res.company_info.public_notice;
@@ -1331,9 +1369,10 @@ import html2canvas from 'html2canvas'
 				}
 			}
 			.con_swiper {
+				position: relative;
 				swiper {
 					height: calc(100vh - 88rpx);
-
+					
 					#companyInfo {
 						.con_scrollView {
 							height: calc(100vh - 88rpx);
@@ -1743,6 +1782,25 @@ import html2canvas from 'html2canvas'
 						}
 					}
 				}
+			}
+			.playVideo {
+				position: absolute;
+				left: 50%;
+				top: 50%;
+				transform: translate(-50%, -50%);
+			}
+			.tip-view{
+				position: absolute;
+				right: 20px;
+				bottom: 20px;
+				background-color: rgba(0, 0, 0, 0.5);
+				width: 60px;
+				height: 25px;
+				line-height: 25px;
+				text-align: center;
+				border-radius: 50px;
+				font-size: 26rpx;
+				color: #FFFFFF;
 			}
 			.call_view {
 				padding-top: 8rpx;

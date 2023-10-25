@@ -189,6 +189,7 @@
 				var url = "/logistics/company/get_company_info"
 				gt.gtRequest.post(url).then(res => {
 					gt.parkId = res.company_info.park_id
+					uni.setStorageSync('companyInfo', res.company_info)
 				})
 			},
 			getIndexInfo() {

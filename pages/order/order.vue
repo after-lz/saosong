@@ -483,6 +483,12 @@
 			gt.currentTab = orderSearchStatus
 			gt.statusIndex = orderSearchStatus
 			uni.removeStorageSync('orderSearchStatus');
+			gt.calcendarChange({
+				startDate: uni.getStorageSync('stime'),
+				endDate: uni.getStorageSync('etime')
+			})
+			uni.removeStorageSync('stime');
+			uni.removeStorageSync('etime');
 			setTimeout(function() {
 				gt.reGetOrderList();
 			}, 500);

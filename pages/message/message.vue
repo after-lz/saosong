@@ -83,7 +83,7 @@
 				</scroll-view>
 			</swiper-item>
 			<swiper-item class="swiper-item circle" id="circle" catchtouchmove="stopTouchMove">
-				<circle-box ref="circleBox" :newMsgArr='newMsgArr'></circle-box>
+				<circle-box ref="circleBox" :newMsgArr='newMsgArr' :companyInfo='companyInfo' :userInfo='userInfo'></circle-box>
 			</swiper-item>
 		</swiper>
 	</view>
@@ -106,7 +106,9 @@
 				},
 				token: '',
 				newMsgArr: [],
-				offset: [10, 0]
+				offset: [10, 0],
+				companyInfo: {},
+				userInfo: {}
 			}
 		},
 		async onLoad() {
@@ -136,10 +138,8 @@
 				index: 3
 			})
 			gt.newMsgArr = JSON.parse(uni.getStorageSync('newMsgArr') || '[]')
-			gt.$nextTick(()=> {
-				gt.$refs.circleBox.companyInfo = uni.getStorageSync('companyInfo')
-				gt.$refs.circleBox.userInfo = uni.getStorageSync('userInfo')
-			})
+			gt.companyInfo = uni.getStorageSync('companyInfo')
+			gt.userInfo = uni.getStorageSync('userInfo')
 		},
 		// 下拉刷新
 		// onPullDownRefresh() {
@@ -150,9 +150,7 @@
 		methods: {
 			refreshCircle() {
 				let gt = this
-				// gt.$nextTick(()=> {
-					gt.$refs.circleBox.showFn()
-				// })
+				gt.$refs.circleBox.showFn()
 			},
 			getList() {
 				let gt = this

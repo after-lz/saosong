@@ -722,6 +722,13 @@
 						"navigationBarTitleText": "",
 						"enablePullDownRefresh": false
 					}
+				},
+				{
+					"path": "pages/user/earning",
+					"style": {
+						"navigationBarTitleText": "我的营收",
+						"enablePullDownRefresh": false
+					}
 				}
 			]
 		},

@@ -232,33 +232,38 @@
 			},
 			submit() {
 				let gt = this
-				let arr = []
-				gt.fileList.forEach(item=> {
-					arr.push(item.url)
-				})
-				gt.gtRequest.post('/logistics/circle/publish', {
-					role: 1,
-					resource_type: gt.type, // 0：图片，1：视频
-					words: gt.value,
-					resource: arr.join(','),
-					location: gt.locationInfo.name || '',
-					cover: gt.cover
+				gt.gtRequest.post('/api/upload/baiduCheck', {
+					type: 0,
+					content: gt.value
 				}).then(res => {
-					gt.$refs.uToast.show({
-					    title: "发布成功",
-					    type: "success",
-					    back: true
+					let arr = []
+					gt.fileList.forEach(item=> {
+						arr.push(item.url)
 					})
-					setTimeout(()=> {
-						uni.switchTab({
-							url: '../../../pages/message/message',
-							success() {
-								let pages = getCurrentPages()
-								let beforePage = pages[0]
-								beforePage.$vm.refreshCircle()
-							}
+					gt.gtRequest.post('/logistics/circle/publish', {
+						role: 1,
+						resource_type: gt.type, // 0：图片，1：视频
+						words: gt.value,
+						resource: arr.join(','),
+						location: gt.locationInfo.name || '',
+						cover: gt.cover
+					}).then(res => {
+						gt.$refs.uToast.show({
+						    title: "发布成功",
+						    type: "success",
+						    back: true
 						})
-					}, 1500)
+						setTimeout(()=> {
+							uni.switchTab({
+								url: '../../../pages/message/message',
+								success() {
+									let pages = getCurrentPages()
+									let beforePage = pages[0]
+									beforePage.$vm.refreshCircle()
+								}
+							})
+						}, 1500)
+					})
 				})
 			}
 		}

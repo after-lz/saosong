@@ -336,9 +336,9 @@
 			},
 			goCompanyAuth() {
 				let gt = this
-				if(gt.companyInfo.is_company_approve) return gt.$refs.uToast.show({
-					title: '已认证'
-				})
+				// if(gt.companyInfo.is_company_approve) return gt.$refs.uToast.show({
+				// 	title: '已认证'
+				// })
 				uni.navigateTo({
 					url: '/pages/login/companyAuth?flag=true'
 				})

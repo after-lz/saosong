@@ -170,7 +170,7 @@
 				menuList1: [
 					{ name: '我的营收' },
 					{ name: '我的账单' },
-					{ name: '发票管理' },
+					// { name: '发票管理' },
 					{ name: '员工管理' }
 				],
 				menuList2: [

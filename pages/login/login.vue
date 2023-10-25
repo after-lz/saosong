@@ -38,7 +38,7 @@
 		<!-- #endif -->
 		<view class="con_type2" v-if="type == 2">
 			<view class="con_title">
-				<text @longpress="envVersion_show = true">手机号登录</text>
+				<text @longpress="longpressFn">手机号登录</text>
 			</view>
 			<view class="con_areaCode_mobile">
 				<view class="con_areaCode">
@@ -156,8 +156,10 @@
 		},
 		methods: {
 			onChange(e) {
+				let gt = this
 				uni.setStorageSync('environment', e[0].label)
 				uni.setStorageSync('apiDomain', e[0].value)
+				gt.mobile = ''
 			},
 			getLoginToken_ali() {
 				// 这里我是用了一个按钮触发这个方法，你也可以选择页面加载后就执行。
@@ -404,6 +406,12 @@
 						clearInterval(sid)
 					}
 				}, 1000)
+			},
+			longpressFn() {
+				let gt = this
+				if(gt.mobile == '0000') {
+					gt.envVersion_show = true
+				}
 			},
 			submitForm() {
 				let gt = this;
