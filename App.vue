@@ -110,10 +110,10 @@
 			
 			
 			// #ifdef APP-PLUS
-			var apiDomain = 'http://test.sansongkeji.com';
-			uni.setStorageSync('environment', 'dev');
-			// var apiDomain = 'https://saasdemo.sansongkeji.com';
-			// uni.setStorageSync('environment', 'prod');
+			// var apiDomain = 'http://test.sansongkeji.com';
+			// uni.setStorageSync('environment', 'dev');
+			var apiDomain = 'https://saasdemo.sansongkeji.com';
+			uni.setStorageSync('environment', 'prod');
 			let n = uni.getStorageSync('environment') === 'prod' ? 'token' : 'token_d'
 			if(!uni.getStorageSync(n)) {
 				uni.reLaunch({

@@ -76,7 +76,7 @@
 			</view>
 		</view>
 		<view class="con_swiper">
-			<u-swiper :list="swiperList" name="picurl" height="240"></u-swiper>
+			<u-swiper :list="swiperList" name="picurl" height="200"></u-swiper>
 		</view>
 		<view class="con_wallet">
 			<view class="con_title">
