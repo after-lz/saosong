@@ -694,9 +694,9 @@
 					}
 				},
 				{
-					"path": "pages/user/transferredBalance",
+					"path": "pages/user/transferBalance",
 					"style": {
-						"navigationBarTitleText": "提现",
+						"navigationBarTitleText": "红包转余额",
 						"enablePullDownRefresh": false
 					}
 				},

@@ -51,7 +51,6 @@
 </template>
 
 <script>
-	const apiDomain = uni.getStorageSync('apiDomain')
 	export default {
 		data() {
 			return {
@@ -75,14 +74,12 @@
 					zhuanyueeSwitch: 0, // 是否可以转余额
 					ruleStr: '' // 规则
 				},
-				token: '',
 				is_company_approve: false,
 				flag: false
 			}
 		},
 		onLoad() {
 			let gt = this
-			gt.token = gt.gtRequest.getToken()
 			gt.is_company_approve = uni.getStorageSync("companyInfo").is_company_approve
 			// 是否有专线
 			gt.gtRequest.post("/logistics/specialline/get_special_line_list", {
@@ -107,43 +104,8 @@
 				})
 			},
 			goBalance() {
-				// uni.navigateTo({
-				// 	url: './transferredBalance'
-				// })
-				let gt = this
-				if(!gt.data.zhuanyueeSwitch) return
-				// gt.gtRequest.post("/logistics/Companywallet/apply_zhuanyuee").then(res=> {
-				// 	uni.showToast({
-				// 		title: res.msg
-				// 	})
-				// })
-				let params = {
-					login_token: gt.token,
-					number: gt.data.money02
-				}
-				uni.request({
-					url: apiDomain + "/logistics/Companywallet/apply_zhuanyuee",
-					data: params,
-					method: 'GET',
-					success: function(res) {	
-						if(res.data.code == 1) {
-							gt.getList()
-							uni.showToast({
-								title: res.data.msg
-							})
-						} else {
-							uni.showToast({
-								title: '转余额失败',
-								icon: 'error'
-							})
-						}
-					},
-					fail: function(res) {
-						uni.showToast({
-							title: '转余额失败',
-							icon: 'error'
-						})
-					}
+				uni.navigateTo({
+					url: './transferBalance?params=' +encodeURIComponent(JSON.stringify(this.data))
 				})
 			},
 			goNext(type) {
