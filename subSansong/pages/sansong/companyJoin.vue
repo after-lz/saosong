@@ -142,7 +142,7 @@
 				<view class="con_keyVal">
 					<view class="con_key">
 						<view class="con_required">
-							<!-- <text>*</text> -->
+							<text>*</text>
 						</view>
 						<view class="con_text">
 							<text>查货电话</text>
@@ -598,6 +598,13 @@
 				if (!gt.gtCommon.isTel(gt.phone)) {
 					gt.$refs.uToast.show({
 						title: '座机号码不正确',
+						type: 'error',
+					});
+					return false;
+				}
+				if (!gt.$u.test.mobile(gt.queryNumber) && !gt.gtCommon.isTel(gt.queryNumber)) {
+					gt.$refs.uToast.show({
+						title: '查货电话不正确',
 						type: 'error',
 					});
 					return false;

@@ -5,14 +5,18 @@
 		</dragButton>
 		<scroll-view scroll-y @scrolltolower="loadingMore" :class="unid ? 'scrollView1' : 'scrollView'"
 			 :refresher-enabled="true" :refresher-triggered="refresh" @refresherrefresh="onRefresh">
-			<view class="userInfo">
+			<view class="userInfo" @click.stop="updateCircleBg" :style="{backgroundImage: `url(${bgMsg})`}">
 				<view class="user_info" v-if="JSON.stringify(info) !== '{}'">
 					<view class="userInfo_name">{{ info.company_name || info.nickname }}</view>
-					<u-avatar :src="info.headerpic" :size="160"></u-avatar>
+					<view class="userInfo_pic">
+						<u-avatar :src="info.headerpic" :size="160"></u-avatar>
+					</view>
 				</view>
-				<view class="user_info" v-else @click="viewCompany()">
+				<view class="user_info" v-else @click.stop="viewCompany()">
 					<view class="userInfo_name">{{ companyInfo.company_name || userInfo.nickname }}</view>
-					<u-avatar :src="userInfo.headerpic" :size="160"></u-avatar>
+					<view class="userInfo_pic">
+						<u-avatar :src="userInfo.headerpic" :size="160"></u-avatar>
+					</view>
 				</view>
 			</view>
 			<view class="newMsg" v-if="newMsgArr.length" @click="circleMsg">
@@ -33,7 +37,9 @@
 								<view class="company_detail" v-if="item.role" @click.stop="goCompanyDetail(item)">公司详情</view>
 							</view>
 							<view class="card_info">
-								{{ item.words }}
+								<text>
+									{{ item.words }}
+								</text>
 							</view>
 							<view class="cover" v-if="item.cover" @click.stop="playVideo(item.resource[0])">
 								<u-image :src="item.cover" mode="widthFix" lazy-load></u-image>
@@ -120,6 +126,18 @@
 					return []
 				}
 			},
+			companyInfo: {
+				type: Object,
+				default: ()=> {
+					return {}
+				}
+			},
+			userInfo: {
+				type: Object,
+				default: ()=> {
+					return {}
+				}
+			},
 			info: {
 				type: Object,
 				default: ()=> {
@@ -133,8 +151,8 @@
 		},
 		data() {
 			return {
-				companyInfo: {},
-				userInfo: {},
+				// companyInfo: {},
+				// userInfo: {},
 				params: {},
 				list: [],
 				status: 'loading',
@@ -153,7 +171,8 @@
 				other: 85,
 				bottomPx: 200,
 				refresh: false,
-				top: 0
+				top: 0,
+				bgMsg: ''
 			}
 		},
 		mounted() {
@@ -163,24 +182,31 @@
 		methods: {
 			async showFn() {
 				let gt = this
+				// 查看他人圈子
 				if(gt.unid) {
 					gt.params = {
 						page: 1,
 						limit: 10,
 						keyword_unid: gt.unid
 					}
+					await gt.gtRequest.post('/logistics/user/get_user_infother', {
+						unid: gt.unid
+					}).then(res => {
+						gt.bgMsg = res.circle_pic
+					})
 				} else {
+				// 查看自己的圈子
 					gt.params = {
 						page: 1,
-						limit: 10,
-						// keyword_role: 1
+						limit: 10
 					}
+					setTimeout(()=> {
+						gt.bgMsg = gt.userInfo.circle_pic
+					})
 				}
 				gt.list = []
 				await gt.getList_circle()
 				gt.getWindowSize()
-				gt.companyInfo = uni.getStorageSync('companyInfo')
-				// gt.userInfo = uni.getStorageSync('userInfo')
 			},
 			async getList_circle() {
 				let gt = this
@@ -450,6 +476,32 @@
 					})
 				}
 			},
+			updateCircleBg() {
+				let gt = this
+				if(uni.getStorageSync('companyInfo').logistics_id == gt.companyInfo.logistics_id) {
+					uni.chooseImage({
+						count: 1,
+						sizeType: ['original', 'compressed'], //可以指定是原图还是压缩图，默认二者都有
+						sourceType: ['album', 'camera'], //从相册选择
+						success: function (res) {
+							gt.gtRequest.upload(res.tempFiles[0]).then(res => {
+								gt.gtRequest.post('/logistics/user/addCirclePic', {
+									circle_pic: res.src
+								}).then(()=> {
+									gt.$refs.uToast.show({
+										title: '更换成功',
+										type: 'success'
+									})
+									gt.bgMsg = res.src
+									let info = uni.getStorageSync('userInfo')
+									info.circle_pic = res.src
+									uni.setStorageSync('userInfo', info)
+								})
+							})
+						}
+					})
+				}
+			}
 		}
 	}
 </script>
@@ -462,20 +514,31 @@
 		position: relative;
 		width: 100%;
 		height: 430rpx;
-		background-image: url('https://baohusan-uisource.oss-cn-shanghai.aliyuncs.com/mp-transport/message/groupBg.png');
+		// background-image: url('https://baohusan-uisource.oss-cn-shanghai.aliyuncs.com/mp-transport/message/groupBg.png');
 		background-repeat: no-repeat;
 		background-size: cover;
 		margin-bottom: 134rpx;
 		.user_info {
+			width: 100%;
 			position: absolute;
-			right: 32rpx;
-			bottom: -80rpx;
+			bottom: 0;
 			display: flex;
-			align-items: center;
+			align-items: flex-start;
+			justify-content: flex-end;
 			.userInfo_name {
+			    width: 100%;
+				height: 92rpx;
+				line-height: 110rpx;
 				font-weight: 700;
-				margin-right: 20rpx;
-				margin-top: -60rpx;
+			    text-align: right;
+				padding-right: 200rpx;
+				color: #fff;
+				background: linear-gradient(to top, #000 -100%, transparent);
+			}
+			.userInfo_pic {
+				position: absolute;
+				top: 0;
+				right: 30rpx;
 			}
 		}
 	}
@@ -526,6 +589,8 @@
 				.card_info {
 					color: #000;
 					margin: 16rpx 0;
+					word-break: break-all;
+					word-wrap: break-word;
 				}
 				.imgList {
 					display: flex;

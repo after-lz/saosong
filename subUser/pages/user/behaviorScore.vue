@@ -9,7 +9,7 @@
 			<view class="progress">
 				<data-chart height="560" type="arcbar" :opts='opts' :chartData='chartData'></data-chart>
 			</view>
-			<view class="remake" @click="gtCommon.goLicence(url)">规则</view>
+			<view class="remake" @click="viewDetail">规则</view>
 			<cover-view class="progress_left progress_40">40</cover-view>
 			<cover-view class="progress_left progress_50">较差</cover-view>
 			<cover-view class="progress_left progress_60">60</cover-view>
@@ -23,8 +23,8 @@
 		
 		<view class="card_info">
 			<view class="info_title">所受影响</view>
-			<view class="info_manifestation">-您当前表现{{ judgeInfo(70).manifestation }}</view>
-			<view class="info_interests">-相应权益：{{ judgeInfo(70).interests }}</view>
+			<view class="info_manifestation">-您当前表现{{ judgeInfo(score).manifestation }}</view>
+			<view class="info_interests">-相应权益：{{ judgeInfo(score).interests }}</view>
 		</view>
 		
 		<view class="card_record">
@@ -36,14 +36,14 @@
 				<view class="record_item" v-for="(item, index) in list" :key="index">
 					<view class="item_row">
 						<view class="item_left">
-							<view class="item_title">{{ item.title }}</view>
-							<view :class="item.status ? 'item_status' : 'item_status1'">{{ item.status ? '指派' : '极速' }}</view>
+							<view class="item_title">{{ item.remark }}</view>
+							<!-- <view :class="item.cancel_status ? 'item_status' : 'item_status1'">{{ item.cancel_status ? '指派' : '极速' }}</view> -->
 						</view>
-						<view :class="item.type ? 'item_type' : 'item_type1'">
-							{{ (item.type ? '加' : '扣') + item.num + '分' }}
+						<view :class="item.number > 0 ? 'item_type' : 'item_type1'">
+							{{ item.number + '分' }}
 						</view>
 					</view>
-					<view class="item_time">{{ gtCommon.formateTime(item.time, 'YYYY-MM-DD HH:mm:ss') }}</view>
+					<view class="item_time">{{ gtCommon.formateTime(item.create_time, 'YYYY-MM-DD HH:mm:ss') }}</view>
 				</view>
 			</scroll-view>
 		</view>
@@ -61,7 +61,7 @@
 				tops: 0,
 				height: 0,
 				list: [],
-				url: 'https://saasdemo.sansongkeji.com/adminsite/#/agreement/transportation'
+				score: 0
 			}
 		},
 		onReady() {
@@ -78,13 +78,17 @@
 				}
 			})
 		},
-		onLoad() {
+		onLoad(options) {
+			this.score = parseInt(options.score) + ''
+			// this.score = 30
+			let name = this.judgeInfo(this.score).manifestation
+			let progress = +this.score > 40 ? 1 / (120 - 40) * (this.score - 40) : 0
 			this.getDate()
 			this.chartData = {
 				series: [
 				  {
 				    color: "#485EF4",
-				    data: 0.125
+				    data: progress
 				  }
 				]
 			}
@@ -92,13 +96,13 @@
 				color: ["#485EF4"],
 				padding: [0,0,0,0],
 				title: {
-				  name: "90",
+				  name: this.score,
 				  fontSize: 56,
 				  offsetY: -15,
 				  color: "#485EF4"
 				},
 				subtitle: {
-				  name: "良好",
+				  name: name,
 				  fontSize: 16,
 				  offsetY: 10,
 				  color: "#485EF4"
@@ -114,24 +118,28 @@
 				}
 			}
 		},
-		onShow() {
-			
-		},
 		methods: {
-			getDate(n=1) {
-				for (var i = 0; i < 10; i++) {
-					this.list.push({
-						title: '拒绝订单' + i,
-						type: n,
-						status: n,
-						num: i,
-						time: (+new Date()) / 1000
+			getDate() {
+				this.gtRequest.post("/logistics/companywallet/get_wallet_log", {
+					page: 1,
+					limit: 10,
+					wallet_type: 'money03',
+					data_type:1
+				}).then(res=>{
+					res.list.forEach(item=> {
+						item.number = +item.number
 					})
-				}
+					this.list = res.list
+				})
 			},
 			viewMore() {
 				uni.navigateTo({
 					url: './behaviorSubrecord'
+				})
+			},
+			viewDetail() {
+				uni.navigateTo({
+					url: './behaviorSubrule'
 				})
 			},
 			back() {
@@ -150,27 +158,27 @@
 				} else if(num > 0 && num < 41) {
 					obj = {
 						manifestation: '极差',
-						interests: '延长3至30天到账|接单：每天限制5单|红包：完成订单不再得到红包'
+						interests: '延长3至30天到账 | 每天限制5单 | 完成订单不再得到红包'
 					}
 				} else if(num >= 41 && num < 61) {
 					obj = {
-						manifestation: '极差',
-						interests: '抢单相对优势|提现正常到账|专属活动'
+						manifestation: '较差',
+						interests: '延长至7天到账 | 能接单能抢单 | 完成订单不再得到红包'
 					}
 				} else if(num >= 61 && num < 81) {
 					obj = {
-						manifestation: '极差',
-						interests: '抢单相对优势|提现正常到账|专属活动'
+						manifestation: '一般',
+						interests: '正常到账 | 正常接单正常抢单 | 不再得红包'
 					}
 				} else if(num >= 81 && num < 100) {
 					obj = {
-						manifestation: '极差',
-						interests: '抢单相对优势|提现正常到账|专属活动'
+						manifestation: '良好',
+						interests: '正常到账 | 正常接单正常抢单 | 正常得红包'
 					}
 				} else if(num >= 100) {
 					obj = {
-						manifestation: '极差',
-						interests: '抢单相对优势|提现正常到账|专属活动'
+						manifestation: '优秀',
+						interests: '正常到账 | 正常接单正常抢单 | 正常得红包'
 					}
 				}
 				return obj
@@ -219,11 +227,15 @@
 					color: #909399;
 					position: absolute;
 					transform: translate(-50%, -50%);
+					width: 60rpx;
+					text-align: center;
 				}
 				.progress_right {
 					color: #909399;
 					position: absolute;
 					transform: translate(50%, -50%);
+					width: 60rpx;
+					text-align: center;
 				}
 				.progress_40 {
 					bottom: 80rpx;

@@ -36,7 +36,8 @@ Vue.filter('telHide', (value)=>{
 
 let mpShare = require('static/uview/libs/mixin/mpShare.js');
 Vue.mixin(mpShare)
-
+let share= require('common/share.js'); 
+Vue.mixin(share)
 
 
 // #ifndef VUE3

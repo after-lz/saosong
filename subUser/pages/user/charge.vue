@@ -50,7 +50,7 @@
 					// 	content: JSON.stringify(res)
 					// })
 					// #ifdef MP-WEIXIN
-					var url = "/cargo/pay/go_pay";
+					var url = "/logistics/pay/go_pay";
 					var data = {
 						pay_sn: res.pay_sn,
 						pay_type: 4,
@@ -95,7 +95,7 @@
 					// #endif
 
 					// #ifdef APP-PLUS
-					var url = "/cargo/pay/go_pay";
+					var url = "/logistics/pay/go_pay";
 					var data = {
 						pay_sn: res.pay_sn,
 						pay_type: 4,

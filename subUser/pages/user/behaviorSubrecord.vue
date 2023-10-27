@@ -15,7 +15,7 @@
 				<view class="con_item" v-for="(item, index) in dataList" :key="index">
 					<view class="con_title_num">
 						<view class="con_title">
-							<text>{{item.log_type_msg}}</text>
+							<text>{{item.remark}}</text>
 						</view>
 						<view class="con_num">
 							<text v-if="item.number > 0">+{{item.number}}</text>
@@ -23,7 +23,7 @@
 						</view>
 					</view>
 					<view class="con_time">
-						<text>{{gtCommon.formateTime(item.create_time,'YYYY-MM-DD HH:mm:SS')}}</text>
+						<text>{{gtCommon.formateTime(item.create_time, 'YYYY-MM-DD HH:mm:SS')}}</text>
 					</view>
 				</view>
 				<u-loadmore :status="status" />	
@@ -65,7 +65,7 @@
 			gt.params = {
 				page: 1,
 				limit: 10,
-				wallet_type: 'money01',
+				wallet_type: 'money03',
 				data_type:1
 			}
 			gt.getList()

@@ -27,7 +27,7 @@
 			//按钮默认位置离底部距离（px）
 			bottomPx: {
 				type: Number,
-				default: 200
+				default: 500
 			},
 			//按钮默认位置离右边距离（px）
 			rightPx: {
@@ -76,7 +76,9 @@
 				let str = ''
 				uni.getSystemInfo({
 					success: (res) => {
-						str = `height: ${res.windowHeight - this.viewTop - this.other}px;top: ${this.viewTop}px;`
+						this.$nextTick(()=> {
+							str = `height: ${res.windowHeight - this.viewTop - this.other}px;top: ${this.viewTop}px;`
+						})
 					}
 				})
 				return str
@@ -126,7 +128,9 @@
 					}
 					this.isRemove = false
 				}
-				this.$emit('touchend')
+				setTimeout(()=> {
+					this.$emit('touchend')
+				}, 0)
 			},
 			//点击按钮
 			clickBtn() {

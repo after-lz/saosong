@@ -117,7 +117,7 @@
 				let str = 0
 				if(gt.active === 1) {
 					gt.list.forEach(item=> {
-						if(item.selected) str += gt.data.lineDeposit
+						if(item.selected) str += +gt.data.lineDeposit
 					})
 					return str
 				} else {

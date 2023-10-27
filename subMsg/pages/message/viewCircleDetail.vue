@@ -115,7 +115,10 @@
 		},
 		onShow() {
 			let gt = this
-			gt.getData()
+			// 圈子点赞有600毫秒延迟
+			setTimeout(()=> {
+				gt.getData()
+			}, 600)
 		},
 		methods: {
 			getData() {
