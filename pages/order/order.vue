@@ -236,6 +236,9 @@
 											v-if="item.status == 99">
 											<text>查看取消</text>
 										</view> -->
+										<view class="con_btnItem" @click.stop="viewOrder(item)">
+											<text>电子面单</text>
+										</view>
 									</view>
 								</view>
 							</scroll-view>
@@ -873,6 +876,18 @@
 					url: '/subSansong/pages/sansong/sendInfo?orderSn=' + item.waybill_sn,
 				});
 				return false;
+			},
+			viewOrder(item) {
+				const apiDomain = uni.getStorageSync('apiDomain')
+				// #ifdef MP-WEIXIN
+				let sheet_url = `${apiDomain}/adminsite/#/agreement/index?deliver_sn=${item.deliver_sn}&type=uni&hiden=false`
+				// #endif
+				// #ifdef APP-PLUS
+				let sheet_url = `${apiDomain}/adminsite/#/agreement/index?deliver_sn=${item.deliver_sn}&type=uni`
+				// #endif
+				uni.navigateTo({
+					url: '/pages/login/licence?url=' + encodeURIComponent(sheet_url),
+				})
 			}
 		}
 	}

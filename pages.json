@@ -145,6 +145,13 @@
 			}
 		},
 		{
+			"path": "pages/login/licenceview",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
 			"path": "pages/order/billDetail",
 			"style": {
 				"navigationBarTitleText": "费用明细",

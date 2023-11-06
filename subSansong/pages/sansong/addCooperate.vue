@@ -3,13 +3,10 @@
 		<view class="con_toast">
 			<u-toast ref="uToast" />
 		</view>
-
-
 		<view class="con_search">
 			<u-search placeholder="请输入公司名称搜索" v-model="searchVal" bg-color="#F3F4F6" height="72" :clearabled="false"
 				:show-action="false" @search="searchCompany"></u-search>
 		</view>
-
 		<view class="con_dataList" v-if="dataShow">
 			<view class="con_empty" v-if="dataList.length == 0">
 				<u-empty text="暂无数据" color="#000" :src="gtCommon.getOssImg('index/empty.png')" icon-size="550"
@@ -81,7 +78,8 @@
 							<!-- <text>申请添加</text> -->
 						</view>
 						<view class="con_btns">
-							<view class="con_btnItem" @click="gtCommon.callMobile(item.mobile)">
+							<!-- gtCommon.callMobile(item.mobile) -->
+							<view class="con_btnItem" @click="openPhoneCallPop(item)">
 								<text>即刻联系</text>
 							</view>
 							<view class="con_btnItem" @click="showLine(item)">
@@ -121,6 +119,40 @@
 				</u-popup>
 			</view>
 		</view>
+		<!-- 电话弹层 -->
+		<u-popup v-model="showCall" @close="showCall = false" mode="bottom" border-radius="14">
+		    <view class="call_view">
+		       <view class="call_item" v-if="targetItem.mobile" @click="callPhoneFn(targetItem.mobile)">
+					<view class="item_name">
+						<text>负责人</text>
+					</view>
+					<view class="item_val">
+						<text>{{targetItem.mobile}}</text>
+					</view>
+		       </view>
+			   <view class="call_item" v-if="targetItem.fixed_telephone" @click="callPhone()">
+					<view class="item_name">
+						<text>座机</text>
+					</view>
+					<view class="item_val">
+						<text>{{targetItem.fixed_telephone}}</text>
+					</view>
+			   </view>
+			   <view class="call_item" v-if="targetItem.line_info && targetItem.line_info.line_mobile" @click="callPhoneFn(targetItem.line_info.line_mobile)">
+					<view class="item_name">
+						<text>专线经理</text>
+					</view>
+					<view class="item_val">
+						<text>{{targetItem.line_info && targetItem.line_info.line_mobile}}</text>
+					</view>
+			   </view>
+			   <view class="call_item" @click="showCall = false">
+					<view class="item_name">
+						<text>取消</text>
+					</view>			
+			   </view>
+			</view>
+		</u-popup>
 	</view>
 </template>
 
@@ -131,7 +163,6 @@
 				searchVal: '',
 				lng: '',
 				lat: '',
-
 				dataShow: false,
 				dataList: [],
 				companyId: 0,
@@ -139,9 +170,8 @@
 				lineList: [],
 				lineId: 0,
 				showAddressStatus: true,
-
-
-
+				showCall: false,
+				targetItem: {}
 			}
 		},
 		onLoad() {
@@ -168,8 +198,37 @@
 					gt.lineList = res.list
 				});
 			},
+			openPhoneCallPop(item) {
+				let gt = this
+				gt.showCall = true
+				gt.targetItem = item
+			},
+			callPhoneFn(phone) {
+				let gt = this
+				gt.calll_company()
+				gt.gtCommon.callMobile(phone)
+			},
+			calll_company() {
+				let gt = this
+				gt.gtRequest.post("/logistics/Company/company_calll_company", {
+					logistics_id: gt.targetItem.logistics_id
+				}).then(res => {})
+			},
+			callPhone() {
+				let gt = this
+				if(gt.gtCommon.isTel(gt.targetItem.fixed_telephone)) {
+					gt.calll_company()
+					uni.makePhoneCall({
+						phoneNumber: gt.targetItem.fixed_telephone,
+					});
+				} else {
+					uni.showToast({
+						title: '手机号格式错误',
+						icon: "error"
+					})
+				}
+			},
 			searchCompany() {
-				console.log('searchCompany');
 				let gt = this;
 				var url = "/logistics/collaborate/get_logistics_company_list";
 				var data = {
@@ -190,7 +249,6 @@
 			},
 			showLine(item) {
 				let gt = this;
-				
 				gt.companyId = item.logistics_id;
 				gt.lineShow = true;
 			},
@@ -209,8 +267,6 @@
 					line_id: gt.lineId,
 					is_show_address: gt.showAddressStatus ? 1 : 0,
 				};
-				// console.log(data);
-				// return false;
 				gt.gtRequest.post(url, data).then(res => {
 					gt.lineShow = false;
 					gt.$refs.uToast.show({
@@ -220,14 +276,12 @@
 					});
 				});
 			}
-
 		}
 	}
 </script>
 
 <style lang="scss">
 	page {
-
 		.gt_content {
 			.con_search {
 				margin: 8rpx 16rpx;
@@ -475,6 +529,24 @@
 						line-height: 100rpx;
 						text-align: center;
 						margin-left: 16rpx;
+					}
+				}
+			}
+		
+			.call_view {
+				padding-top: 8rpx;
+				.call_item {
+					padding: 32rpx 0;
+					border-bottom: 1rpx solid #e5e5e5;
+					&:last-child {
+						border-bottom: none;
+					}
+					.item_name {
+						text-align: center;
+					}
+					.item_val {
+						text-align: center;
+						color: $gtProjectColor;
 					}
 				}
 			}

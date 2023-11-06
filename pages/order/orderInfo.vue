@@ -1095,9 +1095,9 @@
 				trajectoryList: [],
 
 				trajectoryShow: false,
-
+				fee_detail: [],
 				msg: '',
-				yunshu_xieyi_url:'https://saasdemo.sansongkeji.com/adminsite/#/agreement/transportation'
+				yunshu_xieyi_url:'https://saasdemo.sansongkeji.com/adminsite/#/agreement/transportation',
 				// yunshu_xieyi_url:'https://baidu.com'
 			}
 		},
@@ -1107,7 +1107,6 @@
 			// if(options.intoFrom){
 			// 	gt.intoFrom = options.intoFrom;
 			// }
-
 			var companyInfo = uni.getStorageSync('companyInfo');
 			gt.companyLat = companyInfo.latitude;
 			gt.companyLng = companyInfo.longitude;
@@ -1774,7 +1773,7 @@
 					}
 					gt.dataInfo = res.order_info;
 					gt.sendInfo = res.waybill_info;
-
+					gt.fee_detail = res.fee_detail
 					var payBillList = [];
 					var unPayBillList = [];
 					var payTotalMoney = 0;
@@ -1902,9 +1901,10 @@
 					});
 				}
 				if (action == 'offlineCollection') {
-					var url = "/logistics/order/confirm_pay_main";
+					var url = gt.dataInfo.pay_method == 1 ? "/logistics/order/confirm_pay_other" : "/logistics/order/confirm_pay_main";
 					var data = {
 						deliver_sn: gt.dataInfo.deliver_sn,
+						fee_id: gt.fee_detail[gt.fee_detail.length-1].fee_id
 					};
 					gt.gtRequest.post(url, data).then(res => {
 						gt.getDataInfo();

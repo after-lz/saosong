@@ -88,15 +88,21 @@
 				selectedList: [],
 			}
 		},
-		onLoad(options) {
+		async onLoad(options) {
 			let gt = this;
+			await gt.getDataList(options.logistics_id);
 			if (options.lineId) {
 				gt.lineId = options.lineId;
-				setTimeout(function() {
+				// setTimeout(function() {
 					gt.getLineInfo();
-				}, 500);
+				// }, 500);
 			}
-			gt.getDataList(options.logistics_id);
+			if(options.end_province) {
+				let target = gt.provinceList.find(item=> item.cityName === options.end_province)
+				if(target) {
+					gt.selectItem2(target)
+				}
+			}
 		},
 		methods: {
 			getLineInfo() {
@@ -108,22 +114,26 @@
 				gt.gtRequest.post(url, data).then(res => {
 					// var info = res.info;
 					gt.fromTo = res.info.start_city + ' - ' + res.info.end_city;
-					for (var i = 0; i < gt.pcaList.length; i++) {
-						// if(gt.pcaList[i].city_name == res.info.end_province){
-						// 	gt.selectItem(gt.pcaList[i]);
-						// }
-						for (var j = 0; j < gt.pcaList[i].children.length; j++) {
-							if (gt.pcaList[i].children[j].city_name == res.info.end_city) {
-								gt.selectItem(gt.pcaList[i].children[j]);
-							}
-						}
+					// for (var i = 0; i < gt.pcaList.length; i++) {
+					// 	// if(gt.pcaList[i].city_name == res.info.end_province){
+					// 	// 	gt.selectItem(gt.pcaList[i]);
+					// 	// }
+					// 	for (var j = 0; j < gt.pcaList[i].children.length; j++) {
+					// 		if (gt.pcaList[i].children[j].city_name == res.info.end_city) {
+					// 			gt.selectItem(gt.pcaList[i].children[j]);
+					// 		}
+					// 	}
+					// }
+					let target = gt.provinceList.find(item=> item.cityName === res.info.end_province)
+					if(target) {
+						gt.selectItem2(target)
 					}
 				})
 			},
-			getDataList(id) {
+			async getDataList(id) {
 				let gt = this;
 				var url = "/logistics/specialline/get_special_line_range";
-				gt.gtRequest.post(url, {
+				await gt.gtRequest.post(url, {
 					logistics_id: id
 				}).then(res => {
 					var list = [];
@@ -284,7 +294,7 @@
 			},
 			selectItem2(item) {
 				let gt = this;
-				// var selected = !item.selected;
+				var selected = !item.selected;
 				if (item.cityType == 1) {
 					var cityList = gt.getChildren(item);
 					gt.cityList = cityList;
@@ -295,7 +305,7 @@
 					var areaList = gt.getChildren(item);
 					gt.areaList = areaList;
 				}
-				// gt.selectdPCA(item, selected);
+				gt.selectdPCA(item, selected);
 			},
 			selectdPCA(item, selected) {
 				let gt = this;

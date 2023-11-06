@@ -10,7 +10,7 @@
 			</view>
 			<view class="gt_title_swiper">
 				<u-tabs-swiper ref="uTabs" :list="tabs" :current="current" @change="tabsChange" :is-scroll="false"
-					swiperWidth="750" height="80"></u-tabs-swiper>
+					swiperWidth="750" height="80" :offset='offset1'></u-tabs-swiper>
 			</view>
 		</view>
 		<swiper :current="current" @animationfinish="animationfinish" :disable-touch="true" class="main">
@@ -95,9 +95,10 @@
 		components: { CircleBox },
 		data() {
 			return {
-				tabs: [{name: '消息'}, {name: '圈子'}],
+				tabs: [{name: '消息'}, {name: '圈子', count: 0}],
 				current: 0,
 				offset: [0, 0],
+				offset1: [5, 0],
 				list: {
 					type_0: {},
 					type_1: {},
@@ -108,7 +109,8 @@
 				newMsgArr: [],
 				offset: [10, 0],
 				companyInfo: {},
-				userInfo: {}
+				userInfo: {},
+				newCircleNum: 0
 			}
 		},
 		async onLoad() {
@@ -138,6 +140,11 @@
 			uni.hideTabBarRedDot({ //隐藏红点
 				index: 3
 			})
+			gt.newCircleNum = uni.getStorageSync("circleNum") || 0
+			if(gt.newCircleNum) {
+				gt.tabs[1].count = gt.newCircleNum
+				if(gt.current) gt.clearMsg()
+			}
 			gt.newMsgArr = JSON.parse(uni.getStorageSync('newMsgArr') || '[]')
 			gt.companyInfo = uni.getStorageSync('companyInfo')
 			gt.userInfo = uni.getStorageSync('userInfo')
@@ -161,10 +168,18 @@
 					gt.list = res
 				})
 			},
+			clearMsg() {
+				let gt = this
+				gt.gtRequest.post('/api/applogin/set_circle_red_time').then(res => {
+					gt.tabs[1].count = 0
+					uni.setStorageSync("circleNum", 0)
+				})
+			},
 			tabsChange(index) {
 				let gt = this
 				if(gt.token) {
 					gt.current = index
+					if(index) gt.clearMsg()
 				} else {
 					uni.showModal({
 						title: '获取完整体验，请先登录',

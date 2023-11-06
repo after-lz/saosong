@@ -27,6 +27,22 @@ function getToken() {
 
 }
 
+function get(url) {
+	const apiDomain = uni.getStorageSync('apiDomain');
+	var promise = new Promise(async function(resolve, reject) {
+		var token = await getToken();
+		uni.request({
+			url: apiDomain + url,
+			data: {login_token: token},
+			method: 'GET',
+			success: function(res) {
+				resolve(res)
+			},
+		})
+	})
+	return promise
+}
+
 function post(url, data = {}, rejectStatus = false) {
 	// console.log('rejectStatus:', rejectStatus);
 	const apiDomain = uni.getStorageSync('apiDomain');
@@ -223,5 +239,6 @@ function upload(file) {
 
 
 module.exports.getToken = getToken;
+module.exports.get = get;
 module.exports.post = post;
 module.exports.upload = upload;

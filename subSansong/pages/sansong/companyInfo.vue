@@ -109,7 +109,7 @@
 											<view class="con_text">
 												<text>{{mobile}}</text>
 											</view>
-											<view class="con_icon" @click="gtCommon.callMobile(mobile)">
+											<view class="con_icon" @click="callPhoneFn()">
 												<u-icon name="phone-fill" size="40" color="#485EF4"></u-icon>
 											</view>
 										</view>
@@ -586,7 +586,7 @@
 		<!-- 电话弹层 -->
 		<u-popup v-model="showCall" @close="closeCall" mode="bottom" border-radius="14">
 		    <view class="call_view">
-		       <view class="call_item" v-if="name" @click="gtCommon.callMobile(mobile)">
+		       <view class="call_item" v-if="name" @click="callPhoneFn()">
 					<view class="item_name">
 						<text>负责人</text>
 					</view>
@@ -897,6 +897,17 @@
 					if(res.list.length < gt.params.limit) gt.over = true
 				})
 			},
+			callPhoneFn() {
+				let gt = this
+				gt.calll_company()
+				gt.gtCommon.callMobile(gt.mobile)
+			},
+			calll_company() {
+				let gt = this
+				gt.gtRequest.post("/logistics/Company/company_calll_company", {
+					logistics_id: gt.logistics_id
+				}).then(res => {})
+			},
 			// 导航
 			toMapApp() {
 				let gt = this
@@ -1180,13 +1191,14 @@
 				let gt = this;
 				uni.navigateTo({
 					// url: './transportScope?lineId=' + item.line_id + '&logistics_id=' + gt.data.company_info.logistics_id,
-					url: './transportScope?logistics_id=' + gt.data.company_info.logistics_id,
+					url: './transportScope?logistics_id=' + gt.data.company_info.logistics_id + '&end_province=' + item.end_province
 				});
 				return false;
 			},
 			callPhone(phone) {
 				let gt = this
 				if(gt.gtCommon.isTel(phone)) {
+					gt.calll_company()
 					uni.makePhoneCall({
 						phoneNumber: phone,
 					});
@@ -1554,7 +1566,7 @@ import html2canvas from 'html2canvas'
 								display: flex;
 								align-items: center;
 								.left_icon {
-									width: 110rpx;
+									width: 120rpx;
 									display: flex;
 									flex-wrap: wrap;
 									justify-content: center;
@@ -1578,7 +1590,7 @@ import html2canvas from 'html2canvas'
 									line-height: 100rpx;
 									background-color: #FFBF27;
 									color: #fff;
-									padding: 0 44rpx;
+									padding: 0 60rpx;
 									border-radius: 16rpx;
 									margin: 0 auto;
 								}

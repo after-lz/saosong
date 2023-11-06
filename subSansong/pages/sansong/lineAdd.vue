@@ -927,7 +927,7 @@
 			showGTPCA(str) {
 				let gt = this;
 				gt.height = '600rpx';
-				if(str == 's' && (gt.isAdd || gt.isEdit)) return;
+				if(str == 's' && gt.isEdit) return;
 				if(gt.isEdit && str == 'e') {
 					let editProvince = gt.provinceCityAreaList.filter(item=> item.city_code == gt.toPca[0][0].cityCode)
 					editProvince[0].children = editProvince[0].children.filter(item=> item.city_code == gt.toPca[1][0].cityCode)

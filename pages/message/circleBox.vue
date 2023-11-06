@@ -177,9 +177,26 @@
 		},
 		mounted() {
 			let gt = this
+			uni.hideTabBarRedDot({
+				index: 3
+			})
+			let ws_url = uni.getStorageSync('environment') == 'prod' ? 'wss://saasdemo.sansongkeji.com:3021' : 'wss://test.sansongkeji.com:8021'
+			gt.gtWSS.setWsUrl(ws_url)
+			gt.getonMessage()
 			if(gt.unid) gt.showFn()
 		},
 		methods: {
+			getonMessage() {
+				let gt = this
+				gt.gtWSS.socketTask.onMessage((res) => {
+					let obj = JSON.parse(res.data)
+					if (obj.type == 'new_circle') {
+						uni.showTabBarRedDot({ // 显示红点
+							index: 3
+						})
+					}
+				})
+			},
 			async showFn() {
 				let gt = this
 				// 查看他人圈子
