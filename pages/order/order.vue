@@ -476,6 +476,7 @@
 				historyList = [];
 			}
 			gt.historyList = historyList;
+			gt.reGetOrderList();
 		},
 		onShow() {
 			let gt = this;
@@ -483,18 +484,22 @@
 			var orderSearchStatus = uni.getStorageSync('orderSearchStatus');
 			gt.searchVal = orderSearchVal;
 			uni.removeStorageSync('orderSearchVal');
-			gt.currentTab = orderSearchStatus
-			gt.statusIndex = orderSearchStatus
-			uni.removeStorageSync('orderSearchStatus');
+			if(orderSearchStatus) {
+				gt.currentTab = orderSearchStatus
+				gt.statusIndex = orderSearchStatus
+				uni.removeStorageSync('orderSearchStatus');
+			}
 			gt.calcendarChange({
 				startDate: uni.getStorageSync('stime'),
 				endDate: uni.getStorageSync('etime')
 			})
 			uni.removeStorageSync('stime');
 			uni.removeStorageSync('etime');
-			setTimeout(function() {
-				gt.reGetOrderList();
-			}, 500);
+			if(orderSearchVal || orderSearchStatus || uni.getStorageSync('stime') || uni.getStorageSync('etime')) {
+				setTimeout(function() {
+					gt.reGetOrderList();
+				}, 500);
+			}
 		},
 		onHide() {
 			let gt = this;

@@ -8,7 +8,14 @@
 		</view>
 		<view class="con_listenStatus_tabSwiper">
 			<view class="con_listenAudio">
-				<view class="con_listenStatus" @click="changeListenStatus" v-if="companyAuth">
+				<view class="con_listenStatus" v-if="companyAuth">
+					<view class="con_listen">
+						<view class="con_text">
+							<text>听单中 ·</text>
+						</view>
+					</view>
+				</view>
+				<!-- <view class="con_listenStatus" @click="changeListenStatus" v-if="companyAuth">
 					<view class="con_listen" :style="{display: listenStatus ? '':'none'}">
 						<view class="con_text">
 							<text>听单中 ·</text>
@@ -19,8 +26,9 @@
 							<text>未听单 ·</text>
 						</view>
 					</view>
-				</view>
-				<view class="con_audioStatus" @click="audioSwitch" :style="{display: listenStatus ? '':'none'}">
+				</view> -->
+				<view class="con_audioStatus">
+<!-- 				<view class="con_audioStatus" @click="audioSwitch" :style="{display: listenStatus ? '':'none'}"> -->
 					<view class="openAudio" :style="{backgroundImage: `url(${gtCommon.getOssImg('index/openAudio.png')})`,display: audioStatus ? '':'none'}"></view>
 					<view class="closeAudio" :style="{backgroundImage: `url(${gtCommon.getOssImg('index/closeAudio.png')})`,display: audioStatus ? 'none':''}"></view>
 				</view>
@@ -464,7 +472,7 @@
 			return {
 				maskShow: false,
 				mobile: '',
-				listenStatus: false,
+				listenStatus: true,
 				audioStatus: true,
 				tabList: [
 					{name: '极速', count: 0}, 
@@ -561,7 +569,7 @@
 				gt.gtWSS.setWsUrl(ws_url);
 				gt.gtonMessage();
 			}
-			gt.listenStatus = uni.getStorageSync('listenStatus');
+			// gt.listenStatus = uni.getStorageSync('listenStatus');
 			gt.audioStatus = uni.getStorageSync('audioStatus');
 			gt.companyAuth = uni.getStorageSync('companyAuth');
 			// gt.getLineNum();
@@ -594,7 +602,7 @@
 					var obj = JSON.parse(data);
 					var type = obj.type;
 					if (type == 'order_new_order') {
-						if (!gt.listenStatus) return false;
+						// if (!gt.listenStatus) return false;
 						var orderInfo = obj.data;
 						var orderInfo = orderInfo.order_info;
 						// for (var i = 0; i < gt.dataList.length; i++) {

@@ -617,7 +617,7 @@
 						height: 184rpx;
 						margin-right: 6rpx;
 						margin-top: 6rpx;
-						border-radius: 16rpx;
+						// border-radius: 16rpx;
 						background-repeat: no-repeat;
 						background-size: cover;
 						&:nth-child(3n) {

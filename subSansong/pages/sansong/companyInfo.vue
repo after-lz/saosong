@@ -868,6 +868,7 @@
 			let url = gt.logistics_id ? "/logistics/company/get_company_infother" : "/logistics/company/get_company_info"
 			gt.inviteCompanyUrl = "https://saasdemo.sansongkeji.com/company?logistics_id="+gt.logistics_id
 			gt.invitePickUpUrl = "https://saasdemo.sansongkeji.com/order?logistics_id="+gt.logistics_id
+			if(option.from == 'user') gt.tabsChange(2)
 			await gt.getCompanyInfo(url);
 			if(url == '/logistics/company/get_company_info') {
 				gt.logistics_id = gt.data.company_info.logistics_id

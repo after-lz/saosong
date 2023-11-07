@@ -220,13 +220,13 @@
 						url = '/subUser/pages/user/behaviorScore?score=' + gt.numArr1[0]
 						break;
 					case 1:
-						url = ''
+						url = '/subMsg/pages/message/visitorLog'
 						break;
 					case 2:
 						url = ''
 						break;
 					case 3:
-						url = ''
+						url = '/subSansong/pages/sansong/companyInfo?from=user'
 						break;
 					default:
 						break;
