@@ -12,12 +12,15 @@
 		<view class="con_num">
 			<text>￥{{money}}</text>
 		</view>
+		<view class="warning" v-if="wallet_status">
+			<text>你的账户异常，请联系平台客服!</text>
+		</view>
 		<view class="con_btns">
-			<view class="con_btnItem chargeBtn" @click="goCharge">
-				<text>充值</text>
+			<view class="con_btnItem chargeBtn">
+				<u-button type="primary" :disabled='wallet_status' @click="goCharge">充值</u-button>
 			</view>
-			<view class="con_btnItem withdrawBtn" @click="goWithdrawal">
-				<text>提现</text>
+			<view class="con_btnItem withdrawBtn">
+				<u-button :disabled='wallet_status' @click="goWithdrawal">提现</u-button>
 			</view>
 		</view>
 		<view class="con_tip">
@@ -42,11 +45,13 @@
 		data() {
 			return {
 				money: 0,
-				aut_show: false
+				aut_show: false,
+				wallet_status: 0
 			}
 		},
 		onShow() {
 			let gt = this
+			gt.wallet_status = uni.getStorageSync("user_info").wallet_status
 			gt.getUserInfo()
 		},
 		methods: {
@@ -126,6 +131,11 @@
 				margin-top: 4rpx;
 			}
 
+			.warning {
+				text-align: center;
+				color: #ff9900;
+			}
+	
 			.con_btns {
 				width: 750rpx;
 				padding-left: 200rpx;
@@ -134,24 +144,9 @@
 
 				.con_btnItem {
 					width: 350rpx;
-					height: 100rpx;
-					border-radius: 16rpx;
-					font-size: 32rpx;
-					font-family: PingFangSC-Medium, PingFang SC;
-					font-weight: 500;
-					color: #FFFFFF;
-					line-height: 100rpx;
-					text-align: center;
-				}
-
-				.chargeBtn {
-					background: $gtProjectColor;
-					color: #fff;
 				}
 
 				.withdrawBtn {
-					color: $gtProjectColor;
-					border: 2rpx solid #485EF4;
 					margin-top: 26rpx;
 				}
 			}

@@ -7,7 +7,8 @@
 			</view>
 			<view class="info_bottom">
 				<view class="balance">{{ data.money02.toFixed(2) }}</view>
-				<view class="con_btnItem" @click="goBalance" :class="data.zhuanyueeSwitch ? '' : 'dis'" v-if="data.zhuanyueeSwitch">
+				<view class="warning" v-if="wallet_status">你的账户异常，请联系平台客服!</view>
+				<view class="con_btnItem" @click="goBalance" :class="wallet_status ? 'dis' : ''" v-if="data.zhuanyueeSwitch">
 					<text>转到余额</text>
 				</view>
 			</view>
@@ -75,7 +76,8 @@
 					ruleStr: '' // 规则
 				},
 				is_company_approve: false,
-				flag: false
+				flag: false,
+				wallet_status: 0
 			}
 		},
 		onLoad() {
@@ -91,6 +93,7 @@
 		},
 		onShow() {
 			let gt = this
+			gt.wallet_status = uni.getStorageSync("user_info").wallet_status
 			gt.getList()
 		},
 		methods: {
@@ -179,6 +182,11 @@
 					width: 100%;
 					text-align: center;
 					font-size: 80rpx;
+				}
+				.warning {
+					width: 100%;
+					text-align: center;
+					color: #485EF4;
 				}
 				.con_btnItem {
 					width: 200rpx;

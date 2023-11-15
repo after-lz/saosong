@@ -56,6 +56,7 @@
 		name: "bindCollectionAccount",
 		data() {
 			return {
+				data: {},
 				formData: {
 					alipay: "",
 					truename: "",
@@ -67,7 +68,12 @@
 			}
 		},
 		onLoad() {
-			this.formData = uni.getStorageSync("user_info")
+			this.data = uni.getStorageSync("user_info")
+			this.formData = {
+				alipay: this.data.alipay,
+				truename: this.data.truename,
+				verify_code: ""
+			}
 		},
 		onReady() {
 			let that = this
@@ -124,6 +130,8 @@
 					...this.formData
 				}
 				this.gtRequest.post("/api/applogin/bind_alipay", info).then(res=> {
+					this.data.alipay = this.formData.alipay
+					uni.setStorageSync("user_info", this.data)
 					this.$refs.uToast.show({
 						title: '绑定成功',
 						type: 'success',

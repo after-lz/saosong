@@ -12,7 +12,7 @@
 					<text>￥</text>
 				</view>
 				<view class="con_input">
-					<u-input v-model.number="money" maxlength='7' type="digit" placeholder="最低提现金额20元" height="40" @blur="inputChange" />
+					<u-input v-model.number="money" type="digit" placeholder="最低提现金额20元" height="40" @blur="inputChange" />
 				</view>
 			</view>
 			<view class="con_line">
@@ -42,7 +42,7 @@
 					</view>
 					<view class="con_account">
 						<text v-if="withdrawalMethod == 1">微信账户</text>
-						<text v-if="withdrawalMethod == 2">支付宝账户</text>
+						<text v-if="withdrawalMethod == 2">{{alipay||'支付宝账户'}}</text>
 						<text v-if="withdrawalMethod == 3">{{bankNameNum||'请选择'}}</text>
 					</view>
 				</view>
@@ -59,14 +59,19 @@
 		</view>
 		<view class="footer">
 			<view class="left">
-				<view class="left_item">
+				<!-- <view class="left_item">
 					<text>服务费：￥</text>
 					<text v-if="money >= 20">{{ serviceCharge }}</text>
 				</view>
 				<view class="left_item">
 					<text>预计到账：￥</text>
 					<text v-if="money >= 20">{{ (money - serviceCharge).toFixed(2) || '' }}</text>
-				</view>
+				</view> -->
+				<view class="left_item">
+					<text>预计到账：￥</text>
+					<text v-if="withdrawalMethod == 2 && money >= 0.1">{{ money }}</text>
+					<text v-if="withdrawalMethod == 3 && money >= 20">{{ money }}</text>
+				</view> 
 			</view>
 			<view class="right">
 				<u-button type="primary" :disabled="_disabled" @click="submitWithdrawal">立即提现</u-button>
@@ -80,9 +85,9 @@
 		</view> -->
 		<view class="con_popup">
 			<view class="con_method">
-				<u-popup v-model="methodShow" mode="bottom" height="330" border-radius="24rpx 24rpx 0 0">
+				<u-popup v-model="methodShow" mode="bottom" border-radius="24rpx 24rpx 0 0">
 					<view class="con_list">
-						<view class="con_methodItem" @click="confirmMethod(1)">
+						<!-- <view class="con_methodItem" @click="confirmMethod(1)">
 							<view class="con_icon">
 								<image :src="gtCommon.getOssImg('user/wechatPayIcon.png')" mode="widthFix"></image>
 							</view>
@@ -92,8 +97,8 @@
 						</view>
 						<view class="con_line">
 							<u-line length="750rpx" color="#EFEFEF"></u-line>
-						</view>
-						<!-- <view class="con_methodItem">
+						</view> -->
+						<view class="con_methodItem" @click="confirmMethod(2)">
 							<view class="con_icon">
 								<image :src="gtCommon.getOssImg('user/alipayIcon.png')" mode="widthFix"></image>
 							</view>
@@ -103,7 +108,7 @@
 						</view>
 						<view class="con_line">
 							<u-line length="750rpx" color="#EFEFEF"></u-line>
-						</view> -->
+						</view>
 						<view class="con_methodItem" @click="confirmMethod(3)">
 							<view class="con_icon">
 								<image :src="gtCommon.getOssImg('user/bankCardIcon.png')" mode="widthFix"></image>
@@ -111,15 +116,15 @@
 							<view class="con_text">
 								<text>银行卡</text>
 							</view>
-						</view><!-- 
+						</view>
 						<view class="con_line">
 							<u-line length="750rpx" color="#EFEFEF"></u-line>
-						</view> -->
-						<!-- <view class="con_methodItem">
+						</view>
+						<view class="con_methodItem" @click='methodShow = false'>
 							<view class="con_text">
 								<text>取消</text>
 							</view>
-						</view> -->
+						</view>
 					</view>
 				</u-popup>
 			</view>
@@ -139,6 +144,7 @@
 				totalMoney: 0,
 				withdrawalMethod: 3,
 				bankNameNum: '',
+				alipay: '',
 				bankCardId: 0,
 				openId: '',
 				bankList: [],
@@ -156,16 +162,22 @@
 		computed: {
 			_disabled() {
 				let gt = this
-				return !gt.money || gt.money < 20 || gt.totalMoney < 20 || gt.money > gt.totalMoney || !gt.bankCardId
+				if(gt.withdrawalMethod == 1) {
+					return true
+				} else if(gt.withdrawalMethod == 2) {
+					let flag = !gt.money || gt.money < 0.1 || gt.totalMoney < 0.1 || gt.money > gt.totalMoney
+					return flag || !gt.alipay
+				} else {
+					let flag = !gt.money || gt.money < 20 || gt.totalMoney < 20 || gt.money > gt.totalMoney
+					return flag || !gt.bankCardId
+				}
 			},
-			serviceCharge() {
-				let gt = this
-				
-					let num = gt.money || 0
-					let min = num * 0.001 >= 1 ? num * 0.001 : 1
-					return parseFloat((num * 0.01).toFixed(2)) + parseFloat(min.toFixed(2))
-				
-			}
+			// serviceCharge() {
+			// 	let gt = this
+			// 	let num = gt.money || 0
+			// 	let min = num * 0.001 >= 1 ? num * 0.001 : 1
+			// 	return parseFloat((num * 0.01).toFixed(2)) + parseFloat(min.toFixed(2))
+			// }
 		},
 		methods: {
 			getBankList() {
@@ -184,7 +196,13 @@
 			},
 			inputChange(e) {
 				let gt = this
-				gt.money = +e > 0 ? e.match(/\d+\.?\d{0,2}/, '')[0] : 0
+				if(+e > 0 && +e <= 9999999) {
+					gt.money = e.match(/\d+\.?\d{0,2}/, '')[0]
+				} else if(+e > 9999999) {
+					gt.money = 9999999
+				} else if(+e <= 0) {
+					gt.money = 0
+				}
 			},
 			allWithdrawal() {
 				let gt = this;
@@ -192,23 +210,31 @@
 			},
 			showMethod() {
 				let gt = this;
-				// gt.methodShow = true;
-				gt.confirmMethod(3)
+				gt.methodShow = true;
+				// gt.confirmMethod(3)
 			},
 			confirmMethod(index) {
 				let gt = this;
-				if (index != 3) {
-					gt.withdrawalMethod = index;
+				if (index == 2) {
+					let alipay = uni.getStorageSync("user_info").alipay
+					if(!alipay) {
+						return gt.$refs.uToast.show({
+							title: '请先绑定支付宝',
+							type: 'error'
+						})
+					} else {
+						gt.withdrawalMethod = index;
+						gt.alipay = alipay
+					}
 				}
 				if (index == 3) {
 					if(gt.bankList.length == 0){
-						gt.$refs.uToast.show({
+						return gt.$refs.uToast.show({
 							title: '请先添加银行卡',
 							type: 'error',
 							// back: true,
 						})
-						return false;
-					}else{
+					} else {
 						gt.bankListShow = true;
 					}
 				}

@@ -42,9 +42,6 @@
 				alipay: ''
 			}
 		},
-		onLoad() {
-			
-		},
 		onShow() {
 			let gt = this
 			let user_info = uni.getStorageSync("user_info")
@@ -66,7 +63,7 @@
 				uni.navigateTo({
 					url: '../../../pages/login/peopleAuth?flag=' + true
 				})
-			},
+			}
 		}
 	}
 </script>
