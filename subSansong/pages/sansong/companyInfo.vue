@@ -944,15 +944,16 @@
 			// app端 生成名片分享
 			generateCard() {
 				let gt = this
+				let url = `page_order/companyDetails/index?logistics_id=${gt.logistics_id}`
 				uni.share({
 					provider: 'weixin',
 					scene: "WXSceneSession",
 					type: 5,
 					imageUrl: gt.data.company_info.company_pic,
-					title: '伞送货运',
+					title: gt.data.company_info.company_name,
 					miniProgram:{
 						id: 'gh_f6589072e372',
-						path: "page_order/companyDetails/index?logistics_id="+gt.logistics_id+"&all_outlets=0",
+						path: url,
 						type: 0,
 						webUrl: "http://uniapp.dcloud.io"
 					},

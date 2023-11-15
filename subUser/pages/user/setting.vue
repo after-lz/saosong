@@ -27,6 +27,17 @@
 			<view class="con_line">
 				<u-line length="718rpx" color="#f2f2f2" margin="0 16rpx"></u-line>
 			</view>
+			<view class="con_item" @click="goAccountCredited">
+				<view class="con_text">
+					<text>收款账户</text>
+				</view>
+				<view class="con_icon">
+					<u-icon name="arrow-right" color="#000"></u-icon>
+				</view>
+			</view>
+			<view class="con_line">
+				<u-line length="718rpx" color="#f2f2f2" margin="0 16rpx"></u-line>
+			</view>
 			<view class="con_item" @click="goMessage">
 				<view class="con_text">
 					<text>消息设置</text>
@@ -76,6 +87,11 @@
 			goAccount() {
 				uni.navigateTo({
 					url: './accountSecurity'
+				})
+			},
+			goAccountCredited() {
+				uni.navigateTo({
+					url: './accountCredited'
 				})
 			},
 			goMessage() {

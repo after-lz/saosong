@@ -12,13 +12,13 @@
 						</view>
 						<view class="row">
 							<view class="address">{{ item.line_name + `(${judgeType(item.promote_type)})` }}</view>
-							<view class="payNum">实付金额：<text class="num">￥{{ item.money }}</text> </view>
+							<view class="payNum">实付：<text class="num">￥{{ item.money }}</text> </view>
 						</view>
 						<view class="row">
 							<view class="orderNum">缴纳单号：{{ item.order_sn }}</view>
 							<view class="payType">
-								<text>{{ judgeMethod(item.pay_method) }}</text>
-								<text class="redpack" v-if="item.redpack_money">{{ `（红包抵扣-￥${item.redpack_money}）` }}</text>
+								<!-- <text>{{ judgeMethod(item.pay_method) }}</text> -->
+								<text class="redpack" v-if="item.redpack_money">{{ `抵扣￥${item.redpack_money}` }}</text>
 							</view>
 						</view>
 					</view>
@@ -123,7 +123,7 @@
 			.card {
 				position: relative;
 				height: 172rpx;
-				margin: 30rpx 28rpx 0;
+				margin: 30rpx 18rpx 0;
 				padding: 20rpx 30rpx;
 				background-color: #fff;
 				border-radius: 16rpx;

@@ -36,8 +36,7 @@
 		</view>
 		<view class="con_dataList" v-else>
 			<view class="con_tabs">
-				<u-tabs-swiper ref="uTabs" :list="tabList" :current="currentTab" @change="tabsChange" :is-scroll="false"
-					swiperWidth="750"></u-tabs-swiper>
+				<u-tabs-swiper ref="uTabs" :list="tabList" :current="currentTab" @change="tabsChange" swiperWidth="750"></u-tabs-swiper>
 			</view>
 			<view class="con_swiper">
 				<swiper :current="currentTab" @animationfinish="animationfinish">
@@ -889,6 +888,7 @@
 				// #endif
 				// #ifdef APP-PLUS
 				let sheet_url = `${apiDomain}/adminsite/#/agreement/index?deliver_sn=${item.deliver_sn}&type=uni`
+				// let sheet_url = `http://192.168.1.21:8080/#/?deliver_sn=${item.deliver_sn}&type=uni`
 				// #endif
 				uni.navigateTo({
 					url: '/pages/login/licence?url=' + encodeURIComponent(sheet_url),
@@ -986,7 +986,11 @@
 			}
 
 			.con_dataList {
-
+				.con_tabs {
+					.u-scroll-view {
+						clip-path: inset(0010px)
+					}
+				}
 				.con_swiper {
 					swiper {
 						height: calc(100vh - 168rpx);

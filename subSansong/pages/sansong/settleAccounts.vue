@@ -49,6 +49,21 @@
 				  `url(${gtCommon.getOssImg(type === 3 ? 'sansong/selected.png' : 'sansong/unSelected.png')})`}">
 			</view>
 		</view>
+		<view class="card" @click="type = 4">
+			<view class="card_left">
+				<view class="pay_logo">
+					<u-icon name="zhifubao-circle-fill" color="#2979ff" size="65"></u-icon>
+				</view>
+				<view class="pay_info">
+					<view class="pay_info_type">
+						<text>支付宝</text>
+					</view>
+				</view>
+			</view>
+			<view class="card_right" :style="{backgroundImage:
+				  `url(${gtCommon.getOssImg(type === 4 ? 'sansong/selected.png' : 'sansong/unSelected.png')})`}">
+			</view>
+		</view>
 		<!-- #endif -->
 		<view class="deduction" @click="confimPacket" v-if="promote_type">
 			<view class="deduction_select" :style="{backgroundImage:
@@ -136,7 +151,7 @@
 				// let Fn = gt.gtCommon.debounce(()=> {
 					gt.gtRequest.post(gt.pay_url, {
 						order_id: gt.order_id,
-						pay_method: gt.type, // 1余额2微信小程序3微信app
+						pay_method: gt.type, // 1余额2微信小程序3微信app4支付宝
 						redpack_money: gt.redpack_money
 					}).then(info => {
 						if(gt.type === 1) {
@@ -157,6 +172,24 @@
 									back: true
 								})
 							}
+						} else if(gt.type === 4) {
+							uni.requestPayment({
+								provider: 'alipay',
+								orderInfo: info.orderInfo,
+								success: function(res) {
+									gt.$refs.uToast.show({
+										title: '支付成功',
+										type: 'success',
+										back: true
+									})
+								},
+								fail: function(err) {
+									gt.$refs.uToast.show({
+										title: '支付失败',
+										type: 'error'
+									})
+								}
+							})
 						} else {
 							// #ifdef MP-WEIXIN
 							uni.getProvider({

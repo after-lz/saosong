@@ -151,9 +151,9 @@
 					<text>选择到站地址</text>
 				</view>
 				<view class="con_list">
-					<u-radio-group v-model="dataInfo.waybill_info.outlets_id" @change="stationChange">
+					<u-radio-group v-model="dataInfo.waybill_info.outlets_id">
 						<scroll-view scroll-y="true" style="height: 700rpx;">
-							<u-radio v-for="item in outletList" :key="item.outlets_id" :name="item.outlets_id">
+							<u-radio v-for="item in outletList" :key="item.outlets_id" :name="item.outlets_id" @click="stationChange(item.outlets_id)">
 								<view class="con_item">
 									<view class="con_name">
 										<text>{{item.outlets_name}}</text>
@@ -345,7 +345,8 @@
 				orderList: [], // 订单列表
 				showOrderList: [],
 				orderNum: 0,
-				allSelect: false
+				allSelect: false,
+				old_outlets_id: undefined
 			}
 		},
 		onLoad(options) {
@@ -362,6 +363,7 @@
 					gt.getlinInfo(res.waybill_info.line_id)
 					gt.getOrderInfo(res.waybill_info.line_id)
 					gt.dataInfo = res
+					gt.old_outlets_id = res.waybill_info.outlets_id
 					gt.oldOrderList = res.deliver_order_list
 					gt.plateNum = res.waybill_info.license_plate
 					gt.sendTime = res.waybill_info.create_time
@@ -542,6 +544,7 @@
 					driver_name: gt.dataInfo.waybill_info.driver_name, // 司机名称
 					driver_mobile: gt.dataInfo.waybill_info.driver_mobile, // 司机电话
 					line_id: gt.dataInfo.waybill_info.line_id, // 专线id
+					old_outlets_id: gt.old_outlets_id, // 修改之前的专线id
 					outlets_id: gt.dataInfo.waybill_info.outlets_id // 到站网点id
 				}
 				let imgs = []
@@ -569,7 +572,7 @@
 					if(!old_deliver_sn.some(obj=> obj == item)) add_deliver_sn.push(item)
 				})
 				params.add_deliver_sn = add_deliver_sn.join(',')
-				console.log(params)
+				// return console.log(params)
 				gt.gtRequest.post("/logistics/waybill/adjust_waybill", params).then(res => {
 					gt.$refs.uToast.show({
 						title: '调整运单成功',

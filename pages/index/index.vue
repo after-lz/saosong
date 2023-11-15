@@ -543,11 +543,14 @@
 		},
 		onLoad() {
 			let gt = this;
+			gt.mobile = uni.getStorageSync('mobile');
 			gt.innerAudioContext = uni.createInnerAudioContext();
 			// gt.innerAudioContext = uni.getBackgroundAudioManager();
-			// if (mobile) {
-			// gt.gtonMessage();
-			// }
+			if (gt.mobile) {
+				let ws_url = uni.getStorageSync('environment') == 'prod' ? 'wss://saasdemo.sansongkeji.com:3021' : 'wss://test.sansongkeji.com:8021'
+				gt.gtWSS.setWsUrl(ws_url);
+				gt.gtonMessage();
+			}
 			uni.setStorageSync('audioStatus', true);
 			// uni.setStorageSync('listenStatus', true);
 		},
@@ -556,19 +559,14 @@
 			uni.hideTabBarRedDot({ //隐藏红点
 				index: 0
 			})
-			var mobile = uni.getStorageSync('mobile');
-			gt.mobile = mobile;
+			gt.mobile = uni.getStorageSync('mobile');
 			var companyInfo = uni.getStorageSync('companyInfo');
 			gt.logistics_id = companyInfo.logistics_id;
 			gt.clientId = uni.getStorageSync('clientId');
 			uni.setNavigationBarTitle({
 				title: '专线货源',
 			});
-			if (gt.mobile) {
-				let ws_url = uni.getStorageSync('environment') == 'prod' ? 'wss://saasdemo.sansongkeji.com:3021' : 'wss://test.sansongkeji.com:8021'
-				gt.gtWSS.setWsUrl(ws_url);
-				gt.gtonMessage();
-			}
+			
 			// gt.listenStatus = uni.getStorageSync('listenStatus');
 			gt.audioStatus = uni.getStorageSync('audioStatus');
 			gt.companyAuth = uni.getStorageSync('companyAuth');

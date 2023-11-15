@@ -10,15 +10,18 @@
 					<view class="con_item" v-for="(item,index) in dataList" :key="index" @click="goDetail(item)">
 						<view class="con_title_num">
 							<view class="con_title">
-								<text>{{item.log_type_msg}}</text>
+								<text>{{item.remark}}</text>
 							</view>
 							<view class="con_num">
-								<text v-if="item.number > 0">+{{item.number}}</text>
-								<text v-else>{{item.number}}</text>
+								<text v-if="item.num > 0">+{{item.num}}</text>
+								<text v-else>{{item.num}}</text>
 							</view>
 						</view>
-						<view class="con_time">
-							<text>{{gtCommon.formateTime(item.create_time,'YYYY-MM-DD HH:mm:SS')}}</text>
+						<view class="con_title_num">
+							<view class="con_time">
+								<text>{{gtCommon.formateTime(item.create_time,'YYYY-MM-DD HH:mm:SS')}}</text>
+							</view>
+							<view class="con_time" style="color: #000;">{{ judgeType(item.type) }}</view>
 						</view>
 					</view>
 				</scroll-view>
@@ -55,21 +58,23 @@
 				if (gt.end) {
 					return false;
 				}
-				var url = "/logistics/companywallet/get_wallet_log";
+				// var url = "/logistics/companywallet/get_wallet_log";
+				// var data = {
+				// 	page: gt.page,
+				// 	limit: gt.size,
+				// 	wallet_type:'money01',
+				// 	data_type:1,
+				// };
+				var url = "/api/applogin/get_bill_list";
 				var data = {
+					platform: 'logistics',
 					page: gt.page,
-					limit: gt.size,
-					wallet_type:'money01',
-					data_type:1,
+					limit: gt.size
 				};
 				gt.gtRequest.post(url,data).then(res=>{
+					res.list.forEach(item=> item.num = +item.num)
 					gt.dataList = gt.dataList.concat(res.list);
 					gt.end = gt.page >= res.total_page
-					// if (res.list.length == gt.size) {
-					// 	gt.page = gt.page + 1;
-					// } else {
-					// 	gt.end = true;
-					// }
 				});
 			},
 			goDetail(record) {
@@ -85,6 +90,44 @@
 				++gt.page
 				gt.getDataList();
 			},
+			judgeType(type) {
+				let str = ''
+				switch (type){
+					case 'money01':
+						str = '零钱'
+						break;
+					case 'money02':
+						str = '红包'
+						break;
+					case 'money03':
+						str = '行为分'
+						break;
+					case 'weipay':
+						str = '微信支付'
+						break;
+					case 'weipay_mini':
+						str = '微信小程序支付'
+						break;
+					case 'weipay_app':
+						str = '微信APP支付'
+						break;
+					case 'alipay':
+						str = '支付宝支付'
+						break;
+					case 'alipay_app':
+						str = '支付宝APP支付'
+						break;
+					case 'coupon':
+						str = '优惠券'
+						break;
+					case 'cash':
+						str = '现金'
+						break;
+					default:
+						break;
+				}
+				return str
+			}
 		}
 	}
 </script>
@@ -124,6 +167,8 @@
 								}
 							}
 							.con_time{
+								display: flex;
+								justify-content: space-between;
 								font-size: 24rpx;
 								font-family: PingFangSC-Regular, PingFang SC;
 								font-weight: 400;

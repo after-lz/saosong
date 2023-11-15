@@ -117,6 +117,9 @@
 			let gt = this
 			gt.token = await gt.gtRequest.getToken()
 			if(gt.token) {
+				let ws_url = uni.getStorageSync('environment') == 'prod' ? 'wss://saasdemo.sansongkeji.com:3021' : 'wss://test.sansongkeji.com:8021'
+				gt.gtWSS.setWsUrl(ws_url)
+				gt.getonMessage()
 				// gt.getList()
 				gt.refreshCircle()
 			} else {
@@ -159,6 +162,18 @@
 			refreshCircle() {
 				let gt = this
 				gt.$refs.circleBox.showFn()
+			},
+			getonMessage() {
+				let gt = this
+				gt.gtWSS.socketTask.onMessage((res) => {
+					let obj = JSON.parse(res.data)
+					if (obj.type == 'new_circle') {
+						if(!gt.current) ++gt.tabs[1].count
+						uni.showTabBarRedDot({ // 显示红点
+							index: 3
+						})
+					}
+				})
 			},
 			getList() {
 				let gt = this
