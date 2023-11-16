@@ -188,6 +188,16 @@
 		},
 		onShow: function(options) {
 			let gt = this;
+			let baseUrl = uni.getStorageSync('apiDomain')
+			gt.gtRequest.get('/api/applogin/get_new_circle_num').then(res => {
+				const obj = res.data.data
+				if(obj.num > 0) {
+					uni.setStorageSync("circleNum", obj.num)
+					uni.showTabBarRedDot({ // 显示红点
+						index: 3
+					})
+				}
+			})
 			// #ifdef APP-PLUS
 			let jpush_alias = uni.getStorageSync('jpush_alias');
 			if (jpush_alias) {
@@ -199,7 +209,6 @@
 			// #endif
 			var pcaList = uni.getStorageSync('pcaList');
 			if (!pcaList) {
-				let baseUrl = uni.getStorageSync('apiDomain')
 				var url = '/api/appgobal/get_city_data';
 				uni.request({
 					url: baseUrl + url,

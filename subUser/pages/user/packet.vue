@@ -7,7 +7,8 @@
 			</view>
 			<view class="info_bottom">
 				<view class="balance">{{ data.money02.toFixed(2) }}</view>
-				<view class="con_btnItem" @click="goBalance" :class="data.zhuanyueeSwitch ? '' : 'dis'" v-if="data.zhuanyueeSwitch">
+				<view class="warning" v-if="wallet_status">你的账户异常，请联系平台客服!</view>
+				<view class="con_btnItem" @click="goBalance" :class="wallet_status ? 'dis' : ''" v-if="data.zhuanyueeSwitch">
 					<text>转到余额</text>
 				</view>
 			</view>
@@ -51,7 +52,6 @@
 </template>
 
 <script>
-	const apiDomain = uni.getStorageSync('apiDomain')
 	export default {
 		data() {
 			return {
@@ -75,14 +75,13 @@
 					zhuanyueeSwitch: 0, // 是否可以转余额
 					ruleStr: '' // 规则
 				},
-				token: '',
 				is_company_approve: false,
-				flag: false
+				flag: false,
+				wallet_status: 0
 			}
 		},
 		onLoad() {
 			let gt = this
-			gt.token = gt.gtRequest.getToken()
 			gt.is_company_approve = uni.getStorageSync("companyInfo").is_company_approve
 			// 是否有专线
 			gt.gtRequest.post("/logistics/specialline/get_special_line_list", {
@@ -95,6 +94,7 @@
 		onShow() {
 			let gt = this
 			gt.getList()
+			gt.getWallet_status()
 		},
 		methods: {
 			getList() {
@@ -106,44 +106,17 @@
 					gt.data = res
 				})
 			},
-			goBalance() {
-				// uni.navigateTo({
-				// 	url: './transferredBalance'
-				// })
+			/* 获取开关信息 */
+			getWallet_status() {
 				let gt = this
-				if(!gt.data.zhuanyueeSwitch) return
-				// gt.gtRequest.post("/logistics/Companywallet/apply_zhuanyuee").then(res=> {
-				// 	uni.showToast({
-				// 		title: res.msg
-				// 	})
-				// })
-				let params = {
-					login_token: gt.token,
-					number: gt.data.money02
-				}
-				uni.request({
-					url: apiDomain + "/logistics/Companywallet/apply_zhuanyuee",
-					data: params,
-					method: 'GET',
-					success: function(res) {	
-						if(res.data.code == 1) {
-							gt.getList()
-							uni.showToast({
-								title: res.data.msg
-							})
-						} else {
-							uni.showToast({
-								title: '转余额失败',
-								icon: 'error'
-							})
-						}
-					},
-					fail: function(res) {
-						uni.showToast({
-							title: '转余额失败',
-							icon: 'error'
-						})
-					}
+				gt.gtRequest.post('/logistics/user/get_user_info').then(res => {
+					gt.wallet_status = res.logistics_info.wallet_status
+				})
+			},
+			goBalance() {
+				if(this.wallet_status) return
+				uni.navigateTo({
+					url: './transferBalance?params=' +encodeURIComponent(JSON.stringify(this.data))
 				})
 			},
 			goNext(type) {
@@ -217,6 +190,11 @@
 					width: 100%;
 					text-align: center;
 					font-size: 80rpx;
+				}
+				.warning {
+					width: 100%;
+					text-align: center;
+					color: #485EF4;
 				}
 				.con_btnItem {
 					width: 200rpx;

@@ -12,11 +12,14 @@
 						</view>
 						<view class="row">
 							<view class="address">{{ item.line_name + `(${judgeType(item.promote_type)})` }}</view>
-							<view class="payType">{{ judgeMethod(item.pay_method) }}</view>
+							<view class="payNum">实付：<text class="num">￥{{ item.money }}</text> </view>
 						</view>
 						<view class="row">
 							<view class="orderNum">缴纳单号：{{ item.order_sn }}</view>
-							<view class="payNum">实付金额：<text class="num">￥{{ item.money }}</text> </view>
+							<view class="payType">
+								<!-- <text>{{ judgeMethod(item.pay_method) }}</text> -->
+								<text class="redpack" v-if="item.redpack_money">{{ `抵扣￥${item.redpack_money}` }}</text>
+							</view>
 						</view>
 					</view>
 				</view>
@@ -52,6 +55,9 @@
 			getList() {
 				let gt = this
 				gt.gtRequest.post('/logistics/Specialline/promote_list', gt.params).then(res => {
+					res.list.map(item=> {
+						return item.redpack_money = parseFloat(item.redpack_money)
+					})
 					gt.list = [...gt.list, ...res.list]
 					gt.status = gt.params.page >= res.total_page ? 'nomore' : 'loading'
 				})
@@ -117,7 +123,7 @@
 			.card {
 				position: relative;
 				height: 172rpx;
-				margin: 30rpx 28rpx 0;
+				margin: 30rpx 18rpx 0;
 				padding: 20rpx 30rpx;
 				background-color: #fff;
 				border-radius: 16rpx;
@@ -149,9 +155,13 @@
 						.address {
 							color: #000000;
 							font-size: 32rpx;
+							font-weight: 500;
 						}
 						.payType {
 							color: #000000;
+							.redpack {
+								color: #FF2330;
+							}
 						}
 						.orderNum {
 							color: #777777;
@@ -161,6 +171,7 @@
 							color: #000000;
 							.num {
 								font-size: 32rpx;
+								font-weight: 500;
 							}
 						}
 					}

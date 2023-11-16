@@ -145,6 +145,13 @@
 			}
 		},
 		{
+			"path": "pages/login/licenceview",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
 			"path": "pages/order/billDetail",
 			"style": {
 				"navigationBarTitleText": "费用明细",
@@ -328,7 +335,7 @@
 					"path": "pages/sansong/sendList",
 					"style": {
 						"navigationBarTitleText": "装车记录",
-						"enablePullDownRefresh": true
+						"enablePullDownRefresh": false
 					}
 				},
 				{
@@ -694,9 +701,9 @@
 					}
 				},
 				{
-					"path": "pages/user/transferredBalance",
+					"path": "pages/user/transferBalance",
 					"style": {
-						"navigationBarTitleText": "提现",
+						"navigationBarTitleText": "红包转余额",
 						"enablePullDownRefresh": false
 					}
 				},
@@ -727,6 +734,20 @@
 					"path": "pages/user/earning",
 					"style": {
 						"navigationBarTitleText": "我的营收",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "pages/user/accountCredited",
+					"style": {
+						"navigationBarTitleText": "收款账户",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "pages/user/bindingAccount",
+					"style": {
+						"navigationBarTitleText": "绑定收款账户",
 						"enablePullDownRefresh": false
 					}
 				}

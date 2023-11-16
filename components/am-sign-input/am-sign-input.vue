@@ -44,7 +44,7 @@
 						</view>
 
 						<view class="handRight">
-							<view class="handTitle">请签名</view>
+							<view class="handTitle">请签名（以此为上）</view>
 						</view>
 					</view>
 				</view>
@@ -324,6 +324,7 @@
 	.handRight {
 		display: inline-flex;
 		align-items: center;
+		width: 90rpx;
 	}
 
 	.handCenter {
@@ -347,6 +348,8 @@
 		transform: rotate(90deg);
 		flex: 1;
 		color: #666;
+		width: 90rpx;
+		white-space: nowrap;
 	}
 
 	.handBtn button {

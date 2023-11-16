@@ -59,9 +59,9 @@
 					<u-button class="btn" type="primary" @click="goInstantCoupon">立即发券</u-button>
 				</swiper-item>
 				<swiper-item class="swiper-item" id="down">
-					<u-empty text="您还没有发券" mode="list" v-if="!list.length"></u-empty>
+					<u-empty text="您还没有发券" mode="list" v-if="!list1.length"></u-empty>
 					<scroll-view scroll-y="true" @scrolltolower="loadMore(2)" style="height: 90vh;overflow: auto" v-else>
-						<view class="card card_over" v-for="item in list" :key="item.id">
+						<view class="card card_over" v-for="item in list1" :key="item.id">
 							<view class="card_top">
 								<view class="card_left">
 									<view class="money">{{ (+item.coupon_min_price).toFixed(0) }}元</view>
@@ -126,6 +126,7 @@
 				}],
 				currentTab: 0,
 				list: [],
+				list1: [],
 				show: false,
 				id: undefined,
 				params: {},
@@ -141,22 +142,30 @@
 			}
 			gt.over = false
 			gt.list = []
+			gt.list1 = []
 			gt.getList()
 		},
 		methods: {
 			tabsChange(index) {
 				let gt = this
 				gt.currentTab = index
-				gt.params.status = gt.currentTab === 0 ? 1 : 2
-				gt.params.page = 1
-				gt.over = false
-				gt.list = []
-				gt.getList()
+				// gt.$nextTick(()=> {
+					gt.params.status = gt.currentTab === 0 ? 1 : 2
+					gt.params.page = 1
+					gt.over = false
+					gt.list = []
+					gt.list1 = []
+					gt.getList()
+				// })
 			},
 			getList() {
 				let gt = this
 				gt.gtRequest.post('/logistics/coupon/list', gt.params).then(res=>{
-					gt.list = [...gt.list, ...res.list]
+					if(gt.currentTab) {
+						gt.list1 = [...gt.list1, ...res.list]
+					} else {
+						gt.list = [...gt.list, ...res.list]
+					}
 					gt.over = res.list.length < gt.params.limit
 				})
 			},
@@ -170,6 +179,7 @@
 					gt.params.page = 1
 					gt.over = false
 					gt.list = []
+					gt.list1 = []
 					gt.getList()
 					gt.$refs.uToast.show({
 						title: '结束发放优惠券成功'

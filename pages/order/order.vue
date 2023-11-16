@@ -36,8 +36,7 @@
 		</view>
 		<view class="con_dataList" v-else>
 			<view class="con_tabs">
-				<u-tabs-swiper ref="uTabs" :list="tabList" :current="currentTab" @change="tabsChange" :is-scroll="false"
-					swiperWidth="750"></u-tabs-swiper>
+				<u-tabs-swiper ref="uTabs" :list="tabList" :current="currentTab" @change="tabsChange" swiperWidth="750"></u-tabs-swiper>
 			</view>
 			<view class="con_swiper">
 				<swiper :current="currentTab" @animationfinish="animationfinish">
@@ -236,6 +235,9 @@
 											v-if="item.status == 99">
 											<text>查看取消</text>
 										</view> -->
+										<view class="con_btnItem" @click.stop="viewOrder(item)">
+											<text>电子面单</text>
+										</view>
 									</view>
 								</view>
 							</scroll-view>
@@ -473,6 +475,7 @@
 				historyList = [];
 			}
 			gt.historyList = historyList;
+			gt.reGetOrderList();
 		},
 		onShow() {
 			let gt = this;
@@ -480,18 +483,22 @@
 			var orderSearchStatus = uni.getStorageSync('orderSearchStatus');
 			gt.searchVal = orderSearchVal;
 			uni.removeStorageSync('orderSearchVal');
-			gt.currentTab = orderSearchStatus
-			gt.statusIndex = orderSearchStatus
-			uni.removeStorageSync('orderSearchStatus');
+			if(orderSearchStatus) {
+				gt.currentTab = orderSearchStatus
+				gt.statusIndex = orderSearchStatus
+				uni.removeStorageSync('orderSearchStatus');
+			}
 			gt.calcendarChange({
 				startDate: uni.getStorageSync('stime'),
 				endDate: uni.getStorageSync('etime')
 			})
 			uni.removeStorageSync('stime');
 			uni.removeStorageSync('etime');
-			setTimeout(function() {
-				gt.reGetOrderList();
-			}, 500);
+			if(orderSearchVal || orderSearchStatus || uni.getStorageSync('stime') || uni.getStorageSync('etime')) {
+				setTimeout(function() {
+					gt.reGetOrderList();
+				}, 500);
+			}
 		},
 		onHide() {
 			let gt = this;
@@ -873,6 +880,19 @@
 					url: '/subSansong/pages/sansong/sendInfo?orderSn=' + item.waybill_sn,
 				});
 				return false;
+			},
+			viewOrder(item) {
+				const apiDomain = uni.getStorageSync('apiDomain')
+				// #ifdef MP-WEIXIN
+				let sheet_url = `${apiDomain}/adminsite/#/agreement/index?deliver_sn=${item.deliver_sn}&type=uni&hiden=false`
+				// #endif
+				// #ifdef APP-PLUS
+				let sheet_url = `${apiDomain}/adminsite/#/agreement/index?deliver_sn=${item.deliver_sn}&type=uni`
+				// let sheet_url = `http://192.168.1.21:8080/#/?deliver_sn=${item.deliver_sn}&type=uni`
+				// #endif
+				uni.navigateTo({
+					url: '/pages/login/licence?url=' + encodeURIComponent(sheet_url),
+				})
 			}
 		}
 	}
@@ -966,7 +986,11 @@
 			}
 
 			.con_dataList {
-
+				.con_tabs {
+					.u-scroll-view {
+						clip-path: inset(0010px)
+					}
+				}
 				.con_swiper {
 					swiper {
 						height: calc(100vh - 168rpx);

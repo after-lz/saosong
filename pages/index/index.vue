@@ -8,7 +8,14 @@
 		</view>
 		<view class="con_listenStatus_tabSwiper">
 			<view class="con_listenAudio">
-				<view class="con_listenStatus" @click="changeListenStatus" v-if="companyAuth">
+				<view class="con_listenStatus" v-if="companyAuth">
+					<view class="con_listen">
+						<view class="con_text">
+							<text>听单中 ·</text>
+						</view>
+					</view>
+				</view>
+				<!-- <view class="con_listenStatus" @click="changeListenStatus" v-if="companyAuth">
 					<view class="con_listen" :style="{display: listenStatus ? '':'none'}">
 						<view class="con_text">
 							<text>听单中 ·</text>
@@ -19,17 +26,19 @@
 							<text>未听单 ·</text>
 						</view>
 					</view>
-				</view>
-				<view class="con_audioStatus" @click="audioSwitch" :style="{display: listenStatus ? '':'none'}">
-					<!-- <image :src="gtCommon.getOssImg('index/openAudio.png')" mode="widthFix" :style="{display: audioStatus ? '':'none'}"></image>
-					<image :src="gtCommon.getOssImg('index/closeAudio.png')" mode="widthFix" :style="{display: audioStatus ? 'none':''}"></image> -->
+				</view> -->
+				<view class="con_audioStatus">
+<!-- 				<view class="con_audioStatus" @click="audioSwitch" :style="{display: listenStatus ? '':'none'}"> -->
 					<view class="openAudio" :style="{backgroundImage: `url(${gtCommon.getOssImg('index/openAudio.png')})`,display: audioStatus ? '':'none'}"></view>
 					<view class="closeAudio" :style="{backgroundImage: `url(${gtCommon.getOssImg('index/closeAudio.png')})`,display: audioStatus ? 'none':''}"></view>
 				</view>
 			</view>
 			<view class="con_tabs">
-				<u-tabs-swiper ref="uTabs" :list="tabList" :current="currentTab" @change="tabsChange" :is-scroll="false"
-					swiperWidth="750"></u-tabs-swiper>
+				<!-- <u-tabs-swiper ref="uTabs" :list="tabList" :current="currentTab" @change="tabsChange" :is-scroll="false" swiperWidth="750"></u-tabs-swiper> -->
+				<view class="tab_item" v-for="(ob, i) in tabList" @click="tabsChange(i)" :class="currentTab === i ? 'tab_item_active':''">
+					<u-badge :is-dot="true" type="error" :count='ob.count' absolute :offset='offset'></u-badge>
+					<view class="tab_name">{{ ob.name }}</view>
+				</view>
 			</view>
 		</view>
 		<view class="con_tip">
@@ -106,9 +115,7 @@
 					</view>
 					<view class="con_list" v-else>
 						<scroll-view class="con_scrollView" scroll-y @scrolltolower="loadMore">
-							<view class="con_item" v-for="(item,index) in dataList" :key="index"
-								@click="goOrderInfo(item)">
-
+							<view class="con_item" v-for="(item,index) in dataList" :key="index" @click="goOrderInfo(item)">
 								<view class="con_type_distance"
 									:class="item.is_yuyue == 1 ? 'orderType1' : 'orderType2'">
 									<view class="con_type">
@@ -121,7 +128,6 @@
 										</view>
 									</view>
 								</view>
-
 								<view class="con_fromTo">
 									<view class="con_from">
 										<view class="con_city">
@@ -136,10 +142,8 @@
 												<text v-if="item.jiaohuo_type == 2">上门自提</text>
 											</view>
 										</view>
-
 									</view>
 									<view class="con_lineFT"></view>
-
 									<view class="con_to">
 										<view class="con_city">
 											<text>{{item.receive_city}}</text>
@@ -148,19 +152,14 @@
 											<view class="con_address">
 												<text>{{item.receive_address}}</text>
 											</view>
-
 											<view class="con_type">
 												<text v-if="item.peisong_type == 1">送货上门</text>
 												<text v-if="item.peisong_type == 2">自提</text>
 											</view>
 										</view>
 									</view>
-
-
 								</view>
-
 								<view class="con_keyVal">
-
 									<view class="con_key_val">
 										<view class="con_key">
 											<text>运输时效：</text>
@@ -170,7 +169,6 @@
 											<view v-else>{{item.transport_day_min}} - {{item.transport_day_max}}天</view>
 										</view>
 									</view>
-
 									<view class="con_key_val">
 										<view class="con_key">
 											<text>货物信息：</text>
@@ -194,7 +192,6 @@
 										</view>
 									</view>
 								</view>
-
 								<view class="con_time_price">
 									<view class="con_time">
 										<text>下单时间：{{$u.timeFormat(item.create_time, 'mm-dd hh:MM:ss')}}</text>
@@ -204,16 +201,11 @@
 										<text v-if="item.deliver_type == 3">货主出价</text>
 										<text v-else-if="item.pay_status == 2">已支付</text>
 										<text v-else-if="item.pay_status == 0">待支付</text>
-										
-
 										<text>)</text> -->
 										<text>{{gtCommon.getMoneyStatus(item)}}</text>
 									</view>
 								</view>
-
-								<view class="con_line">
-
-								</view>
+								<view class="con_line"></view>
 								<view class="con_btns">
 									<view class="con_btnItem con_refuseBtn" @click.stop="showRefuse(item)"
 										v-if="item.order_type == 1">
@@ -231,12 +223,9 @@
 										<text>查看报价</text>
 									</view>
 								</view>
-
-
 							</view>
 						</scroll-view>
 					</view>
-
 				</swiper-item>
 				<swiper-item class="swiper-item" id="type2">
 					<view class="con_empty" v-if="dataList.length == 0">
@@ -254,9 +243,7 @@
 					</view>
 					<view class="con_list" v-else>
 						<scroll-view class="con_scrollView" scroll-y @scrolltolower="loadMore">
-							<view class="con_item" v-for="(item,index) in dataList" :key="index"
-								@click="goOrderInfo(item)">
-
+							<view class="con_item" v-for="(item,index) in dataList" :key="index" @click="goOrderInfo(item)">
 								<view class="con_type_distance"
 									:class="item.is_yuyue == 1 ? 'orderType1' : 'orderType2'">
 									<view class="con_type">
@@ -269,7 +256,6 @@
 										</view>
 									</view>
 								</view>
-
 								<view class="con_fromTo">
 									<view class="con_from">
 										<view class="con_city">
@@ -284,10 +270,8 @@
 												<text v-if="item.jiaohuo_type == 2">上门自提</text>
 											</view>
 										</view>
-
 									</view>
 									<view class="con_lineFT"></view>
-
 									<view class="con_to">
 										<view class="con_city">
 											<text>{{item.receive_city}}</text>
@@ -296,19 +280,14 @@
 											<view class="con_address">
 												<text>{{item.receive_address}}</text>
 											</view>
-
 											<view class="con_type">
 												<text v-if="item.peisong_type == 1">送货上门</text>
 												<text v-if="item.peisong_type == 2">自提</text>
 											</view>
 										</view>
 									</view>
-
-
 								</view>
-
 								<view class="con_keyVal">
-
 									<view class="con_key_val">
 										<view class="con_key">
 											<text>运输时效：</text>
@@ -318,7 +297,6 @@
 											<view v-else>{{item.transport_day_min}} - {{item.transport_day_max}}天</view>
 										</view>
 									</view>
-
 									<view class="con_key_val">
 										<view class="con_key">
 											<text>货物信息：</text>
@@ -342,7 +320,6 @@
 										</view>
 									</view>
 								</view>
-
 								<view class="con_time_price">
 									<view class="con_time">
 										<text>下单时间：{{$u.timeFormat(item.create_time, 'mm-dd hh:MM:ss')}}</text>
@@ -353,17 +330,12 @@
 										<text v-else-if="item.pay_status == 2">已支付</text>
 										<text v-else-if="item.pay_status == 0">待支付</text> -->
 										<text>{{gtCommon.getMoneyStatus(item)}}</text>
-
-										<text>)</text>
+										<!-- <text>)</text> -->
 									</view>
 								</view>
-
-								<view class="con_line">
-
-								</view>
+								<view class="con_line"></view>
 								<view class="con_btns">
-									<view class="con_btnItem con_refuseBtn" @click.stop="showRefuse(item)"
-										v-if="item.order_type == 1">
+									<view class="con_btnItem con_refuseBtn" @click.stop="showRefuse(item)" v-if="item.order_type == 1">
 										<text>拒绝</text>
 									</view>
 									<view class="con_btnItem con_quotationBtn" @click.stop="showQuotation(item)"
@@ -373,22 +345,16 @@
 									<view class="con_btnItem con_seizeBtn" @click.stop="receiveOrder(item)">
 										<text>接单</text>
 									</view>
-									<view class="con_btnItem con_viewBtn" @click.stop="showQuotation(item)"
-										v-if="item.quoted_price">
+									<view class="con_btnItem con_viewBtn" @click.stop="showQuotation(item)" v-if="item.quoted_price">
 										<text>查看报价</text>
 									</view>
 								</view>
-
-
 							</view>
 						</scroll-view>
 					</view>
-
-
 				</swiper-item>
 			</swiper>
 		</view>
-
 		<!-- <view class="con_movable" v-if="companyAuth">
 			<movable-area class="movable-area">
 				<movable-view class="movable-view" :x="moveX" :y="moveY" direction="all">
@@ -408,10 +374,6 @@
 				</movable-view>
 			</movable-area>
 		</view> -->
-
-
-
-
 		<view class="con_popup">
 			<view class="con_companyJoin">
 				<u-popup v-model="joinShow" mode="center" width="640" height="464" border-radius="22">
@@ -439,7 +401,6 @@
 					</view>
 				</u-popup>
 			</view>
-
 			<view class="con_quotation">
 				<u-popup v-model="quotationShow" mode="center" width="718" height="444" border-radius="22">
 					<view class="con_title">
@@ -469,7 +430,6 @@
 						<view class="con_unit">
 							<text>元</text>
 						</view>
-
 					</view>
 					<view class="con_tip">
 						<text>注：建议电话联系货主商谈后再报价</text>
@@ -482,7 +442,6 @@
 					</view>
 				</u-popup>
 			</view>
-
 			<view class="con_refuse">
 				<u-popup v-model="refuseShow" mode="bottom" height="838" border-radius="22">
 					<view class="con_title">
@@ -513,13 +472,13 @@
 			return {
 				maskShow: false,
 				mobile: '',
-				listenStatus: false,
+				listenStatus: true,
 				audioStatus: true,
-				tabList: [{
-					name: '极速'
-				}, {
-					name: '指派'
-				}],
+				tabList: [
+					{name: '极速', count: 0}, 
+					{name: '指派', count: 0}
+				],
+				offset: [10, 10],
 				currentTab: 0,
 				companyAuth: false,
 				lineNum: 0,
@@ -538,31 +497,38 @@
 				quotationStatus: false,
 				refuseShow: false,
 				refuseReason: '',
-				refuseReasonList: [{
-					id: 1,
-					name: '运费支付金额不符',
-					value: 1,
-				}, {
-					id: 1,
-					name: '无法安排车辆提货',
-					value: 1,
-				}, {
-					id: 1,
-					name: '专线停运',
-					value: 1,
-				}, {
-					id: 1,
-					name: '异形件无法托运',
-					value: 1,
-				}, {
-					id: 1,
-					name: '不支持到付',
-					value: 1,
-				}, {
-					id: 1,
-					name: '其他',
-					value: 1,
-				}],
+				refuseReasonList: [
+					{
+						id: 1,
+						name: '运费支付金额不符',
+						value: 1,
+					},
+					{
+						id: 1,
+						name: '无法安排车辆提货',
+						value: 1,
+					},
+					{
+						id: 1,
+						name: '专线停运',
+						value: 1,
+					},
+					{
+						id: 1,
+						name: '异形件无法托运',
+						value: 1,
+					},
+					{
+						id: 1,
+						name: '不支持到付',
+						value: 1,
+					},
+					{
+						id: 1,
+						name: '其他',
+						value: 1,
+					}
+				],
 				refuseOtherReason: '',
 				lng: '',
 				lat: '',
@@ -577,30 +543,31 @@
 		},
 		onLoad() {
 			let gt = this;
+			gt.mobile = uni.getStorageSync('mobile');
 			gt.innerAudioContext = uni.createInnerAudioContext();
 			// gt.innerAudioContext = uni.getBackgroundAudioManager();
-			// if (mobile) {
-			// gt.gtonMessage();
-			// }
+			if (gt.mobile) {
+				let ws_url = uni.getStorageSync('environment') == 'prod' ? 'wss://saasdemo.sansongkeji.com:3021' : 'wss://test.sansongkeji.com:8021'
+				gt.gtWSS.setWsUrl(ws_url);
+				gt.gtonMessage();
+			}
 			uni.setStorageSync('audioStatus', true);
 			// uni.setStorageSync('listenStatus', true);
 		},
 		async onShow() {
 			let gt = this;
-			var mobile = uni.getStorageSync('mobile');
-			gt.mobile = mobile;
+			uni.hideTabBarRedDot({ //隐藏红点
+				index: 0
+			})
+			gt.mobile = uni.getStorageSync('mobile');
 			var companyInfo = uni.getStorageSync('companyInfo');
 			gt.logistics_id = companyInfo.logistics_id;
 			gt.clientId = uni.getStorageSync('clientId');
 			uni.setNavigationBarTitle({
 				title: '专线货源',
 			});
-			if (gt.mobile) {
-				let ws_url = uni.getStorageSync('environment') == 'prod' ? 'wss://saasdemo.sansongkeji.com:3021' : 'wss://test.sansongkeji.com:8021'
-				gt.gtWSS.setWsUrl(ws_url);
-				gt.gtonMessage();
-			}
-			gt.listenStatus = uni.getStorageSync('listenStatus');
+			
+			// gt.listenStatus = uni.getStorageSync('listenStatus');
 			gt.audioStatus = uni.getStorageSync('audioStatus');
 			gt.companyAuth = uni.getStorageSync('companyAuth');
 			// gt.getLineNum();
@@ -629,32 +596,29 @@
 			gtonMessage() {
 				let gt = this;
 				gt.gtWSS.socketTask.onMessage((res) => {
-					console.log('indexOnMessage:', res);
-					// uni.showModal({
-					// 	title:'indexOnMessage232',
-					// 	content:JSON.stringify(res)
-					// })
-					// gt.gtLog(res);
 					var data = res.data;
 					var obj = JSON.parse(data);
 					var type = obj.type;
 					if (type == 'order_new_order') {
-						if (!gt.listenStatus) {
-							return false;
-						}
+						// if (!gt.listenStatus) return false;
 						var orderInfo = obj.data;
 						var orderInfo = orderInfo.order_info;
-						for (var i = 0; i < gt.dataList.length; i++) {
-							if (orderInfo.id == gt.dataList[i].id) {
-								return false;
-							}
-						}
+						// for (var i = 0; i < gt.dataList.length; i++) {
+						// 	if (orderInfo.id == gt.dataList[i].id) {
+						// 		return false;
+						// 	}
+						// }
 						if (orderInfo.order_type == 2 && gt.currentTab == 0) {
 							gt.dataList.unshift(orderInfo);
 						}
 						if (orderInfo.order_type == 1 && gt.currentTab == 1) {
 							gt.dataList.unshift(orderInfo);
 						}
+						if(orderInfo.order_type == 2 && gt.currentTab == 1) gt.tabList[0].count = 1
+						if(orderInfo.order_type == 1 && gt.currentTab == 0) gt.tabList[1].count = 1
+						uni.showTabBarRedDot({ // 显示红点
+							index: 0
+						})
 					}
 					if (type == 'order_rob_result') {
 						gt.maskShow = false;
@@ -689,8 +653,7 @@
 			},
 			async getCompanyInfo() {
 				let gt = this;
-				var url = "/logistics/company/get_index_info";
-				await gt.gtRequest.post(url).then(res => {
+				await gt.gtRequest.post("/logistics/company/get_index_info").then(res => {
 					gt.lineNum = res.line_num;
 					gt.flag = res.company_info.is_company_approve ? true : false
 					gt.companyAuth = res.company_info.is_company_approve;
@@ -800,6 +763,7 @@
 				let gt = this;
 				gt.currentTab = index;
 				gt.reGetOrderList();
+				gt.tabList[gt.currentTab].count = 0
 			},
 			animationfinish(item) {
 				let gt = this;
@@ -818,7 +782,6 @@
 				let gt = this;
 				gt.getOrderList();
 			},
-
 			hideOrder(item) {
 				let gt = this;
 				uni.showModal({
@@ -871,7 +834,6 @@
 					});
 					return false;
 				}
-
 			},
 			seizeConfirm() {
 				let gt = this;
@@ -885,11 +847,7 @@
 				gt.ownerMobile = item.pickup_mobile;
 				gt.myQuotation = item.quoted_price;
 				gt.quotationTime = gt.$u.timeFormat(item.quoted_create_time, 'yyyy-mm-dd hh:MM');
-				if (item.quoted_price) {
-					gt.quotationStatus = true;
-				} else {
-					gt.quotationStatus = false;
-				}
+				gt.quotationStatus = item.quoted_price ? true : false
 				gt.quotationShow = true;
 			},
 			contactOwner() {
@@ -901,32 +859,27 @@
 			submitQuotation() {
 				let gt = this;
 				if (gt.$u.test.isEmpty(gt.myQuotation)) {
-					gt.$refs.uToast.show({
+					return gt.$refs.uToast.show({
 						title: '我的报价不能为空',
 						type: 'error',
 					});
-					return false;
 				}
 				if (!gt.$u.test.amount(gt.myQuotation)) {
-					gt.$refs.uToast.show({
+					return gt.$refs.uToast.show({
 						title: '我的报价格式不正确',
 						type: 'error',
 					});
-					return false;
 				}
 				if (gt.myQuotation * 100 <= gt.ownerQuotation * 100) {
-					gt.$refs.uToast.show({
+					return gt.$refs.uToast.show({
 						title: '我的报价不能低于货主出价',
 						type: 'error',
 					});
-					return false;
 				}
-				var url = "/logistics/order/fast_quoted_price";
-				var data = {
+				gt.gtRequest.post("/logistics/order/fast_quoted_price", {
 					deliver_sn: gt.orderSn,
-					quoted_price: gt.myQuotation,
-				};
-				gt.gtRequest.post(url, data).then(res => {
+					quoted_price: gt.myQuotation
+				}).then(res => {
 					gt.quotationShow = false;
 					gt.reGetOrderList();
 					gt.$refs.uToast.show({
@@ -943,11 +896,7 @@
 					content: '确定抢单吗？',
 					success(res) {
 						if (res.confirm) {
-							var url = "/logistics/supplyhall/fast_rob_order";
-							var data = {
-								deliver_sn: item.deliver_sn,
-							};
-							gt.gtRequest.post(url, data, true).then(res => {
+							gt.gtRequest.post("/logistics/supplyhall/fast_rob_order", {deliver_sn: item.deliver_sn}, true).then(res => {
 								gt.orderSn = item.deliver_sn;
 								gt.maskShow = true;
 								uni.showLoading({
@@ -959,7 +908,6 @@
 									gt.reGetOrderList()
 								}, 33000);
 							}).catch(res => {
-								// console.log(res);
 								gt.$refs.uToast.show({
 									title: res,
 									type: 'error',
@@ -977,11 +925,9 @@
 					content: '确定接单吗？',
 					success(res) {
 						if (res.confirm) {
-							var url = "/logistics/order/confirm_receving";
-							var data = {
-								deliver_sn: item.deliver_sn,
-							};
-							gt.gtRequest.post(url, data).then(res => {
+							gt.gtRequest.post("/logistics/order/confirm_receving", {
+								deliver_sn: item.deliver_sn
+							}).then(res => {
 								gt.orderSn = item.deliver_sn;
 								gt.seizeShow = true;
 								gt.innerAudioContext.stop();
@@ -1008,22 +954,13 @@
 			},
 			getOrderList() {
 				let gt = this;
-				if (!gt.listenStatus) {
-					return false;
-				}
-				if (gt.end) {
-					return false;
-				}
-				var url = "/logistics/supplyhall/get_order_list";
-				var data = {
+				if (!gt.listenStatus || gt.end) return false;
+				gt.gtRequest.post("/logistics/supplyhall/get_order_list", {
 					search_type: gt.currentTab == 0 ? 2 : 1,
 					page: gt.page,
-					limit: gt.size,
-				};
-				gt.gtRequest.post(url, data).then(res => {
-					if (gt.page == 1) {
-						gt.dataList = [];
-					}
+					limit: gt.size
+				}).then(res => {
+					if (gt.page == 1) gt.dataList = []
 					gt.dataList = gt.dataList.concat(res.list);
 					if (res.list.length == gt.size) {
 						gt.page = gt.page + 1;
@@ -1049,9 +986,7 @@
 			},
 			audioSwitch() {
 				let gt = this;
-				if (!gt.listenStatus) {
-					return false;
-				}
+				if (!gt.listenStatus) return false;
 				gt.audioStatus = !gt.audioStatus;
 				uni.setStorageSync('audioStatus', gt.audioStatus);
 			},
@@ -1114,13 +1049,35 @@
 						}
 					}
 				}
-				.u-tabs-item {
-					font-size: 32rpx !important;
-					padding: 0 40rpx !important;
+				.con_tabs {
+					display: flex;
+					align-items: center;
+					margin-right: 16rpx;
+					.tab_item {
+						position: relative;
+						width: 120rpx;
+						color: #909399;
+						text-align: center;
+						font-size: 28rpx;
+						.tab_name {
+							height: 80rpx;
+							line-height: 80rpx;
+						}
+					}
+					.tab_item_active {
+						color: #485EF4;
+						font-size: 36rpx;
+						font-weight: 700;
+						border-bottom: 4rpx solid #485EF4;
+					}
 				}
-				.con_tabSwiper {
-					width: 300rpx;
-				}
+				// .u-tabs-item {
+				// 	font-size: 32rpx !important;
+				// 	padding: 0 40rpx !important;
+				// }
+				// .con_tabSwiper {
+				// 	width: 300rpx;
+				// }
 			}
 			.con_tip {
 				// position: fixed;
@@ -1219,53 +1176,6 @@
 									border-radius: 20rpx;
 									margin: 20rpx 16rpx 0 16rpx;
 									padding: 24rpx;
-									// 				.con_typeSn_status {
-									// 					display: flex;
-									// 					justify-content: space-between;
-									// 					.con_typeSn {
-									// 						display: flex;
-									// 						.con_type {
-									// 							width: 68rpx;
-									// 							height: 40rpx;
-									// 							background: #485EF4;
-									// 							border-radius: 6rpx;
-									// 							font-size: 24rpx;
-									// 							font-family: PingFangSC-Regular, PingFang SC;
-									// 							font-weight: 400;
-									// 							color: #FFFFFF;
-									// 							line-height: 40rpx;
-									// 							text-align: center;
-									// 						}
-									// 						.orderType1 {
-									// 							background: $gtProjectColor;
-									// 						}
-									// 						.orderType2 {
-									// 							background: #FFBF27;
-									// 						}
-									// 						.con_sn {
-									// 							display: flex;
-									// 							font-size: 28rpx;
-									// 							font-family: PingFangSC-Regular, PingFang SC;
-									// 							font-weight: 400;
-									// 							color: #909399;
-									// 							line-height: 40rpx;
-									// 							margin-left: 22rpx;
-									// 							.con_text {}
-									// 							.con_copyIcon {
-									// 								margin: 0 8rpx;
-									// 								font-size: 24rpx;
-									// 								color: #0C0C0C;
-									// 							}
-									// 						}
-									// 					}
-									// 					.con_status {
-									// 						font-size: 28rpx;
-									// 						font-family: PingFangSC-Regular, PingFang SC;
-									// 						font-weight: 400;
-									// 						color: $gtProjectColor;
-									// 						line-height: 40rpx;
-									// 					}
-									// 				}
 									.con_type_distance {
 										display: flex;
 										justify-content: space-between;
