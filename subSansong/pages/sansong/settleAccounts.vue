@@ -4,12 +4,14 @@
 			<view class="info_num">￥<text class="money">{{ num }}</text></view>
 			<view class="info_order">伞送科技-{{ order_id }}</view>
 		</view>
-		<view class="card" @click="type = 1">
+		<view class="card" @click="type = 1" v-if="!wallet_status">
 			<view class="card_left">
 				<view class="pay_logo" :style="{backgroundImage: `url(${gtCommon.getOssImg('user/walletIcon.png')})`}"></view>
 				<view class="pay_info">
-					<view class="pay_info_type">
-						<text>余额抵扣</text>
+					<view class="pay_info_title">
+						<view class="pay_info_type">
+							余额抵扣
+						</view>
 					</view>
 					<view class="pay_info_remark">
 						<text>可用余额{{ totalNum }}元</text>
@@ -65,6 +67,24 @@
 			</view>
 		</view>
 		<!-- #endif -->
+		<view class="card dis" v-if="wallet_status">
+			<view class="card_left">
+				<view class="pay_logo" :style="{backgroundImage: `url(${gtCommon.getOssImg('user/walletIcon.png')})`}"></view>
+				<view class="pay_info">
+					<view class="pay_info_title">
+						<view class="pay_info_type">
+							余额抵扣
+						</view>
+						<view class="warning">
+							账户异常
+						</view>
+					</view>
+					<view class="pay_info_remark">
+						<text>可用余额{{ totalNum }}元</text>
+					</view>
+				</view>
+			</view>
+		</view>
 		<view class="deduction" @click="confimPacket" v-if="promote_type">
 			<view class="deduction_select" :style="{backgroundImage:
 				  `url(${gtCommon.getOssImg(isUsedPacket ? 'sansong/selected.png' : 'sansong/unSelected.png')})`}">
@@ -93,6 +113,7 @@
 				packetNum: 0, // 推广：可抵扣的红包金额数
 				isUsedPacket: false, // 是否确认使用红包
 				redpack_money: 0, // 推广确认使用了红包抵扣时的金额
+				wallet_status: 0
 			}
 		},
 		onLoad(option) {
@@ -116,9 +137,17 @@
 				gt.pay_url = '/logistics/Abnormal/pay_abnormal_order'
 			} else if(option.type === '6') { // 会员续费
 				gt.pay_url = '/logistics/Specialline/pay_renew_member_order'
-			} 
+			}
+			gt.getWallet_status()
 		},
 		methods: {
+			/* 获取开关信息 */
+			getWallet_status() {
+				let gt = this
+				gt.gtRequest.post('/logistics/user/get_user_info').then(res => {
+					gt.wallet_status = res.logistics_info.wallet_status
+				})
+			},
 			/* 推广：获取推广可抵扣的红包金额数 */
 			getPacketNum() {
 				let gt = this
@@ -317,6 +346,9 @@
 						margin-right: 32rpx;
 					}
 					.pay_info {
+						.pay_info_title {
+							display: flex;
+						}
 						.pay_info_type {
 							font-size: 32rpx;
 						}
@@ -324,6 +356,15 @@
 							color: #909399;
 							font-size: 24rpx;
 							margin-top: 6rpx;
+						}
+						.warning {
+							background-color: #777777;
+							color: #fff;
+							padding: 0 10rpx;
+							border-radius: 8rpx;
+							font-size: 24rpx;
+							margin-left: 10rpx;
+							line-height: 42rpx;
 						}
 					}
 				}
@@ -350,6 +391,9 @@
 				width: calc(100% - 32rpx);
 				margin-left: 16rpx;
 				margin-top: 160rpx;
+			}
+			.dis {
+				background-color: #cfcfcf;
 			}
 		}
 	}

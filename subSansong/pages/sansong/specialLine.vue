@@ -75,7 +75,7 @@
 		</view>
 		<view class="footer">
 			<text class="msg">充值押金升级品质专线，升级可无限制接单抢单</text>
-			<u-button type="primary" v-if="list.length" @click="goTopup">
+			<u-button type="primary" @click="goTopup">
 				<text>立即充值{{ num }}元</text>
 			</u-button>
 		</view>
@@ -131,7 +131,7 @@
 				gt.gtRequest.post('/logistics/specialline/get_special_line_list', {
 					page: 1,
 					limit: 999,
-					logistics_id: uni.getStorageSync('companyInfo').logistics_id
+					// logistics_id: uni.getStorageSync('companyInfo').logistics_id
 				}).then(res => {
 					gt.list = res.list.filter(item=> item.deposit_status === '0')
 					gt.list.map(item=> {

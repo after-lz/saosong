@@ -17,10 +17,10 @@
 		</view>
 		<view class="con_btns">
 			<view class="con_btnItem chargeBtn">
-				<u-button type="primary" :disabled='wallet_status' @click="goCharge">充值</u-button>
+				<u-button type="primary" :disabled='wallet_status ? true : false' @click="goCharge">充值</u-button>
 			</view>
 			<view class="con_btnItem withdrawBtn">
-				<u-button :disabled='wallet_status' @click="goWithdrawal">提现</u-button>
+				<u-button :disabled='wallet_status ? true : false' @click="goWithdrawal">提现</u-button>
 			</view>
 		</view>
 		<view class="con_tip">
@@ -51,7 +51,6 @@
 		},
 		onShow() {
 			let gt = this
-			gt.wallet_status = uni.getStorageSync("user_info").wallet_status
 			gt.getUserInfo()
 		},
 		methods: {
@@ -80,6 +79,7 @@
 				let gt = this
 				gt.gtRequest.post("/logistics/user/get_user_info").then(res=>{
 					gt.money = res.logistics_info.money01
+					gt.wallet_status = res.logistics_info.wallet_status
 				})
 			},
 			goList() {
@@ -133,7 +133,7 @@
 
 			.warning {
 				text-align: center;
-				color: #ff9900;
+				color: #fa3534;
 			}
 	
 			.con_btns {

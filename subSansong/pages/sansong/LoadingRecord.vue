@@ -88,6 +88,7 @@
 				</view>
 			</view>
 		</u-popup>
+		<u-toast ref="uToast" />
 	</mescroll-uni>
 </template>
 

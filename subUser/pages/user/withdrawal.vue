@@ -12,7 +12,7 @@
 					<text>￥</text>
 				</view>
 				<view class="con_input">
-					<u-input v-model.number="money" type="digit" placeholder="最低提现金额20元" height="40" @blur="inputChange" />
+					<u-input v-model.number="money" type="digit" :placeholder="_placeholder" height="40" @blur="inputChange" />
 				</view>
 			</view>
 			<view class="con_line">
@@ -172,6 +172,16 @@
 					return flag || !gt.bankCardId
 				}
 			},
+			_placeholder() {
+				let gt = this
+				if(gt.withdrawalMethod == 2) {
+					return '最低提现金额0.1元'
+				} else if(gt.withdrawalMethod == 3) {
+					return '最低提现金额20元'
+				} else {
+					return '请先选择收款账户'
+				}
+			}
 			// serviceCharge() {
 			// 	let gt = this
 			// 	let num = gt.money || 0

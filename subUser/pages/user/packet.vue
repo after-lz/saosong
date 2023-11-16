@@ -93,8 +93,8 @@
 		},
 		onShow() {
 			let gt = this
-			gt.wallet_status = uni.getStorageSync("user_info").wallet_status
 			gt.getList()
+			gt.getWallet_status()
 		},
 		methods: {
 			getList() {
@@ -106,7 +106,15 @@
 					gt.data = res
 				})
 			},
+			/* 获取开关信息 */
+			getWallet_status() {
+				let gt = this
+				gt.gtRequest.post('/logistics/user/get_user_info').then(res => {
+					gt.wallet_status = res.logistics_info.wallet_status
+				})
+			},
 			goBalance() {
+				if(this.wallet_status) return
 				uni.navigateTo({
 					url: './transferBalance?params=' +encodeURIComponent(JSON.stringify(this.data))
 				})

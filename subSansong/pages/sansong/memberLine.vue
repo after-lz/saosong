@@ -45,7 +45,7 @@
 						</view>
 					</view>
 					<view class="unUpdateLine" v-if="list1.length && active === 1">
-						<view class="unUpdateLine_title">已开通专线</view>
+						<view class="unUpdateLine_title" style="margin-top: 30rpx;">已开通专线</view>
 						<view class="unUpdateLine_lines" v-if="active === 1">
 							<view class="line" v-for="item in list1" :key="item.line_id" @click="changeSelect1(item)">
 								<view class="line_select" :style="{backgroundImage:
@@ -190,7 +190,7 @@
 				gt.gtRequest.post('/logistics/specialline/get_special_line_list', {
 					page: 1,
 					limit: 999,
-					logistics_id: uni.getStorageSync('companyInfo').logistics_id
+					// logistics_id: uni.getStorageSync('companyInfo').logistics_id
 				}).then(res => {
 					gt.list = res.list.filter(item=> item.member_status === '0')
 					gt.list.map(item=> {
