@@ -9,6 +9,9 @@
 					{{item}}
 				</view>
 			</view>
+			<view class="car-hisList" v-show="hisShow">
+				<view class="his-item" v-for="item in targetList" :key="item" @click="onSelect(item)">{{ item }}</view>
+			</view>
 		</view>
 
 		<view class="car-number-container" v-if="showKeyPop1">
@@ -89,6 +92,9 @@
 		},
 		data() {
 			return {
+				hisShow: false,
+				carNumList: [],
+				targetList: [],
 				inputList: [" ", " ", " ", " ", " ", " ", " ", " "],
 				curInput: -1,
 				maxNum: 8,
@@ -118,15 +124,15 @@
 				}
 			},
 			curInput(val) {
-				console.log(val);
-				console.log(this.inputList);
+				// console.log(val);
+				// console.log(this.inputList);
+				if(searchLoading) clearInterval(searchLoading)
 				if(this.inputList[0] == ' '){
 					this.curInput = 0;
 					val = 0;
+					this.hisShow = false
 				}
-				
 				this.showOrHidePop(val)
-
 				switch (val) {
 					case 1:
 						this.lockInput = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "O", "I", "挂"]
@@ -153,6 +159,19 @@
 						this.lockInput = []
 						break
 				}
+				var searchLoading = setTimeout(()=> {
+					let str = this.inputList.filter(item=> item !== " ").join("")
+					if(!str || str.length >= 7) return
+					let arr = []
+					for (let i = 0; i < this.carNumList.length; i++) {
+						if(this.carNumList[i].includes(str)) {
+							arr.push(this.carNumList[i])
+							if(arr.length >= 5) break
+						}
+					}
+					this.hisShow = arr.length ? true : false
+					this.targetList = [...arr]
+				}, 300)
 			}
 		},
 		created() {
@@ -162,8 +181,18 @@
 					this.inputList[i] = valList[i]
 				}
 			}
+			let arr = uni.getStorageSync("carNumList") || []
+			this.carNumList = arr.reverse()
 		},
 		methods: {
+			onSelect(e) {
+				let arr = e.split("")
+				this.inputList = [...arr]
+				this.hisShow = false
+				this.showKeyPop1 = false
+				this.showKeyPop2 = false
+				this.emitResult()
+			},
 			plateInput(e) {
 				this.curInput = e
 				this.showOrHidePop(e)
@@ -179,20 +208,17 @@
 					this.showKeyPop1 = false
 					this.showKeyPop2 = true
 				}
-
 			},
 			tapKeyboard(e) {
 				if (this.lockInput.includes(e)) {
 					return
 				}
-
 				this.inputList[this.curInput] = e
 				if (this.curInput < this.maxNum - 2) {
 					this.curInput++
 				} else {
 					this.curInput = -1
 				}
-
 				this.emitResult()
 			},
 			closeKeyboard() {
@@ -203,7 +229,6 @@
 					this.curInput--
 				}
 				this.inputList[this.curInput] = " "
-
 				this.emitResult()
 			},
 			emitResult() {
@@ -262,6 +287,18 @@
 
 			.last-item {
 				border: 1px solid #18bc37;
+			}
+		}
+		.car-hisList {
+			padding: 16rpx;
+			z-index: 9999;
+			position: absolute;
+			box-shadow: 0rpx 0rpx 12rpx 2rpx rgba(72,94,244,0.2);
+			.his-item {
+				margin-top: 10rpx;
+				&:nth-child(1) {
+					margin-top: 0;
+				}
 			}
 		}
 	}

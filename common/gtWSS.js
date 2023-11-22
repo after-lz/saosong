@@ -41,7 +41,7 @@ let ws = {
 	completeClose,
 	setWsUrl
 }
-const innerAudioContext = uni.createInnerAudioContext();
+// const innerAudioContext = uni.createInnerAudioContext();
 // const innerAudioContext = uni.getBackgroundAudioManager();
 let companyInfo = uni.getStorageSync('companyInfo');
 

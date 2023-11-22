@@ -32,10 +32,10 @@
 			</swiper-item>
 			<swiper-item class="swiper-item">
 				<scroll-view scroll-y style="height: 100%">
-					<view class="card card0">
+					<!-- <view class="card card0">
 						<view class="card_title">下单量</view>
 						<data-chart height="500" :opts='opts' :chartData='chartData' :pieDemo="pieDemo"></data-chart>
-					</view>
+					</view> -->
 					<view class="row">
 						<view class="card">
 							<view class="label">平台活跃</view>
@@ -266,6 +266,7 @@ export default {
 			}
 			.row {
 				display: flex;
+				margin-top: 20rpx;
 				.card {
 					width: 50%;
 					height: 144rpx;

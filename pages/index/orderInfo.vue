@@ -1,371 +1,351 @@
 <template>
 	<view class="gt_content">
-
-		<view class="con_toast">
-			<u-toast ref="uToast" />
-		</view>
-
-		<view class="con_mask">
-			<u-mask :show="maskShow"></u-mask>
-		</view>
-
-
-		<view class="con_headBackground" :class="'order_yuyueStatus_' + dataInfo.is_yuyue"></view>
-
-		<view class="con_billInfo" v-if="dataInfo.pay_status != 2">
-			<view class="con_title_detailBtn">
+		<view class="content">
+			<view class="con_headBackground" :class="'order_yuyueStatus_' + dataInfo.is_yuyue"></view>
+			<view class="con_billInfo" v-if="dataInfo.pay_status != 2">
+				<view class="con_title_detailBtn">
+					<view class="con_title">
+						<text>费用信息</text>
+					</view>
+					<view class="con_detailBtn" @click="goBillDetail">
+						<text>费用明细</text>
+					</view>
+				</view>
+				<view class="con_line"></view>
+				<view class="con_pay_price">
+					<view class="con_pay">
+						<text v-if="dataInfo.pay_status == 2">已支付</text>
+						<text v-else>未支付</text>
+					</view>
+					<view class="con_price">
+						<!-- <text>8888.88元</text> -->
+					</view>
+				</view>
+				<view class="con_payMethod" v-if="dataInfo.pay_status == 2">
+					<text style="margin-right: 10rpx;">付款方式</text>
+					<u-icon name="arrow-down"></u-icon>
+				</view>
+				<view class="con_wechatPay" v-if="dataInfo.pay_status == 2">
+					<view class="con_text">
+						<text v-if="dataInfo.fee_pay_type == 1">线下支付</text>
+						<text v-if="dataInfo.fee_pay_type == 2">余额支付</text>
+						<text v-if="dataInfo.fee_pay_type == 3">支付宝支付</text>
+						<text v-if="dataInfo.fee_pay_type == 4">微信支付</text>
+					</view>
+					<view class="con_payPrice">
+						<text>{{dataInfo.last_price}}元</text>
+					</view>
+				</view>
+				<view class="con_line" v-if="dataInfo.pay_status == 2"></view>
+			</view>
+			<view class="con_userInfo_contact">
+				<view class="con_userInfo">
+					<view class="con_headImg">
+						<u-avatar :src="cargoInfo.headerpic"></u-avatar>
+						<!-- <image :src="cargoInfo.headerpic" mode="widthFix"></image> -->
+					</view>
+					<view class="con_phone">
+						<!-- <text>尾号{{gtCommon.endMobile(cargoInfo.mobile)}}</text> -->
+						<text>{{cargoInfo.nickname}}</text>
+					</view>
+				</view>
+				<view class="con_contact" v-if="dataInfo.deliver_type == 3">
+					<!-- <view class="con_message">
+						<u-icon name="chat-fill" color="#000000" size="40"></u-icon>
+					</view> -->
+					<view class="con_call" @click="callUser">
+						<u-icon name="phone-fill" color="#000000" size="40"></u-icon>
+					</view>
+				</view>
+			</view>
+			<view class="con_baseInfo">
+				<view class="con_time_distance">
+					<view class="con_time">
+						<text v-if="dataInfo.is_yuyue">{{gtCommon.getAppointmentTime(dataInfo.yuyue_time)}}</text>
+						<text v-else>即时</text>
+					</view>
+					<view class="con_distance">
+						<text>距你{{gtCommon.getDistance(lat,lng,dataInfo.pickup_latitude,dataInfo.pickup_longitude)}}公里</text>
+					</view>
+				</view>
+				<view class="con_line"></view>
+				<view class="con_fromTo">
+					<view class="con_left">
+						<view class="con_fromIcon">
+							<text>发</text>
+						</view>
+						<view class="con_fromToLine"></view>
+						<view class="con_toIcon">
+							<text>收</text>
+						</view>
+					</view>
+					<view class="con_right">
+						<view class="con_fromAddress u-line-1">
+							<text>{{dataInfo.pickup_province}}-{{dataInfo.pickup_city}}-{{dataInfo.pickup_county}}{{dataInfo.pickup_address}}</text>
+						</view>
+						<view class="con_fromType">
+							<text>{{dataInfo.pickup_remark}}</text>
+						</view>
+						<view class="con_fromNamePhone">
+							<text>{{dataInfo.pickup_truename}} {{gtCommon.hiddenMobile4to7(dataInfo.pickup_mobile)}}</text>
+						</view>
+			
+						<view class="con_toAddress u-line-1">
+							<text>{{dataInfo.receive_province}}-{{dataInfo.receive_city}}-{{dataInfo.receive_county}}{{dataInfo.receive_address}}</text>
+						</view>
+						<view class="con_toType">
+							<text>{{dataInfo.receive_remark}}</text>
+						</view>
+						<view class="con_toNamePhone">
+							<text>{{dataInfo.receive_truename}}
+								{{gtCommon.hiddenMobile4to7(dataInfo.receive_mobile)}}</text>
+						</view>
+					</view>
+				</view>
+				<view class="con_line"></view>
+				<view class="con_keyVal" :style="!openStatus1 ? 'height:120rpx':''">
+					<view class="con_key_val">
+						<view class="con_key">
+							<text>订单编号</text>
+						</view>
+						<view class="con_val">
+							<text>{{dataInfo.deliver_sn}}</text>
+							<text class="copyBtn" @click="copy(dataInfo.deliver_sn)">复制</text>
+						</view>
+					</view>
+					<view class="con_key_val">
+						<view class="con_key">
+							<text>订单时间</text>
+						</view>
+						<view class="con_val">
+							<!-- <text>2022年12月08日 13:18</text> -->
+							<text>{{gtCommon.formateTime(dataInfo.create_time,'YYYY年MM月DD日 HH:mm')}}</text>
+						</view>
+					</view>
+					<view class="con_key_val" v-if="dataInfo.yuyue_time">
+						<view class="con_key">
+							<text>预约时间</text>
+						</view>
+						<view class="con_val">
+							<text>{{gtCommon.formateTime(dataInfo.yuyue_time,'YYYY年MM月DD日 HH:mm')}}</text>
+						</view>
+					</view>
+					<view class="con_key_val">
+						<view class="con_key">
+							<text>订单类型</text>
+						</view>
+						<view class="con_val">
+							<text v-if="dataInfo.order_type == 1">指派下单</text>
+							<text v-if="dataInfo.order_type == 2">极速下单</text>
+						</view>
+					</view>
+					<view class="con_key_val">
+						<view class="con_key">
+							<text>是否开票</text>
+						</view>
+						<view class="con_val">
+							<text v-if="dataInfo.is_invoice == 1">开票</text>
+							<text v-else>不开票</text>
+						</view>
+					</view>
+					<view class="con_key_val">
+						<view class="con_key">
+							<text>物流方式</text>
+						</view>
+						<view class="con_val">
+							<text v-if="dataInfo.deliver_type == 1">普运</text>
+							<text v-if="dataInfo.deliver_type == 2">快运</text>
+							<text v-if="dataInfo.deliver_type == 3">议价</text>
+							<text>{{dataInfo.transport_day_min}}-{{dataInfo.transport_day_max}}天</text>
+						</view>
+					</view>
+					<view class="con_key_val">
+						<view class="con_key">
+							<text>回单收条</text>
+						</view>
+						<view class="con_val">
+							<text v-if="dataInfo.receipt_type == 1">无需</text>
+							<text v-if="dataInfo.receipt_type == 2">回单</text>
+							<text v-if="dataInfo.receipt_type == 3">收条</text>
+						</view>
+					</view>
+					<view class="con_key_val">
+						<view class="con_key">
+							<text>备注</text>
+						</view>
+						<view class="con_val">
+							<text v-if="dataInfo.remark">{{dataInfo.remark}}</text>
+							<text v-else> - </text>
+						</view>
+					</view>
+				</view>
+				<view class="con_retract" @click="openStatus1 = !openStatus1">
+					<text style="margin-right: 8rpx;" v-if="openStatus1">收起</text>
+					<text style="margin-right: 8rpx;" v-else>展开</text>
+					<u-icon name="arrow-up" v-if="openStatus1"></u-icon>
+					<u-icon name="arrow-down" v-else></u-icon>
+				</view>
+			</view>
+			<view class="con_goodsInfo">
 				<view class="con_title">
-					<text>费用信息</text>
+					<text>货物信息</text>
 				</view>
-				<view class="con_detailBtn" @click="goBillDetail">
-					<text>费用明细</text>
-				</view>
-			</view>
-			<view class="con_line"></view>
-			<view class="con_pay_price">
-				<view class="con_pay">
-					<text v-if="dataInfo.pay_status == 2">已支付</text>
-					<text v-else>未支付</text>
-				</view>
-				<view class="con_price">
-					<!-- <text>8888.88元</text> -->
-				</view>
-			</view>
-			<view class="con_payMethod" v-if="dataInfo.pay_status == 2">
-				<text style="margin-right: 10rpx;">付款方式</text>
-				<u-icon name="arrow-down"></u-icon>
-			</view>
-			<view class="con_wechatPay" v-if="dataInfo.pay_status == 2">
-				<view class="con_text">
-					<text v-if="dataInfo.fee_pay_type == 1">线下支付</text>
-					<text v-if="dataInfo.fee_pay_type == 2">余额支付</text>
-					<text v-if="dataInfo.fee_pay_type == 3">支付宝支付</text>
-					<text v-if="dataInfo.fee_pay_type == 4">微信支付</text>
-				</view>
-				<view class="con_payPrice">
-					<text>{{dataInfo.last_price}}元</text>
-				</view>
-			</view>
-			<view class="con_line" v-if="dataInfo.pay_status == 2"></view>
-		</view>
-
-		<view class="con_userInfo_contact">
-			<view class="con_userInfo">
-				<view class="con_headImg">
-					<u-avatar :src="cargoInfo.headerpic"></u-avatar>
-					<!-- <image :src="cargoInfo.headerpic" mode="widthFix"></image> -->
-				</view>
-				<view class="con_phone">
-					<!-- <text>尾号{{gtCommon.endMobile(cargoInfo.mobile)}}</text> -->
-					<text>{{cargoInfo.nickname}}</text>
-				</view>
-			</view>
-			<view class="con_contact" v-if="dataInfo.deliver_type == 3">
-				<!-- <view class="con_message">
-					<u-icon name="chat-fill" color="#000000" size="40"></u-icon>
-				</view> -->
-				<view class="con_call" @click="callUser">
-					<u-icon name="phone-fill" color="#000000" size="40"></u-icon>
-				</view>
-			</view>
-		</view>
-
-		<view class="con_baseInfo">
-			<view class="con_time_distance">
-				<view class="con_time">
-					<text v-if="dataInfo.is_yuyue">{{gtCommon.getAppointmentTime(dataInfo.yuyue_time)}}</text>
-					<text v-else>即时</text>
-				</view>
-				<view class="con_distance">
-					<text>距你{{gtCommon.getDistance(lat,lng,dataInfo.pickup_latitude,dataInfo.pickup_longitude)}}公里</text>
-				</view>
-			</view>
-			<view class="con_line"></view>
-			<view class="con_fromTo">
-				<view class="con_left">
-					<view class="con_fromIcon">
-						<text>发</text>
+				<view class="con_line"></view>
+				<view class="con_goodsImgs" v-if="dataInfo.pack_imgs">
+					<view class="con_text">
+						<text>货物图片</text>
 					</view>
-					<view class="con_fromToLine"></view>
-					<view class="con_toIcon">
-						<text>收</text>
-					</view>
-				</view>
-				<view class="con_right">
-					<view class="con_fromAddress u-line-1">
-						<text>{{dataInfo.pickup_province}}-{{dataInfo.pickup_city}}-{{dataInfo.pickup_county}}{{dataInfo.pickup_address}}</text>
-					</view>
-					<view class="con_fromType">
-						<text>{{dataInfo.pickup_remark}}</text>
-					</view>
-					<view class="con_fromNamePhone">
-						<text>{{dataInfo.pickup_truename}} {{gtCommon.hiddenMobile4to7(dataInfo.pickup_mobile)}}</text>
-					</view>
-
-					<view class="con_toAddress u-line-1">
-						<text>{{dataInfo.receive_province}}-{{dataInfo.receive_city}}-{{dataInfo.receive_county}}{{dataInfo.receive_address}}</text>
-					</view>
-					<view class="con_toType">
-						<text>{{dataInfo.receive_remark}}</text>
-					</view>
-					<view class="con_toNamePhone">
-						<text>{{dataInfo.receive_truename}}
-							{{gtCommon.hiddenMobile4to7(dataInfo.receive_mobile)}}</text>
-					</view>
-				</view>
-			</view>
-			<view class="con_line"></view>
-
-			<view class="con_keyVal" :style="!openStatus1 ? 'height:120rpx':''">
-				<view class="con_key_val">
-					<view class="con_key">
-						<text>订单编号</text>
-					</view>
-					<view class="con_val">
-						<text>{{dataInfo.deliver_sn}}</text>
-						<text class="copyBtn" @click="copy(dataInfo.deliver_sn)">复制</text>
-					</view>
-				</view>
-				<view class="con_key_val">
-					<view class="con_key">
-						<text>订单时间</text>
-					</view>
-					<view class="con_val">
-						<!-- <text>2022年12月08日 13:18</text> -->
-						<text>{{gtCommon.formateTime(dataInfo.create_time,'YYYY年MM月DD日 HH:mm')}}</text>
-					</view>
-				</view>
-				<view class="con_key_val" v-if="dataInfo.yuyue_time">
-					<view class="con_key">
-						<text>预约时间</text>
-					</view>
-					<view class="con_val">
-						<text>{{gtCommon.formateTime(dataInfo.yuyue_time,'YYYY年MM月DD日 HH:mm')}}</text>
-					</view>
-				</view>
-				<view class="con_key_val">
-					<view class="con_key">
-						<text>订单类型</text>
-					</view>
-					<view class="con_val">
-						<text v-if="dataInfo.order_type == 1">指派下单</text>
-						<text v-if="dataInfo.order_type == 2">极速下单</text>
-					</view>
-				</view>
-				<view class="con_key_val">
-					<view class="con_key">
-						<text>是否开票</text>
-					</view>
-					<view class="con_val">
-						<text v-if="dataInfo.is_invoice == 1">开票</text>
-						<text v-else>不开票</text>
-					</view>
-				</view>
-				<view class="con_key_val">
-					<view class="con_key">
-						<text>物流方式</text>
-					</view>
-					<view class="con_val">
-						<text v-if="dataInfo.deliver_type == 1">普运</text>
-						<text v-if="dataInfo.deliver_type == 2">快运</text>
-						<text v-if="dataInfo.deliver_type == 3">议价</text>
-						<text>{{dataInfo.transport_day_min}}-{{dataInfo.transport_day_max}}天</text>
-					</view>
-				</view>
-				<view class="con_key_val">
-					<view class="con_key">
-						<text>回单收条</text>
-					</view>
-					<view class="con_val">
-						<text v-if="dataInfo.receipt_type == 1">无需</text>
-						<text v-if="dataInfo.receipt_type == 2">回单</text>
-						<text v-if="dataInfo.receipt_type == 3">收条</text>
-					</view>
-				</view>
-				<view class="con_key_val">
-					<view class="con_key">
-						<text>备注</text>
-					</view>
-					<view class="con_val">
-						<text v-if="dataInfo.remark">{{dataInfo.remark}}</text>
-						<text v-else> - </text>
-					</view>
-				</view>
-
-			</view>
-
-			<view class="con_retract" @click="openStatus1 = !openStatus1">
-				<text style="margin-right: 8rpx;" v-if="openStatus1">收起</text>
-				<text style="margin-right: 8rpx;" v-else>展开</text>
-				<u-icon name="arrow-up" v-if="openStatus1"></u-icon>
-				<u-icon name="arrow-down" v-else></u-icon>
-			</view>
-
-		</view>
-
-		<view class="con_goodsInfo">
-			<view class="con_title">
-				<text>货物信息</text>
-			</view>
-			<view class="con_line"></view>
-			<view class="con_goodsImgs" v-if="dataInfo.pack_imgs">
-				<view class="con_text">
-					<text>货物图片</text>
-				</view>
-				<view class="con_list">
-					<view class="con_item" v-for="(item,index) in dataInfo.pack_imgs" :key="index">
-						<image :src="item" mode="aspectFill" @click="gtCommon.previewImg(item)"></image>
-					</view>
-				</view>
-			</view>
-			<view class="con_nums">
-				<view class="con_item">
-					<view class="con_label">
-						<text>数量</text>
-					</view>
-					<view class="con_num">
-						<text>{{dataInfo.goods_number}}</text>
-					</view>
-				</view>
-				<view class="con_item">
-					<view class="con_label">
-						<text>重量(T)</text>
-					</view>
-					<view class="con_num">
-						<text>{{dataInfo.goods_weight}}</text>
-					</view>
-				</view>
-				<view class="con_item">
-					<view class="con_label">
-						<text>体积(m²)</text>
-					</view>
-					<view class="con_num">
-						<text>{{dataInfo.goods_volume}}</text>
-					</view>
-				</view>
-			</view>
-
-			<view class="con_keyVal" :style="!openStatus2 ? 'height:120rpx':''">
-				<view class="con_key_val">
-					<view class="con_key">
-						<text>货物名称</text>
-					</view>
-					<view class="con_val">
-						<text>{{dataInfo.goods_name}}</text>
-					</view>
-				</view>
-				<view class="con_key_val">
-					<view class="con_key">
-						<text>包装类型</text>
-					</view>
-					<view class="con_val">
-						<text v-if="dataInfo.pack_name">{{dataInfo.pack_name}}</text>
-						<text v-else>-</text>
-					</view>
-				</view>
-				<view class="con_key_val">
-					<view class="con_key">
-						<text>交货方式</text>
-					</view>
-					<view class="con_val">
-						<text v-if="dataInfo.jiaohuo_type == 1">自送专线</text>
-						<text v-if="dataInfo.jiaohuo_type == 2">上门自提</text>
-					</view>
-				</view>
-				<view class="con_key_val">
-					<view class="con_key">
-						<text>配送方式</text>
-					</view>
-					<view class="con_val">
-						<text v-if="dataInfo.peisong_type == 1">送货上门</text>
-						<text v-if="dataInfo.peisong_type == 2">自提</text>
-					</view>
-				</view>
-				<view class="con_key_val" v-if="dataInfo.peisong_type == 2">
-					<view class="con_key">
-						<text>自提网点</text>
-					</view>
-					<view class="con_val">
-						<view class="con_text">
-							<text>公司名称：{{dataInfo.outlets_name}}</text>
-						</view>
-						<view class="con_text">
-							<text>地址：{{dataInfo.outlets_province}}{{dataInfo.outlets_city}}{{dataInfo.outlets_county}}{{dataInfo.outlets_address}}</text>
-						</view>
-						<view class="con_text">
-							<text>负责人：{{dataInfo.outlets_contact}}</text>
-						</view>
-						<view class="con_text">
-							<text>电话：</text>
-							<text style="color:#485EF4"
-								@click="gtCommon.callMobile(dataInfo.outlets_mobile)">{{dataInfo.outlets_mobile}}</text>
+					<view class="con_list">
+						<view class="con_item" v-for="(item,index) in dataInfo.pack_imgs" :key="index">
+							<image :src="item" mode="aspectFill" @click="gtCommon.previewImg(item)"></image>
 						</view>
 					</view>
 				</view>
-				<view class="con_key_val">
-					<view class="con_key">
-						<text>是否异性件</text>
+				<view class="con_nums">
+					<view class="con_item">
+						<view class="con_label">
+							<text>数量</text>
+						</view>
+						<view class="con_num">
+							<text>{{dataInfo.goods_number}}</text>
+						</view>
 					</view>
-					<view class="con_val">
-						<text v-if="dataInfo.pack_is_special == 1">是</text>
-						<text v-if="dataInfo.pack_is_special == 0">否</text>
+					<view class="con_item">
+						<view class="con_label">
+							<text>重量(T)</text>
+						</view>
+						<view class="con_num">
+							<text>{{dataInfo.goods_weight}}</text>
+						</view>
+					</view>
+					<view class="con_item">
+						<view class="con_label">
+							<text>体积(m²)</text>
+						</view>
+						<view class="con_num">
+							<text>{{dataInfo.goods_volume}}</text>
+						</view>
 					</view>
 				</view>
-				<view class="con_key_val">
-					<view class="con_key">
-						<text>声明价值</text>
+			
+				<view class="con_keyVal" :style="!openStatus2 ? 'height:120rpx':''">
+					<view class="con_key_val">
+						<view class="con_key">
+							<text>货物名称</text>
+						</view>
+						<view class="con_val">
+							<text>{{dataInfo.goods_name}}</text>
+						</view>
 					</view>
-					<view class="con_val">
-						<text>{{dataInfo.goods_value_price}}元</text>
+					<view class="con_key_val">
+						<view class="con_key">
+							<text>包装类型</text>
+						</view>
+						<view class="con_val">
+							<text v-if="dataInfo.pack_name">{{dataInfo.pack_name}}</text>
+							<text v-else>-</text>
+						</view>
+					</view>
+					<view class="con_key_val">
+						<view class="con_key">
+							<text>交货方式</text>
+						</view>
+						<view class="con_val">
+							<text v-if="dataInfo.jiaohuo_type == 1">自送专线</text>
+							<text v-if="dataInfo.jiaohuo_type == 2">上门自提</text>
+						</view>
+					</view>
+					<view class="con_key_val">
+						<view class="con_key">
+							<text>配送方式</text>
+						</view>
+						<view class="con_val">
+							<text v-if="dataInfo.peisong_type == 1">送货上门</text>
+							<text v-if="dataInfo.peisong_type == 2">自提</text>
+						</view>
+					</view>
+					<view class="con_key_val" v-if="dataInfo.peisong_type == 2">
+						<view class="con_key">
+							<text>自提网点</text>
+						</view>
+						<view class="con_val">
+							<view class="con_text">
+								<text>公司名称：{{dataInfo.outlets_name}}</text>
+							</view>
+							<view class="con_text">
+								<text>地址：{{dataInfo.outlets_province}}{{dataInfo.outlets_city}}{{dataInfo.outlets_county}}{{dataInfo.outlets_address}}</text>
+							</view>
+							<view class="con_text">
+								<text>负责人：{{dataInfo.outlets_contact}}</text>
+							</view>
+							<view class="con_text">
+								<text>电话：</text>
+								<text style="color:#485EF4"
+									@click="gtCommon.callMobile(dataInfo.outlets_mobile)">{{dataInfo.outlets_mobile}}</text>
+							</view>
+						</view>
+					</view>
+					<view class="con_key_val">
+						<view class="con_key">
+							<text>是否异性件</text>
+						</view>
+						<view class="con_val">
+							<text v-if="dataInfo.pack_is_special == 1">是</text>
+							<text v-if="dataInfo.pack_is_special == 0">否</text>
+						</view>
+					</view>
+					<view class="con_key_val">
+						<view class="con_key">
+							<text>声明价值</text>
+						</view>
+						<view class="con_val">
+							<text>{{dataInfo.goods_value_price}}元</text>
+						</view>
 					</view>
 				</view>
-			</view>
-
-
-			<view class="con_retract" @click="openStatus2 = !openStatus2">
-				<text style="margin-right: 8rpx;" v-if="openStatus2">收起</text>
-				<text style="margin-right: 8rpx;" v-else>展开</text>
-				<u-icon name="arrow-up" v-if="openStatus2"></u-icon>
-				<u-icon name="arrow-down" v-else></u-icon>
-			</view>
-		</view>
-
-
-		<view class="con_billInfo" v-if="dataInfo.pay_status == 2">
-			<view class="con_title_detailBtn">
-				<view class="con_title">
-					<text>费用信息</text>
-				</view>
-				<view class="con_detailBtn" @click="goBillDetail">
-					<text>费用明细</text>
+				<view class="con_retract" @click="openStatus2 = !openStatus2">
+					<text style="margin-right: 8rpx;" v-if="openStatus2">收起</text>
+					<text style="margin-right: 8rpx;" v-else>展开</text>
+					<u-icon name="arrow-up" v-if="openStatus2"></u-icon>
+					<u-icon name="arrow-down" v-else></u-icon>
 				</view>
 			</view>
-			<view class="con_line"></view>
-			<view class="con_pay_price">
-				<view class="con_pay">
-					<text v-if="dataInfo.pay_status == 2">已支付</text>
-					<text v-else>未支付</text>
+			<view class="con_billInfo" v-if="dataInfo.pay_status == 2">
+				<view class="con_title_detailBtn">
+					<view class="con_title">
+						<text>费用信息</text>
+					</view>
+					<view class="con_detailBtn" @click="goBillDetail">
+						<text>费用明细</text>
+					</view>
 				</view>
-				<view class="con_price">
-					<!-- <text>8888.88元</text> -->
+				<view class="con_line"></view>
+				<view class="con_pay_price">
+					<view class="con_pay">
+						<text v-if="dataInfo.pay_status == 2">已支付</text>
+						<text v-else>未支付</text>
+					</view>
+					<view class="con_price">
+						<!-- <text>8888.88元</text> -->
+					</view>
 				</view>
+				<view class="con_payMethod">
+					<text style="margin-right: 10rpx;">付款方式</text>
+					<u-icon name="arrow-down"></u-icon>
+				</view>
+				<view class="con_wechatPay">
+					<view class="con_text">
+						<text v-if="dataInfo.fee_pay_type == 1">线下支付</text>
+						<text v-if="dataInfo.fee_pay_type == 2">余额支付</text>
+						<text v-if="dataInfo.fee_pay_type == 3">支付宝支付</text>
+						<text v-if="dataInfo.fee_pay_type == 4">微信支付</text>
+					</view>
+					<view class="con_payPrice">
+						<text>{{dataInfo.last_price}}元</text>
+					</view>
+				</view>
+				<view class="con_line"></view>
 			</view>
-			<view class="con_payMethod">
-				<text style="margin-right: 10rpx;">付款方式</text>
-				<u-icon name="arrow-down"></u-icon>
-			</view>
-			<view class="con_wechatPay">
-				<view class="con_text">
-					<text v-if="dataInfo.fee_pay_type == 1">线下支付</text>
-					<text v-if="dataInfo.fee_pay_type == 2">余额支付</text>
-					<text v-if="dataInfo.fee_pay_type == 3">支付宝支付</text>
-					<text v-if="dataInfo.fee_pay_type == 4">微信支付</text>
-				</view>
-				<view class="con_payPrice">
-					<text>{{dataInfo.last_price}}元</text>
-				</view>
-			</view>
-			<view class="con_line"></view>
 		</view>
 
 		<!-- <view class="con_service">
@@ -379,7 +359,6 @@
 		<view class="con_agreement">
 			<text>《货物运输协议》</text>
 		</view> -->
-
 
 		<view class="con_btns" v-if="dataInfo.order_type == 2">
 			<view class="con_list">
@@ -420,7 +399,6 @@
 			</view>
 		</view>
 
-
 		<view class="con_btns" v-if="dataInfo.order_type == 1">
 			<view class="con_list">
 				<view class="con_item" @click="showRefuse(dataInfo)">
@@ -444,7 +422,14 @@
 			</view>
 		</view>
 
-
+		<view class="con_toast">
+			<u-toast ref="uToast" />
+		</view>
+		
+		<view class="con_mask">
+			<u-mask :show="maskShow"></u-mask>
+		</view>
+		
 		<view class="con_popup">
 			<view class="con_quotation">
 				<u-popup v-model="quotationShow" mode="center" width="718" height="444" border-radius="22">
@@ -535,28 +520,21 @@
 	export default {
 		data() {
 			return {
-
 				maskShow: false,
-
 				orderSn: '',
 				dataInfo: {},
 				cargoInfo: {},
 				timer: 0,
 				openStatus1: false,
 				openStatus2: false,
-
-
 				orderSn: '',
-
 				seizeShow: false,
-
 				quotationShow: false,
 				ownerQuotation: '',
 				ownerMobile: '',
 				myQuotation: '',
 				quotationTime: '',
 				quotationStatus: false,
-
 				refuseShow: false,
 				refuseReason: '',
 				refuseReasonList: [{
@@ -585,18 +563,13 @@
 					value: 1,
 				}],
 				refuseOtherReason: '',
-
-
 				touh: false,
 				startX: 0,
 				moveX: 0,
 				btnStr: '右滑抢单',
 				lng: '',
 				lat: '',
-
 				logistics_id: 0,
-
-
 			}
 		},
 		onLoad(options) {
@@ -606,8 +579,6 @@
 			var lat = uni.getStorageSync('lat');
 			gt.lng = lng;
 			gt.lat = lat;
-
-
 			var companyInfo = uni.getStorageSync('companyInfo');
 			gt.logistics_id = companyInfo.logistics_id;
 		},
@@ -620,42 +591,30 @@
 			gt.onMessage();
 		},
 		onUnload() {
-			console.log('onUnload');
 			let gt = this;
 			// if (gt.t) {
 			clearInterval(gt.timer);
 			// }
 		},
 		onHide() {
-			console.log('onHide');
 			let gt = this;
 			// if (gt.t) {
 			clearInterval(gt.timer);
 			// }
 		},
 		methods: {
-
 			onMessage() {
 				let gt = this;
 				gt.gtWSS.socketTask.onMessage((res) => {
-					console.log(res);
-
 					var data = res.data;
 					// console.log(data);
 					var obj = JSON.parse(data);
 					var type = obj.type;
-
-
 					if (type == 'order_rob_result') {
 						gt.maskShow = false;
 						uni.hideLoading();
-
 						var orderInfo = obj.data;
 						var orderInfo = orderInfo.order_info;
-						console.log(orderInfo);
-						// uni.navigateTo({
-						// });
-
 						if (orderInfo.logistics_id == gt.logistics_id) {
 							clearInterval(gt.timer);
 							gt.$refs.uToast.show({
@@ -672,7 +631,6 @@
 							});
 							return false;
 						}
-
 					}
 					if (type == 'order_rob_fail') {
 						gt.maskShow = false;
@@ -686,10 +644,8 @@
 					}
 				})
 			},
-
 			setNavTitle() {
 				let gt = this;
-
 				gt.timer = setInterval(function() {
 					var title = '';
 					if (gt.dataInfo.order_type == 1) {
@@ -699,7 +655,6 @@
 						title += '极速';
 					}
 					title += '详情';
-
 					var nowTime = parseInt((new Date().getTime()) / 1000);
 					// console.log(nowTime);
 					var time = 1800 + gt.dataInfo.create_time - nowTime;
@@ -726,7 +681,6 @@
 					deliver_sn: gt.orderSn,
 				};
 				gt.gtRequest.post(url, data).then(res => {
-
 					// 不知道为什么会返回
 					// if (res.order_info.logistics_id) {
 						console.log('relaunch');
@@ -757,9 +711,7 @@
 							}
 						})
 					}
-
 					gt.setNavTitle();
-
 					if (res.order_info.pack_imgs) {
 						res.order_info.pack_imgs = res.order_info.pack_imgs.split('||');
 					}
@@ -768,7 +720,6 @@
 			},
 			callUser() {
 				let gt = this;
-
 				uni.makePhoneCall({
 					phoneNumber: gt.cargoInfo.mobile,
 				});
@@ -782,7 +733,6 @@
 			},
 			copy(str) {
 				let gt = this;
-
 				uni.setClipboardData({
 					data: str,
 				});
@@ -791,7 +741,6 @@
 				// 	type: 'success',
 				// });
 				return false;
-
 			},
 			previewImg(current, urls) {
 				uni.previewImage({
@@ -799,11 +748,8 @@
 					urls: urls,
 				})
 			},
-
 			showQuotation(item) {
-				console.log(item);
 				let gt = this;
-
 				gt.orderSn = item.deliver_sn;
 				gt.ownerQuotation = item.last_price;
 				gt.ownerMobile = item.pickup_mobile;
@@ -814,13 +760,10 @@
 				} else {
 					gt.quotationStatus = false;
 				}
-
-
 				gt.quotationShow = true;
 			},
 			contactOwner() {
 				let gt = this;
-
 				uni.makePhoneCall({
 					phoneNumber: gt.ownerMobile
 				});
@@ -841,7 +784,6 @@
 					});
 					return false;
 				}
-
 				if (gt.myQuotation <= gt.ownerQuotation) {
 					gt.$refs.uToast.show({
 						title: '我的报价不能低于货主出价',
@@ -864,7 +806,6 @@
 					return false;
 				});
 			},
-
 			showRefuse(item) {
 				let gt = this;
 				gt.orderSn = item.deliver_sn;
@@ -888,12 +829,8 @@
 					return false;
 				});
 			},
-
 			receiveOrder(item) {
-				console.log(item);
-
 				let gt = this;
-				
 				uni.showModal({
 					title: '提示',
 					content: '确定接单吗？',
@@ -906,8 +843,6 @@
 							gt.gtRequest.post(url, data).then(res => {
 								gt.orderSn = item.deliver_sn;
 								gt.seizeShow = true;
-							
-							
 								const innerAudioContext = uni.createInnerAudioContext();
 								innerAudioContext.stop();
 								innerAudioContext.src =
@@ -917,13 +852,10 @@
 						}
 					}
 				})
-				
 			},
-
 			goOrderInfo() {
 				let gt = this;
 				var orderSn = '';
-
 				uni.navigateTo({
 					url: '../order/orderInfo?orderSn=' + gt.orderSn,
 				})
@@ -934,8 +866,6 @@
 				gt.seizeShow = false;
 				uni.navigateBack();
 			},
-
-
 			startTouch(e) {
 				console.log(e);
 				let gt = this;
@@ -957,13 +887,11 @@
 					if (moveX > 580) {
 						moveX = 718;
 					}
-
 				}
 				gt.moveX = moveX;
 				gt.btnStr = '';
 			},
 			endTouch(e) {
-				console.log(e);
 				let gt = this;
 				gt.touh = false;
 				if (gt.moveX != 718) {
@@ -971,9 +899,6 @@
 					gt.btnStr = '右滑抢单'
 				} else {
 					gt.btnStr = '抢单中'
-
-
-
 					var url = "/logistics/supplyhall/fast_rob_order";
 					var data = {
 						deliver_sn: gt.orderSn,
@@ -995,11 +920,7 @@
 							type: 'error',
 							back: true,
 						});
-
 					});
-
-
-
 				}
 			},
 		}
@@ -1013,7 +934,11 @@
 		.gt_content {
 			width: 750rpx;
 			overflow: hidden;
-
+			.content {
+				height: calc(100vh - 160rpx);
+				overflow: auto;
+				padding-bottom: 20rpx;
+			}
 			.con_headBackground {
 				background: #FF6067;
 				width: 950rpx;
@@ -1552,7 +1477,9 @@
 
 
 			.con_btns {
-				padding-bottom: 50rpx;
+				position: fixed;
+				bottom: 0;
+				// padding-bottom: 50rpx;
 
 				.con_list {
 					background: #fff;

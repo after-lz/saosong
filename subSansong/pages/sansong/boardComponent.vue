@@ -43,15 +43,15 @@
 	export default {
 		props: {
 			active_list: {
-				type: Object,
+				type: Array,
 				default: ()=> {
-					return {}
+					return []
 				}
 			},
 			logistics_list: {
-				type: Object,
+				type: Array,
 				default: ()=> {
-					return {}
+					return []
 				}
 			}
 		},
@@ -98,7 +98,7 @@
 			}
 		}
 		.users {
-			height: calc(880rpx - 92rpx);
+			height: calc(100vh - 82rpx - 188rpx - 92rpx - 20rpx);
 			.gt_title {
 				height: 64rpx;
 				background-color: #a3aef9;
@@ -111,7 +111,8 @@
 				}
 			}
 			.gt_items {
-				height: calc(880rpx - 156rpx);
+				// height: calc(880rpx - 156rpx);
+				height: calc(100% - 66rpx);
 				.gt_item {
 					display: flex;
 					align-items: center;
