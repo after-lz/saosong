@@ -82,13 +82,6 @@
 			}
 		},
 		{
-			"path": "pages/test/test",
-			"style": {
-				"navigationBarTitleText": "test",
-				"enablePullDownRefresh": false
-			}
-		},
-		{
 			"path": "pages/login/companyAuth",
 			"style": {
 				"navigationBarTitleText": "企业认证",
@@ -120,13 +113,6 @@
 			"path": "pages/login/mobileLogin",
 			"style": {
 				"navigationBarTitleText": "",
-				"enablePullDownRefresh": false
-			}
-		},
-		{
-			"path": "pages/test/mapOrder",
-			"style": {
-				"navigationBarTitleText": "订单详情",
 				"enablePullDownRefresh": false
 			}
 		},
