@@ -645,6 +645,13 @@
 					}
 				},
 				{
+					"path": "pages/user/applyWarning",
+					"style": {
+						"navigationBarTitleText": "账号注销",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
 					"path": "pages/user/confirmMobile",
 					"style": {
 						"navigationBarTitleText": "更换手机号码",

@@ -37,25 +37,25 @@
 					<view class="con_label" v-if="dataInfo.status == 5 && dataInfo.jiaohuo_type == 2">
 						<text>待提货，请尽快与货主联系，上门提货</text>
 					</view>
-					<view class="con_label" style="margin: 28rpx 0;" v-if="dataInfo.status == 7">
+					<view class="con_label" v-if="dataInfo.status == 7">
 						<text>已入库</text>
 					</view>
-					<view class="con_label" style="margin: 28rpx 0;" v-if="dataInfo.status == 9">
+					<view class="con_label" v-if="dataInfo.status == 9">
 						<text>运输中</text>
 					</view>
-					<view class="con_label" style="margin: 28rpx 0;" v-if="dataInfo.status == 11">
+					<view class="con_label" v-if="dataInfo.status == 11">
 						<text>待自提/待交货</text>
 					</view>
-					<view class="con_label" style="margin: 28rpx 0;" v-if="dataInfo.status == 13">
+					<view class="con_label" v-if="dataInfo.status == 13">
 						<text>待回单/待确认收货</text>
 					</view>
-					<view class="con_label" style="margin: 28rpx 0;" v-if="dataInfo.status == 15">
+					<view class="con_label" v-if="dataInfo.status == 15">
 						<text>已确认收货</text>
 					</view>
-					<view class="con_label" style="margin: 28rpx 0;" v-if="dataInfo.status == 20">
+					<view class="con_label" v-if="dataInfo.status == 20">
 						<text>已完成</text>
 					</view>
-					<view class="con_label" style="margin: 28rpx 0;" v-if="dataInfo.status == 99">
+					<view class="con_label" v-if="dataInfo.status == 99">
 						<text>已取消</text>
 					</view>
 					<view class="con_btn" @click="showTrajectory">
@@ -1911,6 +1911,7 @@
 									margin-left: 16rpx;
 									margin-top: 20rpx;
 									display: flex;
+									align-items: center;
 									justify-content: space-between;
 									padding: 32rpx 24rpx;
 
@@ -1932,11 +1933,11 @@
 											font-weight: 400;
 											color: #000000;
 											line-height: 40rpx;
-											margin-top: 28rpx;
+											// margin-top: 28rpx;
 										}
 
 										.con_icon {
-											margin-top: 30rpx;
+											// margin-top: 30rpx;
 											margin-left: 16rpx;
 										}
 									}

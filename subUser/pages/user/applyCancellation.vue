@@ -1,14 +1,14 @@
 <template>
 	<view class="gt_content">
 		<view class="con_list">
-			<view v-for="item in list" :key="item.key">
+			<view v-for="item in list" :key="item.title">
 				<view class="con_item">
 					<view class="con_text">
-						<text>{{ item.key }}</text>
+						<text>{{ item.title }}</text>
 					</view>
 					<view class="con_icon">
-						<view style="color: #909399;">{{ item.value }}</view>
-						<u-icon name="checkmark-circle-fill" color="#0ac220" v-if="item.status"></u-icon>
+						<view style="color: #909399;">{{ item.words }}</view>
+						<u-icon name="checkmark-circle-fill" color="#0ac220" v-if="item.checked"></u-icon>
 						<u-icon name="error-circle-fill" color="#ff6067" v-else></u-icon>
 					</view>
 				</view>
@@ -29,84 +29,51 @@
 	export default {
 		data() {
 			return {
-				list: [
-					{
-						key: '账户余额',
-						value: '您的账户余额已清零',
-						status: true
-					},
-					{
-						key: '应收应付',
-						value: '您的账单已结算完成',
-						status: false
-					},
-					{
-						key: '订单信息',
-						value: '您的订单均已完成',
-						status: true
-					},
-					{
-						key: '异常订单',
-						value: '您的异常订单均已处理',
-						status: true
-					},
-					{
-						key: '发票管理',
-						value: '您的发票开票已完成',
-						status: true
-					}
-				],
-				apiDomain: '',
+				list: [],
+				canLogout: false,
 				show: false,
-				content: '',
-				flag: false
+				content: ''
 			}
 		},
 		onLoad() {
 			let gt = this
-			gt.apiDomain = uni.getStorageSync('apiDomain')
-			gt.flag = gt.list.every(item=> item.status)
-			gt.content = gt.flag ? '注销账户之后数据将被清除，确定要注销账户吗？' : '注销条件不满足，不能申请注销!'
+			gt.getData()
 		},
 		methods: {
+			getData() {
+				let gt = this
+				gt.gtRequest.post('/logistics/User/logoutData').then(res => {
+					gt.list = res.list
+					gt.canLogout = res.canLogout ? false : true
+					gt.content = gt.canLogout ? '账户暂不满足注销条件！' : '注销账户之后数据将被清除，确定要注销账户吗？'
+				})
+			},
 			confirm() {
 				let gt = this
-				if(!gt.flag) return
-				uni.request({
-					url: gt.apiDomain + "/api/applogin/logoff",
-					method: 'POST',
-					success: function(res) {
-						if(res.data.code === '1') {
-							uni.removeStorageSync('companyInfo')
-							uni.removeStorageSync('userInfo')
-							uni.removeStorageSync('companyAuth')
-							uni.removeStorageSync('userAuth')
-							uni.removeStorageSync('mobile')
-							uni.removeStorageSync('openId')
-							uni.removeStorageSync('audioStatus')
-							uni.removeStorageSync('token_d')
-							uni.removeStorageSync('tokenValid_d')
-							uni.removeStorageSync('token')
-							uni.removeStorageSync('tokenValid')
-							gt.gtWSS.completeClose()
-							gt.$refs.uToast.show({
-								title: res.data.msg,
-								type: 'success',
-								url: "pages/login/login"
-							})
-						} else {
-							gt.$refs.uToast.show({
-								title: res.data.msg,
-								type: 'error'
-							})
-						}
-					},
-					fail: function(err) {
-						gt.$refs.uToast.show({
-							title: err.data.msg,
-							type: 'error'
-						})
-					}
+				if(gt.canLogout) return
+				gt.gtRequest.post('/logistics/User/logout').then(res => {
+					uni.removeStorageSync('companyInfo')
+					uni.removeStorageSync('userInfo')
+					uni.removeStorageSync('companyAuth')
+					uni.removeStorageSync('userAuth')
+					uni.removeStorageSync('mobile')
+					uni.removeStorageSync('openId')
+					uni.removeStorageSync('audioStatus')
+					uni.removeStorageSync('token_d')
+					uni.removeStorageSync('tokenValid_d')
+					uni.removeStorageSync('token')
+					uni.removeStorageSync('tokenValid')
+					gt.gtWSS.completeClose()
+					gt.$refs.uToast.show({
+						title: "注销成功",
+						type: 'success',
+						url: "pages/login/login"
+					})
+				}).catch(e=> {
+					gt.$refs.uToast.show({
+						title: "注销失败",
+						type: 'error'
+					})
 				})
 			}
 		}
@@ -148,6 +115,7 @@
 			.modalContent {
 				color: #000000;
 				padding: 80rpx 70rpx;
+				text-align: center;
 			}
 		}
 	}
