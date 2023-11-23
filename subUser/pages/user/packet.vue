@@ -7,8 +7,8 @@
 			</view>
 			<view class="info_bottom">
 				<view class="balance">{{ data.money02.toFixed(2) }}</view>
-				<view class="warning" v-if="wallet_status">你的账户异常，请联系平台客服!</view>
-				<view class="con_btnItem" @click="goBalance" :class="wallet_status ? 'dis' : ''" v-if="data.zhuanyueeSwitch">
+				<view class="warning" v-if="hongbao_status">你的账户异常，请联系平台客服!</view>
+				<view class="con_btnItem" @click="goBalance" :class="hongbao_status ? 'dis' : ''" v-if="data.zhuanyueeSwitch">
 					<text>转到余额</text>
 				</view>
 			</view>
@@ -77,7 +77,7 @@
 				},
 				is_company_approve: false,
 				flag: false,
-				wallet_status: 0
+				hongbao_status: 0
 			}
 		},
 		onLoad() {
@@ -110,11 +110,11 @@
 			getWallet_status() {
 				let gt = this
 				gt.gtRequest.post('/logistics/user/get_user_info').then(res => {
-					gt.wallet_status = res.logistics_info.wallet_status
+					gt.hongbao_status = res.logistics_info.hongbao_status
 				})
 			},
 			goBalance() {
-				if(this.wallet_status) return
+				if(this.hongbao_status) return
 				uni.navigateTo({
 					url: './transferBalance?params=' +encodeURIComponent(JSON.stringify(this.data))
 				})

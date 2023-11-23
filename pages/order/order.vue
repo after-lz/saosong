@@ -475,7 +475,7 @@
 				historyList = [];
 			}
 			gt.historyList = historyList;
-			gt.reGetOrderList();
+			// gt.reGetOrderList();
 		},
 		onShow() {
 			let gt = this;
@@ -494,11 +494,11 @@
 			})
 			uni.removeStorageSync('stime');
 			uni.removeStorageSync('etime');
-			if(orderSearchVal || orderSearchStatus || uni.getStorageSync('stime') || uni.getStorageSync('etime')) {
+			// if(orderSearchVal || orderSearchStatus || uni.getStorageSync('stime') || uni.getStorageSync('etime')) {
 				setTimeout(function() {
 					gt.reGetOrderList();
 				}, 500);
-			}
+			// }
 		},
 		onHide() {
 			let gt = this;

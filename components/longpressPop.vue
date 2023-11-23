@@ -1,5 +1,5 @@
 <template>
-	<view class="shade" v-show="_showShade" @click.stop="hidePop">
+	<view class="shade" v-show="showShade" @click.stop="hidePop">
 		<view class="pop" :style="popStyle" :class="{'show': showPop}">
 			<slot></slot>
 		</view>
@@ -16,7 +16,7 @@
 		// },
 		data() {
 			return {
-				_showShade: false,
+				showShade: false,
 				showPop: false,
 				popStyle: "",
 				winSize: {}, // 窗口尺寸

@@ -15,7 +15,6 @@
 						</view>
 					</view>
 					<view class="con_val" style="width: 500rpx;">
-
 						<car-number-input @numberInputResult="plateConfirm" :defaultStr="plateNum"></car-number-input>
 					</view>
 				</view>
@@ -48,8 +47,7 @@
 						</view>
 					</view>
 					<view class="con_val">
-						<u-input v-model="mobile" type="number" placeholder="请输入司机电话号码" height="40" input-align="right"
-							readonly />
+						<u-input v-model="mobile" type="number" placeholder="请输入司机电话号码" height="40" input-align="right" readonly />
 					</view>
 				</view>
 			</view>
@@ -64,9 +62,7 @@
 						</view>
 					</view>
 					<view class="con_val">
-						<u-input v-model="lineStr" type="select" placeholder="请选择专线" height="40" input-align="right"
-							@click="showLine" />
-
+						<u-input v-model="lineStr" type="select" placeholder="请选择专线" height="40" input-align="right" @click="showLine" />
 					</view>
 				</view>
 				<view class="con_line">
@@ -105,8 +101,6 @@
 						</view>
 						<u-input v-model="stationInfo.outlets_name" type="select" placeholder="请选择到站网点" height="40"
 							input-align="right" @click="showStation" v-else />
-
-
 					</view>
 				</view>
 				<view class="con_line">
@@ -122,9 +116,7 @@
 						</view>
 					</view>
 					<view class="con_val">
-						<u-input v-model="orderStr" type="select" placeholder="请选择订单" height="40" input-align="right"
-							@click="showOrder" />
-
+						<u-input v-model="orderStr" type="select" placeholder="请选择订单" height="40" input-align="right" @click="showOrder" />
 					</view>
 				</view>
 			</view>
@@ -137,7 +129,6 @@
 						@on-remove="removeImg"></u-upload>
 				</view>
 			</view>
-
 			<view class="con_itemGroup con_stationInfo">
 				<view class="con_title">
 					<text>发站信息</text>
@@ -158,22 +149,14 @@
 						<text>发站地址：{{companyInfo.address}}</text>
 					</view>
 				</view>
-
 			</view>
-
-
-
-
 		</view>
-
-		<view class="con_confirmBtn" @click="confirmSend">
-			<text>确认发车</text>
+		<view class="con_confirmBtn">
+			<u-button type="primary" @click="confirmSend">确认发车</u-button>
 		</view>
-
 		<view class="con_popup">
 			<view class="con_line">
 				<u-popup v-model="lineShow" mode="bottom" height="800">
-
 					<view class="con_title">
 						<text>选择专线</text>
 					</view>
@@ -194,15 +177,12 @@
 									</view>
 								</u-radio>
 							</scroll-view>
-
 						</u-radio-group>
-
 					</view>
 				</u-popup>
 			</view>
 			<view class="con_station">
 				<u-popup v-model="stationShow" mode="bottom" height="800">
-
 					<view class="con_title">
 						<text>选择到站地址</text>
 					</view>
@@ -224,21 +204,16 @@
 									</view>
 								</u-radio>
 							</scroll-view>
-
 						</u-radio-group>
-
 					</view>
 				</u-popup>
 			</view>
 			<view class="con_order">
-
 				<u-popup v-model="orderShow" mode="bottom" height="1000" border-radius="14">
 					<view class="con_screen">
 						<view class="con_time">
-
 						</view>
 						<view class="con_status">
-
 						</view>
 					</view>
 					<view class="con_list">
@@ -256,7 +231,6 @@
 										<view class="con_type orderType3" v-if="item.is_yuyue == 1">
 											<text>预约</text>
 										</view>
-
 										<view class="con_sn">
 											<view class="con_text">
 												<text>订单号：{{item.deliver_sn}}</text>
@@ -271,8 +245,6 @@
 										<text>{{item.status_msg}}</text>
 									</view>
 								</view>
-
-
 								<view class="con_fromTo">
 									<view class="con_from">
 										<view class="con_city">
@@ -287,10 +259,8 @@
 												<text v-if="item.jiaohuo_type == 2">上门自提</text>
 											</view>
 										</view>
-
 									</view>
 									<view class="con_lineFT"></view>
-
 									<view class="con_to">
 										<view class="con_city">
 											<text>{{item.receive_city}}</text>
@@ -299,19 +269,14 @@
 											<view class="con_address">
 												<text>{{item.receive_address}}</text>
 											</view>
-
 											<view class="con_type">
 												<text v-if="item.peisong_type == 1">送货上门</text>
 												<text v-if="item.peisong_type == 2">自提</text>
 											</view>
 										</view>
 									</view>
-
-
 								</view>
-
 								<view class="con_keyVal">
-
 									<view class="con_key_val">
 										<view class="con_key">
 											<text>运输时效：</text>
@@ -321,7 +286,6 @@
 											<view v-else>{{item.transport_day_min}} - {{item.transport_day_max}}天</view>
 										</view>
 									</view>
-
 									<view class="con_key_val">
 										<view class="con_key">
 											<text>货物信息：</text>
@@ -344,7 +308,6 @@
 										</view>
 									</view>
 								</view>
-
 								<view class="con_time_price">
 									<view class="con_time">
 										<text style="color: #485EF4;"
@@ -362,7 +325,6 @@
 								</view>
 								<view class="con_line">
 								</view>
-
 								<view class="con_select">
 									<view class="con_icon" v-if="item.selected">
 										<image :src="gtCommon.getOssImg('sansong/selected.png')" mode="widthFix">
@@ -376,10 +338,6 @@
 										<text>选择此订单</text>
 									</view>
 								</view>
-
-
-
-
 							</view>
 						</scroll-view>
 						</u-checkbox-group>
@@ -402,12 +360,10 @@
 						<view class="con_btn" @click="orderConfirm">
 							<text>确定</text>
 						</view>
-
 					</view>
 				</u-popup>
 			</view>
 		</view>
-
 	</view>
 </template>
 
@@ -418,26 +374,20 @@
 				plateNum: '',
 				name: '',
 				mobile: '',
-
 				lineShow: false,
 				lineIndex: 9999,
 				lineStr: '',
 				lineList: [],
-
 				stationShow: false,
 				stationIndex: 9999,
 				stationInfo: {},
 				stationList: [],
-
-
 				orderShow: false,
 				orderStr: '',
 				orderList: [],
 				orderNum: 0,
 				allSelect: false,
-
 				imgList: [],
-
 				companyInfo: {},
 				flag: false
 			}
@@ -471,8 +421,6 @@
 				let gt = this;
 				gt.plateNum = res;
 			},
-
-
 			async showLine(type) {
 				let gt = this;
 				if(gt.flag) return
@@ -486,13 +434,11 @@
 					if(!type) gt.lineShow = true;
 				});
 			},
-
 			async lineChange(index) {
 				let gt = this;
 				gt.lineIndex = index;
 				var item = gt.lineList[index];
 				gt.lineStr = item.start_city + ' --- ' + item.end_city + ' (共' + item.order_count + '单)';
-
 				var url = "/logistics/specialline/get_special_line_info";
 				var data = {
 					line_id: item.line_id,
@@ -501,7 +447,6 @@
 					gt.stationList = res.info.outlets_list;
 					gt.lineShow = false;
 				});
-
 				var url = "/logistics/specialline/get_special_line_order_list";
 				var data = {
 					line_id: item.line_id,
@@ -525,7 +470,6 @@
 			},
 			showStation() {
 				let gt = this;
-
 				if (gt.lineIndex == 9999) {
 					gt.$refs.uToast.show({
 						title: '请先选择专线',
@@ -533,7 +477,6 @@
 					});
 					return false;
 				}
-
 				gt.stationShow = true;
 			},
 			stationChange(index) {
@@ -555,7 +498,6 @@
 				uni.setNavigationBarTitle({
 					title: gt.lineList[gt.lineIndex].start_city + ' --- ' + gt.lineList[gt.lineIndex].end_city,
 				});
-
 				gt.orderShow = true;
 			},
 			selectOrder(item) {
@@ -572,7 +514,6 @@
 					gt.allSelect = false;
 				}
 			},
-
 			selectAll() {
 				let gt = this;
 				gt.allSelect = !gt.allSelect;
@@ -601,31 +542,21 @@
 				uni.setNavigationBarTitle({
 					title: '装车发货',
 				});
-
 				gt.orderShow = false;
 			},
-
-
 			chooseImg(item) {
-				console.log(item);
-
 				let gt = this;
 				var file = item.fileInfo;
-
 				gt.gtRequest.upload(file).then(res => {
-					console.log(res);
 					gt.imgList.push(res.src);
 				});
 			},
 			removeImg(index) {
-				console.log(index);
 				let gt = this;
 				gt.imgList.splice(index, 1);
 			},
-
 			confirmSend() {
 				let gt = this;
-
 				if (!gt.$u.test.carNo(gt.plateNum)) {
 					gt.$refs.uToast.show({
 						title: '车牌号不正确',
@@ -633,7 +564,6 @@
 					});
 					return false;
 				}
-				
 				if (gt.name == '') {
 					gt.$refs.uToast.show({
 						title: '司机姓名不能为空',
@@ -669,16 +599,12 @@
 					});
 					return false;
 				}
-				
-
 				var selectOrderSnArr = [];
 				for (var i = 0; i < gt.orderList.length; i++) {
 					if (gt.orderList[i].selected) {
 						selectOrderSnArr.push(gt.orderList[i].deliver_sn);
 					}
 				}
-
-
 				var url = "/logistics/order/confirm_departure";
 				var data = {
 					deliver_sn: selectOrderSnArr.join(','),
@@ -689,8 +615,11 @@
 					line_id: gt.lineList[gt.lineIndex].line_id,
 					outlets_id: gt.stationInfo.outlets_id,
 				};
-				// console.log('success');
-				// return false;
+				let carNumList = uni.getStorageSync('carNumList') || []
+				if(!carNumList.find(item=> item == gt.plateNum)) {
+					carNumList.push(gt.plateNum)
+					uni.setStorageSync('carNumList', carNumList)
+				}
 				gt.gtRequest.post(url, data).then(res => {
 					gt.$refs.uToast.show({
 						title: '发出成功',
@@ -698,9 +627,6 @@
 						back:true,
 					});
 				});
-
-
-
 			}
 		}
 	}
@@ -712,6 +638,8 @@
 
 		.gt_content {
 			.con_form {
+				height: calc(100vh - 140rpx);
+				overflow: auto;
 				.con_itemGroup {
 					width: 718rpx;
 					// height: 312rpx;
@@ -796,20 +724,11 @@
 			}
 
 			.con_confirmBtn {
-				width: 718rpx;
-				height: 100rpx;
-				background: $gtProjectColor;
-				border-radius: 16rpx;
-				// opacity: 0.5;
-				font-size: 32rpx;
-				font-family: PingFangSC-Medium, PingFang SC;
-				font-weight: 500;
-				color: #FFFFFF;
-				line-height: 100rpx;
-				text-align: center;
-				margin: 92rpx auto 128rpx auto;
+				position: fixed;
+				bottom: 0;
+				width: calc(100% - 60rpx);
+				margin: 30rpx;
 			}
-
 
 			.con_popup {
 				.con_line {

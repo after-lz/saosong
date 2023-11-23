@@ -20,7 +20,7 @@
 				<u-button type="primary" :disabled='wallet_status ? true : false' @click="goCharge">充值</u-button>
 			</view>
 			<view class="con_btnItem withdrawBtn">
-				<u-button :disabled='wallet_status ? true : false' @click="goWithdrawal">提现</u-button>
+				<u-button :disabled='(wallet_status || draw_status) ? true : false' @click="goWithdrawal">提现</u-button>
 			</view>
 		</view>
 		<view class="con_tip">
@@ -46,7 +46,8 @@
 			return {
 				money: 0,
 				aut_show: false,
-				wallet_status: 0
+				wallet_status: 0,
+				draw_status: 0
 			}
 		},
 		onShow() {
@@ -80,6 +81,7 @@
 				gt.gtRequest.post("/logistics/user/get_user_info").then(res=>{
 					gt.money = res.logistics_info.money01
 					gt.wallet_status = res.logistics_info.wallet_status
+					gt.draw_status = res.logistics_info.draw_status
 				})
 			},
 			goList() {

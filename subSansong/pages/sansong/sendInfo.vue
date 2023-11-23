@@ -175,6 +175,8 @@
 			</view>
 		</view>
 		
+		<view class="con_empty"></view>
+		
 		<view class="con_btns" v-if="dataInfo.waybill_info.status == 0">
 			<view class="con_list">
 				<view class="con_item" @click="goAdjust">
@@ -261,6 +263,8 @@
 		background: $gtBackgroundColor;
 
 		.gt_content {
+			margin-bottom: 20rpx;
+			padding-bottom: 20rpx;
 			image {
 				width: 100%;
 				height: 100% !important;
@@ -536,12 +540,18 @@
 				}
 			}
 		
+			.con_empty {
+				height: 112rpx;
+			}
+			
 			.con_btns{
 				// display: none;
 				width: 750rpx;
 				height: 112rpx;
 				background: #FFFFFF;
 				padding: 1rpx;
+				position: fixed;
+				bottom: 0;
 				.con_list{
 					display: flex;
 					margin: 20rpx 0;

@@ -35,7 +35,7 @@
 			</view>
 			<view class="con_tabs">
 				<!-- <u-tabs-swiper ref="uTabs" :list="tabList" :current="currentTab" @change="tabsChange" :is-scroll="false" swiperWidth="750"></u-tabs-swiper> -->
-				<view class="tab_item" v-for="(ob, i) in tabList" @click="tabsChange(i)" :class="currentTab === i ? 'tab_item_active':''">
+				<view class="tab_item" v-for="(ob, i) in tabList" :key="i" @click="tabsChange(i)" :class="currentTab === i ? 'tab_item_active':''">
 					<u-badge :is-dot="true" type="error" :count='ob.count' absolute :offset='offset'></u-badge>
 					<view class="tab_name">{{ ob.name }}</view>
 				</view>
@@ -619,6 +619,9 @@
 						uni.showTabBarRedDot({ // 显示红点
 							index: 0
 						})
+						gt.innerAudioContext.stop()
+						gt.innerAudioContext.src = 'https://baohusan-uisource.oss-cn-shanghai.aliyuncs.com/mp-transport/index/new_order.mp3'
+						gt.innerAudioContext.play()
 					}
 					if (type == 'order_rob_result') {
 						gt.maskShow = false;
@@ -627,9 +630,6 @@
 						var orderInfo = orderInfo.order_info;
 						if (orderInfo.logistics_id == gt.logistics_id) {
 							gt.innerAudioContext.stop();
-							// gt.innerAudioContext.title = '暂无';
-							// gt.innerAudioContext.singer = '暂无';
-							// gt.innerAudioContext.coverImgUrl = "";
 							gt.innerAudioContext.src = 'https://baohusan-uisource.oss-cn-shanghai.aliyuncs.com/mp-transport/index/seizeOrderSuccess.mp3';
 							gt.innerAudioContext.play();
 							gt.$refs.uToast.show({

@@ -53,7 +53,7 @@
 			},
 			cancelAccount() {
 				uni.navigateTo({
-					url: './applyCancellation'
+					url: './applyWarning'
 				})
 			}
 		}

@@ -27,8 +27,9 @@
 								<view class="right_time" v-if="list.type_0.create_time">{{ formatDate(list.type_0.create_time) }}</view>
 							</view>
 							<view class="right_info">
-								<text v-if="list.type_0.content">{{ list.type_0.content }}</text>
+								<view v-if="list.type_0.content" class="texteli">{{ list.type_0.content }}</view>
 								<text v-else>暂无信息</text>
+								<u-icon name="arrow-right" color="#909399" size="28"></u-icon>
 							</view>
 						</view>
 					</view>
@@ -43,8 +44,9 @@
 								<view class="right_time" v-if="list.type_1.create_time">{{ formatDate(list.type_1.create_time) }}</view>
 							</view>
 							<view class="right_info">
-								<text v-if="list.type_1.content">{{ list.type_1.content }}</text>
+								<view v-if="list.type_1.content" class="texteli">{{ list.type_1.content }}</view>
 								<text v-else>暂无信息</text>
+								<u-icon name="arrow-right" color="#909399" size="28"></u-icon>
 							</view>
 						</view>
 					</view>
@@ -59,8 +61,9 @@
 								<view class="right_time" v-if="list.type_3.create_time">{{ formatDate(list.type_3.create_time) }}</view>
 							</view>
 							<view class="right_info">
-								<text v-if="list.type_3.content">{{ list.type_3.content }}</text>
+								<view v-if="list.type_3.content" class="texteli">{{ list.type_3.content }}</view>
 								<text v-else>暂无信息</text>
+								<u-icon name="arrow-right" color="#909399" size="28"></u-icon>
 							</view>
 						</view>
 					</view>
@@ -75,8 +78,9 @@
 								<view class="right_time" v-if="list.type_2.create_time">{{ formatDate(list.type_2.create_time) }}</view>
 							</view>
 							<view class="right_info">
-								<text v-if="list.type_2.content">{{ list.type_2.content }}</text>
+								<view v-if="list.type_2.content" class="texteli">{{ list.type_2.content }}</view>
 								<text v-else>暂无信息</text>
+								<u-icon name="arrow-right" color="#909399" size="28"></u-icon>
 							</view>
 						</view>
 					</view>
@@ -391,7 +395,7 @@
 							.right_title {
 								display: flex;
 								justify-content: space-between;
-								align-items: flex-end;
+								align-items: center;
 								.right_name {
 									font-size: 32rpx;
 									color: #000;
@@ -404,8 +408,16 @@
 								}
 							}
 							.right_info {
-								font-size: 24rpx;
-								color: #909399;
+								display: flex;
+								align-items: center;
+								justify-content: space-between;
+								.texteli {
+									font-size: 24rpx;
+									color: #909399;
+									white-space: nowrap;
+									overflow: hidden;
+									text-overflow: ellipsis;
+								}
 							}
 						}
 					}
