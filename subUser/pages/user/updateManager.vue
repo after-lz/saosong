@@ -8,8 +8,8 @@
 			<view class="version" v-if="version">V{{ version }}</view>
 		</view>
 		<view class="con_list">
-			<!-- #ifdef MP-WEIXIN -->
-			<view class="con_item" @click="checkVersion">
+			<!-- #ifdef APP-PLUS -->
+			<!-- <view class="con_item" @click="checkVersion">
 				<view class="con_text">
 					<text>检测新版本</text>
 				</view>
@@ -17,7 +17,7 @@
 					<view v-if="version">V{{ version }}</view>
 					<u-icon name="arrow-right" color="#000"></u-icon>
 				</view>
-			</view>
+			</view> -->
 			<!-- #endif -->
 			<view class="con_line">
 				<u-line length="718rpx" color="#f2f2f2" margin="0 16rpx"></u-line>
@@ -45,6 +45,9 @@
 			<view class="con_line">
 				<u-line length="718rpx" color="#f2f2f2" margin="0 16rpx"></u-line>
 			</view>
+		</view>
+		<view class="con_footer">
+			<text>苏ICP备18045543号-4A</text>
 		</view>
 	</view>
 </template>
@@ -139,6 +142,16 @@
 						}
 					}
 				}
+			}
+			.con_footer {
+				width: 100%;
+				position: fixed;
+				bottom: 0;
+				text-align: center;
+				font-size: 26rpx;
+				padding-bottom: 40rpx;
+				padding-bottom: constant(safe-area-inset-bottom);
+				padding-bottom: env(safe-area-inset-bottom);
 			}
 		}
 	}

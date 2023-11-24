@@ -85,7 +85,8 @@
 			"path": "pages/login/companyAuth",
 			"style": {
 				"navigationBarTitleText": "企业认证",
-				"enablePullDownRefresh": false
+				"enablePullDownRefresh": false,
+				"disableScroll": true
 			}
 		},
 		{
@@ -655,7 +656,8 @@
 					"path": "pages/user/updateManager",
 					"style": {
 						"navigationBarTitleText": "关于伞送",
-						"enablePullDownRefresh": false
+						"enablePullDownRefresh": false,
+						"disableScroll": true
 					}
 				},
 				{
@@ -719,7 +721,7 @@
 				{
 					"path": "pages/user/behaviorSubrule",
 					"style": {
-						"navigationBarTitleText": "",
+						"navigationBarTitleText": "行为分规则",
 						"enablePullDownRefresh": false
 					}
 				},
@@ -799,8 +801,7 @@
 					"path": "pages/message/visitorLog",
 					"style": {
 						"navigationBarTitleText": "",
-						"navigationStyle": "custom",
-						"enablePullDownRefresh": true
+						"navigationStyle": "custom"
 					}
 				},
 				{

@@ -11,14 +11,14 @@
 							<view class="status">交易成功</view>
 						</view>
 						<view class="row">
-							<view class="address">{{ item.line_name + `(${judgeType(item.promote_type)})` }}</view>
+							<view class="address">{{ gtCommon.cityHide(item.line_name) + `(${judgeType(item.promote_type)})` }}</view>
 							<view class="payNum">实付：<text class="num">￥{{ item.money }}</text> </view>
 						</view>
 						<view class="row">
 							<view class="orderNum">缴纳单号：{{ item.order_sn }}</view>
 							<view class="payType">
-								<!-- <text>{{ judgeMethod(item.pay_method) }}</text> -->
-								<text class="redpack" v-if="item.redpack_money">{{ `抵扣￥${item.redpack_money}` }}</text>
+								<text>{{ judgeMethod(item.pay_method) }}</text>
+								<text class="redpack" v-if="item.redpack_money">({{ `红包抵扣￥${item.redpack_money}` }})</text>
 							</view>
 						</view>
 					</view>
@@ -105,6 +105,9 @@
 						break;
 					case '3':
 						str = '微信app'
+						break;
+					case '4':
+						str = '支付宝'
 						break;
 					default:
 						break;

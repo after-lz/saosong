@@ -478,7 +478,7 @@
 										</view>
 										<view class="con_val">
 											<view class="con_input">
-												<u-input v-model="th_price" type="digit" heigth="60" placeholder="输入价格" />
+												<u-input v-model="th_price" type="digit" heigth="60" placeholder="输入价格" @blur="(e)=>inputChange(e, 1)" />
 											</view>
 											<view class="con_unit">
 												<text>元</text>
@@ -503,7 +503,7 @@
 										</view>
 										<view class="con_val">
 											<view class="con_input">
-												<u-input v-model="sh_price" type="digit" heigth="60" placeholder="输入价格" />
+												<u-input v-model="sh_price" type="digit" heigth="60" placeholder="输入价格" @blur="(e)=>inputChange(e, 2)" />
 											</view>
 											<view class="con_unit">
 												<text>元</text>
@@ -1157,6 +1157,8 @@
 					}
 				} else {
 					// gt.step--;
+					if(gt.th_status && !parseFloat(gt.th_price)) return gt.$refs.uToast.show({title: '请输入提货费'});
+					if(gt.sh_status && !parseFloat(gt.sh_price)) return gt.$refs.uToast.show({title: '请输入送货费'});
 					if (gt.id) {
 						var url = "/logistics/specialline/edit_special_line";
 					} else {
@@ -1208,6 +1210,16 @@
 						});
 					});
 				}
+			},
+			inputChange(e, type) {
+				let gt = this
+				setTimeout(() => {
+					if (type === 1) {
+						gt.th_price = +e > 0 && +e <= 999999 ? parseFloat(e.match(/\d+\.?\d{0,2}/, '')[0]) : 0
+					} else if(type === 2) {
+						gt.sh_price = +e > 0 && +e <= 999999 ? parseFloat(e.match(/\d+\.?\d{0,2}/, '')[0]) : 0
+					}
+				}, 0)
 			},
 		}
 	}

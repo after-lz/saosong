@@ -142,11 +142,11 @@
 				}
 				.con_scroll{
 					.scroll_view{
+						width: 100%;
 						height: 97vh;
-						padding: 0 24rpx;
+						box-sizing: border-box;
 						.con_item{
-							width: 718rpx;
-							padding: 32rpx 0;
+							padding: 32rpx 24rpx;
 							border-bottom: 1rpx solid #E7E8E9;
 							.con_title_num{
 								display: flex;

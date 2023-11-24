@@ -5,7 +5,7 @@
 		</view>
 		<view class="con_form">
 			<view class="con_upload">
-				<image :src="imgPath" mode="widthFix" v-if="checkStatus != -1" @click="previewImg(imgPath)"></image>
+				<image :src="imgPath" mode="heightFix" v-if="checkStatus != -1" @click="previewImg(imgPath)"></image>
 				<u-upload ref="uUpload" :auto-upload="false" max-count="1" :file-list="fileList" upload-text="上传营业执照"
 					@on-choose="chooseImg" @on-remove="removeImg" v-else></u-upload>
 			</view>
@@ -410,12 +410,18 @@
 		.gt_content {
 			.con_form {
 				.con_upload {
-					width: 230rpx;
-					height: 230rpx;
-					margin: 84rpx 260rpx;
+					// width: 230rpx;
+					width: 100%;
+					height: 400rpx;
+					text-align: center;
+					// margin: 84rpx 260rpx;
 					border-radius: 16rpx;
 					border: 2rpx dashed #D6D6D6;
 					overflow: hidden;
+					.u-upload {
+						justify-content: center;
+						height: 100%;
+					}
 				}
 
 				.con_keyVal {
@@ -481,7 +487,7 @@
 			}
 
 			.con_submitBtn {
-				width: 640rpx;
+				// width: 640rpx;
 				height: 100rpx;
 				background: $gtProjectColor;
 				border-radius: 16rpx;
@@ -490,8 +496,14 @@
 				font-weight: 500;
 				color: #FFFFFF;
 				line-height: 100rpx;
-				margin: 210rpx auto;
+				// margin: 210rpx auto;
 				text-align: center;
+				width: calc(100% - 80rpx);
+				position: fixed;
+				bottom: 40rpx;
+				left: 40rpx;
+				padding-bottom: constant(safe-area-inset-bottom);
+				padding-bottom: env(safe-area-inset-bottom);
 			}
 		}
 	}

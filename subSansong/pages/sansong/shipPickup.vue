@@ -10,7 +10,7 @@
 			<text>{{companyName}}</text>
 		</view>
 		<view class="con_btn">
-			<view class="saveLocation" @click="saveImage">保存至本地</view>
+			<view class="saveLocation" @click="saveImage">保存本地</view>
 			<!-- #ifdef MP-WEIXIN -->
 			<view class="printLabel">
 				<button open-type="share" class="share">分享好友</button>
@@ -123,6 +123,8 @@
 				margin-top: 100rpx;
 				.saveLocation {
 					flex: 1;
+					height: 80rpx;
+					line-height: 80rpx;
 					border-right: 2rpx solid #e5e5e5;
 					font-size: 32rpx;
 					text-align: center;
@@ -133,9 +135,13 @@
 					text-align: center;
 				}
 				.share {
-					display: contents;
+					// display: contents;
 					color: #909399;
 					font-size: 32rpx;
+					background: transparent;
+				}
+				.share::after {
+				  border: none;
 				}
 			}
 		}
