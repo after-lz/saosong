@@ -63,7 +63,6 @@
 					login_token: gt.token,
 					number: gt.data.money02
 				}
-				return params
 				uni.request({
 					url: apiDomain + "/logistics/Companywallet/apply_zhuanyuee",
 					data: params,

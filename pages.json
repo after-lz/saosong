@@ -481,6 +481,13 @@
 					}
 				},
 				{
+					"path": "pages/user/balanceStatement",
+					"style": {
+						"navigationBarTitleText": "余额明细",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
 					"path": "pages/user/fundFloat",
 					"style": {
 						"navigationBarTitleText": "在途资金",
@@ -537,7 +544,14 @@
 					"path": "pages/user/moneyList",
 					"style": {
 						"navigationBarTitleText": "我的账单",
-						"enablePullDownRefresh": true
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "pages/user/billingDetails",
+					"style": {
+						"navigationBarTitleText": "账单明细",
+						"enablePullDownRefresh": false
 					}
 				},
 				{

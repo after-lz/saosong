@@ -87,7 +87,7 @@
 			goList() {
 				let gt = this
 				uni.navigateTo({
-					url:'./moneyList'
+					url:'./balanceStatement'
 				})
 			}
 		}
