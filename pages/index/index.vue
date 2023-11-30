@@ -579,6 +579,7 @@
 			// }
 			if(uni.getStorageSync('token')) gt.getLocation();
 			if (gt.mobile) {
+				gt.updataInfo()
 				await gt.getCompanyInfo();
 				if(gt.companyAuth) return
 				gt.gtRequest.post("/logistics/company/get_company_approve_info").then(res => {
@@ -593,6 +594,16 @@
 			uni.stopPullDownRefresh();
 		},
 		methods: {
+			updataInfo() {
+				let gt = this;
+				gt.gtRequest.post("/logistics/user/get_user_info").then(res => {
+					uni.setStorageSync('user_info', res.user_info)
+					uni.setStorageSync('userInfo', res.user_info)
+				})
+				// gt.gtRequest.post("/logistics/company/get_company_info").then(res => {
+				// 	uni.setStorageSync('companyInfo', res.company_info)
+				// })
+			},
 			gtonMessage() {
 				let gt = this;
 				gt.gtWSS.socketTask.onMessage((res) => {

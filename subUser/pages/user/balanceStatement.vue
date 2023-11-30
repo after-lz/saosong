@@ -7,21 +7,20 @@
 			</view>
 			<view class="con_scroll">
 				<scroll-view class="scroll_view" scroll-y="true" @scrolltolower="loadMore">
-					<view class="con_item" v-for="(item,index) in dataList" :key="index" @click="goDetail(item)">
+					<view class="con_item" v-for="(item,index) in dataList" :key="index">
 						<view class="con_title_num">
 							<view class="con_title">
-								<text>{{item.remark}}</text>
+								<text>{{item.log_type_msg}}</text>
 							</view>
 							<view class="con_num">
-								<text v-if="item.num > 0">+{{item.num}}</text>
-								<text v-else>{{item.num}}</text>
+								<text v-if="item.number > 0">+{{item.number}}</text>
+								<text v-else>{{item.number}}</text>
 							</view>
 						</view>
 						<view class="con_title_num">
 							<view class="con_time">
 								<text>{{gtCommon.formateTime(item.create_time,'YYYY-MM-DD HH:mm:SS')}}</text>
 							</view>
-							<view class="con_time" style="color: #000;">{{ judgeType(item.type) }}</view>
 						</view>
 					</view>
 				</scroll-view>
@@ -58,16 +57,10 @@
 				if (gt.end) {
 					return false;
 				}
-				// var url = "/logistics/companywallet/get_wallet_log";
-				// var data = {
-				// 	page: gt.page,
-				// 	limit: gt.size,
-				// 	wallet_type:'money01',
-				// 	data_type:1,
-				// };
-				var url = "/api/applogin/get_bill_list";
+				var url = "/logistics/companywallet/get_wallet_log";
 				var data = {
-					platform: 'logistics',
+					wallet_type: 'money01',
+					data_type: 1,
 					page: gt.page,
 					limit: gt.size
 				};
@@ -75,12 +68,6 @@
 					res.list.forEach(item=> item.num = +item.num)
 					gt.dataList = gt.dataList.concat(res.list);
 					gt.end = gt.page >= res.total_page
-				});
-			},
-			goDetail(record) {
-				let gt = this;
-				uni.navigateTo({
-					url: './billingDetails?id=' + record.id
 				})
 			},
 			loadMore() {
@@ -88,44 +75,6 @@
 				if(gt.end) return
 				++gt.page
 				gt.getDataList();
-			},
-			judgeType(type) {
-				let str = ''
-				switch (type){
-					case 'money01':
-						str = '零钱'
-						break;
-					case 'money02':
-						str = '红包'
-						break;
-					case 'money03':
-						str = '行为分'
-						break;
-					case 'weipay':
-						str = '微信支付'
-						break;
-					case 'weipay_mini':
-						str = '微信支付'
-						break;
-					case 'weipay_app':
-						str = '微信支付'
-						break;
-					case 'alipay':
-						str = '支付宝支付'
-						break;
-					case 'alipay_app':
-						str = '支付宝支付'
-						break;
-					case 'coupon':
-						str = '优惠券'
-						break;
-					case 'cash':
-						str = '现金'
-						break;
-					default:
-						break;
-				}
-				return str
 			}
 		}
 	}

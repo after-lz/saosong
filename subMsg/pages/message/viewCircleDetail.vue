@@ -130,6 +130,7 @@
 					res.judgeList.reverse()
 					res.logistics_id = gt.logistics_id
 					gt.data = res
+					gt.updateComment()
 				})
 			},
 			previewImage(path) {
@@ -242,8 +243,10 @@
 					page: 1,
 					limit: 999
 				}).then(res => {
-					gt.data.judgeCount = res.list.length
-					gt.data.judgeList = res.list.reverse()
+					gt.$nextTick(()=> {
+						gt.data.judgeCount = res.list.length
+						gt.data.judgeList = res.list.reverse()
+					})
 				})
 			},
 			/* 点赞 */

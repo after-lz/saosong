@@ -354,6 +354,19 @@ function floatNum(num=0, few=2) {
 	return (parseInt(num * 10) / 10).toFixed(few)
 }
 
+function cityHide(value) {
+	if(!value)return
+	if(value){
+		let city = ""
+		if(value.indexOf("市") != -1) {
+			city = value.slice(0, -1)
+		} else {
+			city = value
+		}
+		return city
+	}
+}
+
 module.exports.getOssImg = getOssImg;
 module.exports.formateTime = formateTime;
 module.exports.getPreMonthDay = getPreMonthDay;
@@ -378,3 +391,4 @@ module.exports.debounce = debounce;
 module.exports.judgeTime = judgeTime;
 module.exports.isTel = isTel;
 module.exports.floatNum = floatNum;
+module.exports.cityHide = cityHide;

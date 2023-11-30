@@ -2,8 +2,8 @@
     "name" : "伞送物流",
     "appid" : "__UNI__D9AD823",
     "description" : "伞送-物流端",
-    "versionName" : "1.4.7",
-    "versionCode" : 147,
+    "versionName" : "1.4.8",
+    "versionCode" : 148,
     "transformPx" : false,
     /* 5+App特有相关 */
     "app-plus" : {

@@ -90,6 +90,7 @@
 </template>
 
 <script>
+	import tools from '@/common/publicLogin'
 	export default {
 		data() {
 			return {
@@ -104,8 +105,11 @@
 				status2: 'loading'
 			}
 		},
-		onLoad(options) {
+		async onLoad(options) {
 			let gt = this
+			// #ifdef MP-WEIXIN
+			if(options.flag) await tools.publicLogin()
+			// #endif
 			if(options.active) {
 				gt.current = options.active
 				gt.swiperCurrent = options.active

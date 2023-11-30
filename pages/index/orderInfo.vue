@@ -517,6 +517,7 @@
 </template>
 
 <script>
+	import tools from '@/common/publicLogin'
 	export default {
 		data() {
 			return {
@@ -570,10 +571,12 @@
 				lng: '',
 				lat: '',
 				logistics_id: 0,
+				flag: false
 			}
 		},
 		onLoad(options) {
 			let gt = this;
+			gt.flag = options.flag
 			gt.orderSn = options.orderSn;
 			var lng = uni.getStorageSync('lng');
 			var lat = uni.getStorageSync('lat');
@@ -582,8 +585,11 @@
 			var companyInfo = uni.getStorageSync('companyInfo');
 			gt.logistics_id = companyInfo.logistics_id;
 		},
-		onShow() {
+		async onShow() {
 			let gt = this;
+			// #ifdef MP-WEIXIN
+			if(gt.flag) await tools.publicLogin()
+			// #endif
 			// clearInterval(gt.t);
 			gt.getDataInfo();
 			let ws_url = uni.getStorageSync('environment') == 'prod' ? 'wss://saasdemo.sansongkeji.com:3021' : 'wss://test.sansongkeji.com:8021'
@@ -617,11 +623,19 @@
 						var orderInfo = orderInfo.order_info;
 						if (orderInfo.logistics_id == gt.logistics_id) {
 							clearInterval(gt.timer);
-							gt.$refs.uToast.show({
-								title: '抢单成功',
-								type: 'success',
-								url: 'pages/order/orderInfo?orderSn=' + orderInfo.deliver_sn
-							});
+							if(gt.flag) {
+								gt.$refs.uToast.show({
+									title: '抢单成功',
+									type: 'success',
+									url: '/pages/index/index'
+								});
+							} else {
+								gt.$refs.uToast.show({
+									title: '抢单成功',
+									type: 'success',
+									url: 'pages/order/orderInfo?orderSn=' + orderInfo.deliver_sn
+								});
+							}
 							return false;
 						} else {
 							gt.$refs.uToast.show({

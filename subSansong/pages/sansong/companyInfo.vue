@@ -748,6 +748,7 @@
 	import DragButton from '@/components/dragButton.vue'
 	import uQRCode from '@/common/uqrcode.js'
 	import { base64ToPath, pathToBase64 } from '@/common/image-tools.js'
+	import tools from '@/common/publicLogin'
 	export default {
 		components: { EvaluateList, DragButton },
 		data() {
@@ -855,6 +856,9 @@
 		},
 		async onLoad(option) {
 			let gt = this;
+			// #ifdef MP-WEIXIN
+			if(option.flag) await tools.publicLogin()
+			// #endif
 			if(option.logistics_id) {
 				gt.logistics_id = option.logistics_id
 				if(gt.logistics_id != uni.getStorageSync("companyInfo").logistics_id) {

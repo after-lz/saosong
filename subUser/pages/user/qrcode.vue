@@ -1,9 +1,9 @@
 <template>
 	<view class="gt_content">
 		<view class="con_switch">邀请码</view>
-		<view class="con_label">
+		<!-- <view class="con_label">
 			<text>邀请码：{{code}}</text>
-		</view>
+		</view> -->
 		<view class="con_qrcode">
 			<!-- <image :src="url" mode="widthFix"></image> -->
 			<canvas canvas-id="qrcode" :style="{ width: qrWidth + 'px', height: qrWidth + 'px' }" class="canvas"></canvas>
@@ -12,7 +12,15 @@
 			<text>推荐下载并成功认证，可<text style="color: #ff646b;">领取红包</text></text>
 		</view>
 		<view class="con_btn">
-			<u-button type="primary" size="medium" @click="saveImage">保存</u-button>
+			<view class="saveLocation" @click="saveImage">保存本地</view>
+			<!-- #ifdef MP-WEIXIN -->
+			<view class="printLabel">
+				<button open-type="share" class="share">分享好友</button>
+			</view>
+			<!-- #endif -->
+			<!-- #ifdef APP-PLUS -->
+			<view class="printLabel" @click="share">分享好友</view>
+			<!-- #endif -->
 		</view>
 	</view>
 </template>
@@ -46,7 +54,7 @@
 			gt.code = uni.getStorageSync('user_info').invite_code
 			gt.apiDomain = uni.getStorageSync('apiDomain')
 			gt.text = uni.getStorageSync('environment') == 'dev' ?
-				'https://test.sansongkeji.com/adminsite/'+ `#` + '/agreement/register' : 
+				'https://test.sansongkeji.com/adminsite/#/agreement/register' : 
 				'https://saasdemo.sansongkeji.com/adminsite/#/agreement/register'
 			// #ifdef MP-WEIXIN
 			let from_plat = '小程序'
@@ -56,9 +64,18 @@
 			// #endif
 			let params = '?code=' + gt.code + '&from_plat=' + from_plat
 			gt.url = gt.apiDomain + '/api/qrcode/qrcode?text=' + gt.text + params
-			
 			gt.QRurl = gt.text + params
 			gt.qrFun(gt.QRurl)
+		},
+		onShareAppMessage(res) {
+			let gt = this;
+			if (res.from === 'button') {// 来自页面内分享按钮
+				console.log(res.target)
+			}
+			return {
+			  title: '邀请码',
+			  path: '/subUser/pages/user/qrcode'
+			}
 		},
 		methods: {
 			qrFun(text) {
@@ -145,20 +162,58 @@
 					}
 				)
 				// #endif
-				// uni.downloadFile({
-				// 	url: gt.imgUrl,
-				// 	success: (res) => {
-				// 		uni.saveImageToPhotosAlbum({
-				// 			filePath: res.tempFilePath,
-				// 			success: function() {
-				// 				uni.showToast({
-				// 					title: '已保存到相册',
-				// 					duration: 2000
-				// 				})
-				// 			}
-				// 		})
-				// 	}
-				// })
+			},
+			share() {
+				let gt = this;
+				let base64 = gt.imgUrl.replace(/[\r\n]/g, "")
+				const bitmap = new plus.nativeObj.Bitmap('base64')
+				bitmap.loadBase64Data(base64, () => {
+					const url = '_doc/' + new Date().getTime() + '.png'
+					bitmap.save(
+						url,
+						{
+							overwrite: true // 是否覆盖
+							// quality: 'quality'  // 图片清晰度
+						},
+						(i) => {
+							uni.saveImageToPhotosAlbum({
+								filePath: url,
+								success: () => {
+									uni.share({
+										provider: "weixin",
+										scene: "WXSceneSession",
+										type: 2,
+										imageUrl: url,
+										success: function (res) {
+											bitmap.clear()
+										},
+										fail: function (err) {
+											uni.showToast({
+											    title: '图片分享失败',
+											    duration: 2000
+											})
+											bitmap.clear()
+										}
+									});
+								}
+							})
+						},
+						(e) => {
+							uni.showToast({
+							    title: '图片分享失败',
+							    duration: 2000
+							})
+							bitmap.clear()
+						}
+					)},
+					(e) => {
+						uni.showToast({
+						    title: '图片分享失败',
+						    duration: 2000
+						})
+						bitmap.clear()
+					}
+				)
 			}
 		}
 	}
@@ -214,8 +269,31 @@
 
 			.con_btn {
 				display: flex;
-				justify-content: center;
-				margin-top: 20px;
+				align-items: center;
+				color: #909399;
+				margin-top: 100rpx;
+				.saveLocation {
+					flex: 1;
+					height: 80rpx;
+					line-height: 80rpx;
+					border-right: 2rpx solid #e5e5e5;
+					font-size: 32rpx;
+					text-align: center;
+				}
+				.printLabel {
+					flex: 1;
+					font-size: 32rpx;
+					text-align: center;
+				}
+				.share {
+					// display: contents;
+					color: #909399;
+					font-size: 32rpx;
+					background: transparent;
+				}
+				.share::after {
+				  border: none;
+				}
 			}
 		}
 	}

@@ -98,6 +98,7 @@
 						<view class="con_line">
 							<u-line length="750rpx" color="#EFEFEF"></u-line>
 						</view> -->
+						<!-- #ifdef APP-PLUS -->
 						<view class="con_methodItem" @click="confirmMethod(2)">
 							<view class="con_icon">
 								<image :src="gtCommon.getOssImg('user/alipayIcon.png')" mode="widthFix"></image>
@@ -109,6 +110,7 @@
 						<view class="con_line">
 							<u-line length="750rpx" color="#EFEFEF"></u-line>
 						</view>
+						<!-- #endif -->
 						<view class="con_methodItem" @click="confirmMethod(3)">
 							<view class="con_icon">
 								<image :src="gtCommon.getOssImg('user/bankCardIcon.png')" mode="widthFix"></image>
