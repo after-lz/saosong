@@ -735,7 +735,8 @@
 			goBillDetail() {
 				let gt = this;
 				uni.navigateTo({
-					url: '../order/billDetail?orderSn=' + gt.orderSn
+					// url: '../order/billDetail?orderSn=' + gt.orderSn
+					url: '../../subMsg/pages/message/billDetail?orderSn=' + gt.orderSn
 				});
 				return false;
 			},

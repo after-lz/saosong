@@ -113,8 +113,7 @@
 					{
 						id: 1,
 						name: '货车定位',
-						url: './empty',
-						// url: '/subSansong/pages/sansong/truckLocation'
+						url: '/subSansong/pages/sansong/truckLocation'
 					},
 					{
 						id: 1,

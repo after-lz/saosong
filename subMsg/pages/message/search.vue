@@ -42,11 +42,8 @@
 			return {
 				refreshStatus: false,
 				searchVal: '',
-
 				historyShow: false,
 				historyList: [],
-
-
 				screenShow: false,
 				calcendarShow: false,
 				timeStr: '',
@@ -58,7 +55,6 @@
 				lineIndex: 0,
 				lineShow: false,
 				// lineIndex: 9999,
-
 				// typeList: [{
 				// 		name: '全部',
 				// 		val: 0,
@@ -151,20 +147,16 @@
 					val: 8,
 				}],
 				currentTab: 0,
-
 				page: 1,
 				size: 10,
 				end: false,
-
 				dataList: [],
-
 				break: false,
 			}
 		},
 		onLoad() {
 			let gt = this;
 			gt.getLineList();
-
 			var historyList = uni.getStorageSync('orderHistory');
 			// console.log(historyList);
 			if (!historyList) {
@@ -182,7 +174,6 @@
 			let gt = this;
 			gt.break = false;
 		},
-
 		onPullDownRefresh() {
 			let gt = this;
 			gt.reGetOrderList();
@@ -196,54 +187,38 @@
 				// gt.historyShow = false;
 				// gt.reGetOrderList();
 			},
-			showHistory() {
-				let gt = this;
-				// gt.historyShow = true;
-				uni.navigateTo({
-					url: './search'
-				})
-
-			},
 			clearHistory() {
 				let gt = this;
 				gt.historyList = [];
 				uni.setStorageSync('wayBillHistory', []);
 			},
-
 			orderSearch() {
 				let gt = this;
 				gt.historyShow = false;
-				
 				gt.updateHistory();
 				// gt.reGetOrderList();
-				
 				uni.setStorageSync('orderSearchVal',gt.searchVal);
 				uni.navigateBack();
-				
 			},
 			showScreen() {
 				let gt = this;
 				gt.screenShow = true;
 			},
 			showCalcendar() {
-				console.log('showCalcendar');
 				let gt = this;
 				gt.calcendarShow = true;
 			},
 			calcendarChange(res) {
-				console.log(res);
 				let gt = this;
 				gt.stime = res.startDate;
 				gt.etime = res.endDate;
 				gt.timeStr = res.startDate + ' ~ ' + res.endDate;
-
 			},
 			showLine() {
 				let gt = this;
 				gt.lineShow = true;
 			},
 			lineConfirm(res) {
-				console.log(res);
 				let gt = this;
 				gt.lineId = res[0].value;
 				gt.lineStr = res[0].label;
@@ -266,7 +241,6 @@
 				}
 			},
 			statusSelect(index) {
-				console.log(index);
 				let gt = this;
 				if (index == gt.statusIndex) {
 					gt.statusIndex = 9999;
@@ -287,9 +261,7 @@
 				gt.deliverTypeIndex = 9999;
 				gt.statusIndex = gt.currentTab;
 			},
-
 			submitScreen() {
-				console.log('submitScreen');
 				let gt = this;
 				if (gt.currentTab == gt.statusIndex) {
 					gt.reGetOrderList();
@@ -297,8 +269,6 @@
 					gt.currentTab = gt.statusIndex;
 				}
 				gt.screenShow = false;
-
-
 			},
 			tabsChange(index) {
 				let gt = this;
@@ -306,23 +276,17 @@
 				gt.statusIndex = index;
 				gt.reGetOrderList();
 			},
-
 			animationfinish(item) {
 				let gt = this;
-			
 				var currentTab = gt.currentTab;
 				gt.currentTab = item.detail.current;
-				
 				if(currentTab != gt.currentTab){
 					gt.reGetOrderList();
 				}
 			},
 			async getLineList() {
 				let gt = this;
-
-
 				var token = await gt.gtRequest.getToken();
-				console.log(621, token);
 				if (token) {
 					var url = "/logistics/specialline/get_special_line_list";
 					var data = {
@@ -333,7 +297,6 @@
 						for (var i = 0; i < res.list.length; i++) {
 							res.list[i]['lineName'] = res.list[i].start_city + '-' + res.list[i].end_city;
 						}
-						console.log(res.list);
 						gt.lineList = res.list;
 						// gt.lineList = gt.lineList.concat(res.list);
 						// gt.lineList = gt.lineList.concat(res.list);
@@ -347,7 +310,6 @@
 						// gt.lineList = gt.lineList.concat(res.list);
 						// gt.lineList = gt.lineList.concat(res.list);
 						// gt.lineList = gt.lineList.concat(res.list);
-
 						gt.lineList.unshift({
 							line_id: 0,
 							lineName: '全部'
@@ -386,16 +348,13 @@
 				// console.log(historyList);
 				gt.historyList = historyList;
 				uni.setStorageSync('orderHistory', historyList);
-
 			},
 			async reGetOrderList() {
 				let gt = this;
-				console.log('break:', gt.break);
 				if (gt.break) {
 					return false;
 				} else {
 					var token = await gt.gtRequest.getToken();
-					console.log(694, token);
 					if (token) {
 						gt.page = 1;
 						gt.size = 10;
@@ -418,8 +377,6 @@
 						return false;
 					}
 				}
-
-
 			},
 			getOrderList() {
 				let gt = this;
@@ -427,14 +384,11 @@
 					return false;
 				}
 				var url = "/logistics/order/get_order_list";
-
-
 				var data = {
 					page: gt.page,
 					limit: gt.size,
 					search_key: gt.searchVal,
 				};
-
 				if (gt.currentTab == 1) {
 					data.pay_status = 0;
 				}
@@ -459,8 +413,6 @@
 				if (gt.currentTab == 8) {
 					data.status = 99;
 				}
-
-
 				if (gt.timeStr) {
 					data.start_time = gt.stime;
 					data.end_time = gt.etime;
@@ -480,9 +432,7 @@
 				if (gt.deliverTypeIndex != 9999) {
 					data.deliver_type = gt.deliverTypeIndex + 1;
 				}
-
 				gt.gtRequest.post(url, data).then(res => {
-					console.log(res);
 					if (gt.page == 1) {
 						gt.dataList = [];
 					}
@@ -495,15 +445,12 @@
 					}
 				});
 			},
-
 			loadMore() {
-				console.log('loadMore');
 				let gt = this;
 				gt.getOrderList();
 			},
 			goOrderInfo(item) {
 				let gt = this;
-
 				uni.navigateTo({
 					url: './orderInfo?orderSn=' + item.deliver_sn
 				})
@@ -529,7 +476,6 @@
 				});
 			},
 			confirmStart(item) {
-				console.log(item);
 				let gt = this;
 				uni.navigateTo({
 					url: '/subSansong/pages/sansong/loadSend?orderSn=' + item.deliver_sn,

@@ -786,7 +786,7 @@
 			},
 			goHistoryList() {
 				uni.navigateTo({
-					url: './historyList'
+					url: '../../subMsg/pages/message/historyList'
 				})
 			},
 			loadMore() {

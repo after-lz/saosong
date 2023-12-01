@@ -554,7 +554,7 @@ import { size } from 'lodash';
 				let gt = this;
 				// gt.historyShow = true;
 				uni.navigateTo({
-					url: './search'
+					url: '../../subMsg/pages/message/search'
 				})
 			},
 			clearHistory() {
