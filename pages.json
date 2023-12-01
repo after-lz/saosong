@@ -77,8 +77,10 @@
 		{
 			"path": "pages/order/orderInfo",
 			"style": {
-				"navigationBarTitleText": "订单详情",
-				"enablePullDownRefresh": false
+				// "navigationBarTitleText": "订单详情",
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false,
+				"navigationStyle": "custom"
 			}
 		},
 		{
@@ -670,6 +672,14 @@
 					"path": "pages/user/updateManager",
 					"style": {
 						"navigationBarTitleText": "关于伞送",
+						"enablePullDownRefresh": false,
+						"disableScroll": true
+					}
+				},
+				{
+					"path": "pages/user/viewImg",
+					"style": {
+						"navigationBarTitleText": "",
 						"enablePullDownRefresh": false,
 						"disableScroll": true
 					}

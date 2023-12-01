@@ -646,7 +646,7 @@
 							gt.$refs.uToast.show({
 								title: '抢单成功',
 								type: 'success',
-								url: 'pages/order/orderInfo?orderSn=' + orderInfo.deliver_sn
+								url: 'pages/order/orderInfo?isIndex=true&&orderSn=' + orderInfo.deliver_sn
 							});
 							return false;
 						} else {

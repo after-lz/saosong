@@ -3,6 +3,10 @@
 		<view class="con_toast">
 			<u-toast ref="uToast" />
 		</view>
+		<view v-if="showPage">
+			<page-container :show="showPage" :duration="false" :overlay="false" @beforeleave="beforeleave('showPage')"></page-container>
+		</view>
+		<u-navbar :is-back="true" back-text=" " title-color="#000" title="订单详情" :custom-back='customBack'></u-navbar>
 		<!-- #ifdef MP-WEIXIN -->
 		<!-- <view class="con_map">
 			<map id="myMap" style="width:750rpx;height:100vh;" :markers="covers" :polyline="polyline"
@@ -819,6 +823,11 @@
 							<text>取消订单</text>
 						</view>
 					</view> -->
+					<view class="con_item" @click="clickBtn('offlineCollection')" v-if="dataInfo.no_pay_total > 0">
+						<view class="con_text">
+							<text>我已现金收款</text>
+						</view>
+					</view>
 					<view class="con_item" @click="clickBtn('addMoney')" v-if="dataInfo.pay_status != 0 || dataInfo.pay_method == 2">
 						<view class="con_text">
 							<text>增加费用</text>
@@ -827,11 +836,6 @@
 					<view class="con_item" @click="clickBtn('confirmCollect')">
 						<view class="con_text">
 							<text>确认揽收</text>
-						</view>
-					</view>
-					<view class="con_item" @click="clickBtn('offlineCollection')" v-if="dataInfo.no_pay_total > 0">
-						<view class="con_text">
-							<text>我已现金收款</text>
 						</view>
 					</view>
 				</view>
@@ -853,11 +857,6 @@
 					</view>
 				</view>
 				<view class="con_list" v-if="dataInfo.status == 9">
-					<view class="con_item" @click="clickBtn('goSendInfo')">
-						<view class="con_text">
-							<text>查看运单</text>
-						</view>
-					</view>
 					<view class="con_item" @click="clickBtn('addMoney')" v-if="dataInfo.pay_status != 0 || dataInfo.pay_method == 2">
 						<view class="con_text">
 							<text>增加费用</text>
@@ -866,6 +865,11 @@
 					<view class="con_item" @click="clickBtn('offlineCollection')" v-if="dataInfo.no_pay_total > 0">
 						<view class="con_text">
 							<text>我已现金收款</text>
+						</view>
+					</view>
+					<view class="con_item" @click="clickBtn('goSendInfo')">
+						<view class="con_text">
+							<text>查看运单</text>
 						</view>
 					</view>
 					<!-- 2023年06月17日，应后台要求，单订单到达停用 -->
@@ -888,7 +892,7 @@
 					</view>
 					<view class="con_item" @click="clickBtn('confirmSign')">
 						<view class="con_text">
-							<text>签收</text>
+							<text>确认签收</text>
 						</view>
 					</view>
 				</view>
@@ -1062,11 +1066,14 @@
 				fee_detail: [],
 				msg: '',
 				yunshu_xieyi_url:'https://saasdemo.sansongkeji.com/adminsite/#/agreement/transportation',
-				call_show: false
+				call_show: false,
+				showPage: false,
+				isIndex: ''
 			}
 		},
 		onLoad(options) {
 			let gt = this;
+			gt.isIndex = options.isIndex
 			gt.orderSn = options.orderSn;
 			// if(options.intoFrom){
 			// 	gt.intoFrom = options.intoFrom;
@@ -1828,6 +1835,22 @@
 					});
 					return false;
 				}
+			},
+			/* 自定义头部返回方法 */
+			customBack() {
+				let gt = this
+				if(gt.isIndex) {
+					uni.switchTab({
+						url: '/pages/index/index'
+					})
+				} else {
+					uni.navigateBack()
+				}
+			},
+			beforeleave() {
+				let gt = this
+				gt.showPage = false  //这个很重要，一定要先把弹框删除掉
+				gt.customBack()
 			}
 		}
 	}

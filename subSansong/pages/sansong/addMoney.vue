@@ -5,19 +5,17 @@
 		</view>
 		<view class="con_money">
 			<view class="con_select_input">
-				<view class="con_select">
-					<view class="con_text" @click="showFeeType">
-						<text>{{feeType}}</text>
+				<view class="con_select" @click="showFeeType">
+					<view class="con_text" :class="feeType1 ? '':'placeholderSty'">
+						<text>{{feeType1||"请选择费用类型"}}</text>
 					</view>
 					<view class="con_icon">
 						<u-icon name="arrow-down"></u-icon>
 					</view>
-
 				</view>
 				<view class="con_input_unit">
 					<view class="con_input">
-						<u-input v-model="money" type="digit" :clearable="false" placeholder="请输入实际产生费用"
-							height="60" />
+						<u-input v-model="money" type="digit" :clearable="false" placeholder="请输入实际产生费用" height="60" />
 					</view>
 					<view class="con_unit">
 						<text>元</text>
@@ -36,30 +34,30 @@
 			<text>确认增加</text>
 		</view>
 
-
 		<view class="con_popup">
 			<view class="con_refuse">
-				<u-popup v-model="feeTypeShow" mode="bottom" height="700" border-radius="22">
+				<u-popup v-model="feeTypeShow" mode="bottom" border-radius="22">
 					<view class="con_title">
 						<text>费用类目</text>
 					</view>
 					<view class="con_radio">
 						<u-radio-group v-model="feeType" :wrap="true">
-							<u-radio v-for="(item, index) in feeTypeList" :key="index" :name="item.name">
+							<u-radio v-for="item in feeTypeList" :key="item.name" :name="item.name">
 								{{item.name}}
 							</u-radio>
 						</u-radio-group>
 					</view>
+					<view class="con_textarea" v-if="feeType === '其他'">
+						<u-input type="textarea" v-model.trim="remake" placeholder="请输入费用类型"></u-input>
+					</view>
 					<!-- <view class="con_textarea">
-						<u-input v-model="otherFeeType" type="textarea " placeholder="请输入费用类目" />
+						<u-input v-model="otherFeeType" type="textarea" placeholder="请输入费用类目" />
 					</view> -->
 					<view class="con_confirmBtn" @click="confirmFeeType">
 						<text>确定</text>
 					</view>
 				</u-popup>
 			</view>
-
-
 		</view>
 	</view>
 </template>
@@ -69,106 +67,86 @@
 		data() {
 			return {
 				orderSn: '',
-				feeType: '搬运费',
+				feeType: '',
+				feeType1: '',
 				money: '',
 				imgArr: [],
-
 				feeTypeShow: false,
-				feeTypeList: [{
-					id: 1,
-					name: '搬运费',
-					value: 1,
-				}, {
-					id: 1,
-					name: '等待费',
-					value: 1,
-				}, {
-					id: 1,
-					name: '过路费',
-					value: 1,
-				}, {
-					id: 1,
-					name: '高速费',
-					value: 1,
-				}, {
-					id: 1,
-					name: '停车费',
-					value: 1,
-				}, {
-					id: 1,
-					name: '其他',
-					value: 1,
-				}],
+				feeTypeList: [
+					{name: "提货费"},
+					{name: "送货费"},
+					{name: "进仓费"},
+					{name: "仓储费"},
+					{name: "搬运费"},
+					{name: "卸货费"},
+					{name: "过路费"},
+					{name: "等待费"},
+					{name: "其他"},
+				],
 				otherFeeType: '',
+				remake: '',
 				flag: false
 			}
 		},
 		onLoad(options) {
-			let gt = this;
-			gt.orderSn = options.orderSn;
+			let gt = this
+			gt.orderSn = options.orderSn
 		},
 		methods: {
 			showFeeType() {
-				let gt = this;
-				gt.feeTypeShow = true;
+				let gt = this
+				gt.feeTypeShow = true
 			},
 			confirmFeeType() {
-				let gt = this;
-				if (gt.feeType == '其他') {
-
+				let gt = this
+				if (gt.feeType == '其他' && gt.remake === '') {
+					return gt.$refs.uToast.show({
+						title: '请输入其他费用',
+						type: 'error'
+					})
 				}
 				// gt.feeType = gt.otherFeeType;
-				gt.feeTypeShow = false;
+				gt.feeType1 = gt.feeType
+				gt.feeTypeShow = false
 			},
 			chooseImg(item,index) {
-				console.log(item);
-				console.log(index);
-				let gt = this;
-
-				var file = item.fileInfo;
-
+				let gt = this
+				let file = item.fileInfo
 				gt.gtRequest.upload(file).then(res => {
-					gt.imgArr.push(res.src);
-				});
+					gt.imgArr.push(res.src)
+				})
 			},
 			removeImg(index) {
-				let gt = this;
-
-				gt.imgArr.splice(index, 1);
+				let gt = this
+				gt.imgArr.splice(index, 1)
 			},
 			submitForm(){
-				let gt = this;
+				let gt = this
 				if(gt.flag) return
 				gt.flag = true
 				if (!gt.$u.test.amount(gt.money)) {
-					gt.$refs.uToast.show({
+					gt.flag = false
+					return gt.$refs.uToast.show({
 						title: '费用不能为空',
-						type: 'error',
-					});
-					gt.flag = false
-					return false;
+						type: 'error'
+					})
 				}
-				
-				var url = "/logistics/order/add_order_fee";
-				var data = {
-					deliver_sn:gt.orderSn,
-					money:gt.money,
-					// fee_notice:gt.feeType == '其他'?gt.otherFeeType:gt.feeType,
-					fee_notice:gt.feeType,
-					fee_pic:gt.imgArr.join('||'),
-				};
-				console.log(data);
-				// return false;
-				gt.gtRequest.post(url,data).then(res=>{
-					gt.flag = false
+				let data = {
+					deliver_sn: gt.orderSn,
+					money: gt.money,
+					// fee_notice: gt.feeType == '其他' ? gt.otherFeeType : gt.feeType,
+					fee_notice: gt.feeType1 === '其他' ? '附加费/' + gt.remake : '附加费/' + gt.feeType1,
+					fee_pic: gt.imgArr.join('||')
+				}
+				// return console.log(data)
+				gt.gtRequest.post("/logistics/order/add_order_fee", data).then(res=> {
 					gt.$refs.uToast.show({
 						title: '增加成功',
 						type: 'success',
-						back:true,
-					});
-				});
-			},
-
+						back: true
+					})
+				})
+			}
 		}
 	}
 </script>
@@ -192,11 +170,18 @@
 						display: flex;
 
 						.con_text {
+							width: 200rpx;
 							font-size: 32rpx;
 							font-family: PingFangSC-Medium, PingFang SC;
 							font-weight: 500;
 							color: #000000;
 							line-height: 60rpx;
+						}
+						
+						.placeholderSty {
+							color: #c0c4cc;
+							font-size: 28rpx;
+							font-family: initial;
 						}
 
 						.con_icon {
@@ -280,7 +265,7 @@
 							}
 						}
 					}
-
+					
 					.con_textarea {
 						width: 678rpx;
 						height: 132rpx;
@@ -292,6 +277,8 @@
 						font-family: PingFangSC-Regular, PingFang SC;
 						font-weight: 400;
 						line-height: 40rpx;
+						overflow: auto;
+						box-sizing: border-box;
 					}
 
 					.con_confirmBtn {

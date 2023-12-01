@@ -45,6 +45,28 @@
 			<view class="con_line">
 				<u-line length="718rpx" color="#f2f2f2" margin="0 16rpx"></u-line>
 			</view>
+			<view class="con_item" @click="viewBusiness">
+				<view class="con_text">
+					<text>营业执照</text>
+				</view>
+				<view class="con_icon">
+					<u-icon name="arrow-right" color="#000"></u-icon>
+				</view>
+			</view>
+			<view class="con_line">
+				<u-line length="718rpx" color="#f2f2f2" margin="0 16rpx"></u-line>
+			</view>
+			<view class="con_item" @click="viewCertification">
+				<view class="con_text">
+					<text>平台资质</text>
+				</view>
+				<view class="con_icon">
+					<u-icon name="arrow-right" color="#000"></u-icon>
+				</view>
+			</view>
+			<view class="con_line">
+				<u-line length="718rpx" color="#f2f2f2" margin="0 16rpx"></u-line>
+			</view>
 		</view>
 		<view class="con_footer">
 			<text>苏ICP备18045543号-4A</text>
@@ -100,6 +122,16 @@
 			viewProtocol() {
 				uni.navigateTo({
 					url: './privacyAndProtocol'
+				})
+			},
+			viewBusiness() {
+				uni.navigateTo({
+					url: './viewImg?type=1'
+				})
+			},
+			viewCertification() {
+				uni.navigateTo({
+					url: './viewImg?type=2'
 				})
 			}
 		}

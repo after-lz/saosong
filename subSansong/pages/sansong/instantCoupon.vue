@@ -120,9 +120,9 @@
 				let gt = this
 				setTimeout(() => {
 					if (type === 1) {
-						gt.form.coupon_min_price = +e > 0 && +e <= 9999 ? parseFloat(e.match(/\d+\.?\d{0,2}/, '')[0]) : undefined
+						gt.form.coupon_min_price = +e > 0 && +e <= 9999 ? parseFloat(e.match(/\d+\.?\d{0,0}/, '')[0]) : undefined
 					} else if(type === 2) {
-						gt.form.coupon_price = +e > 0 && +e < +gt.form.coupon_min_price ? parseFloat(e.match(/\d+\.?\d{0,2}/, '')[0]) : undefined
+						gt.form.coupon_price = +e > 0 && +e < +gt.form.coupon_min_price ? parseFloat(e.match(/\d+\.?\d{0,0}/, '')[0]) : undefined
 					}
 				}, 0)
 			},

@@ -185,21 +185,20 @@
 											<text>叫车取货</text>
 										</view>
 										<!-- #endif -->
-										<!-- <view class="con_btnItem" @click.stop="showRefuse(item)"
-											v-if="item.id > 1">
-											<text>电子面单</text>
+										<view class="con_btnItem" @click.stop="cancelConfirm(item)"
+											v-if="item.cancel_status == 1">
+											<text>确认取消</text>
 										</view>
-										<view class="con_btnItem" @click.stop="showRefuse(item)"
-											v-if="item.id > 1">
-											<text>修改订单</text>
-										</view> -->
-										<view class="con_btnItem" @click.stop="goSendInfo(item)"
-											v-if="item.status == 9">
-											<text>查看运单</text>
+										<view class="con_btnItem" @click.stop="viewOrder(item)">
+											<text>电子面单</text>
 										</view>
 										<view class="con_btnItem" @click.stop="addMoney(item)"
 											v-if="item.status == 5 || item.status == 7 || item.status == 9 || item.status == 11">
 											<text>增加费用</text>
+										</view>
+										<view class="con_btnItem" @click.stop="goSendInfo(item)"
+											v-if="item.status == 9">
+											<text>查看运单</text>
 										</view>
 										<view class="con_btnItem" @click.stop="confirmCollect(item)"
 											v-if="item.status == 5">
@@ -211,10 +210,6 @@
 										<view class="con_btnItem" @click.stop="confirmStart(item)"
 											v-if="item.status == 7">
 											<text>确认发车</text>
-										</view>
-										<view class="con_btnItem" @click.stop="cancelConfirm(item)"
-											v-if="item.cancel_status == 1">
-											<text>确认取消</text>
 										</view>
 										<!-- <view class="con_btnItem" @click.stop="confirmArriva(item)"
 											v-if="item.status == 9">
@@ -231,12 +226,9 @@
 										<!-- <view class="con_btnItem" @click.stop="confirmStart(item)" v-if="item.status == 7">
 											<text>查看回单</text>
 										</view> -->
-										<!-- <view class="con_btnItem" @click.stop="confirmStart(item)"
+										<view class="con_btnItem" @click.stop="coloseCause(item)"
 											v-if="item.status == 99">
 											<text>查看取消</text>
-										</view> -->
-										<view class="con_btnItem" @click.stop="viewOrder(item)">
-											<text>电子面单</text>
 										</view>
 									</view>
 								</view>
@@ -344,10 +336,27 @@
 			<u-modal v-model="showModel" title="确认取消订单申请" content="您确认同意货主的取消订单申请吗？同意后，订单将被取消，终止承运。"
 				:show-cancel-button="true" cancel-text="联系货主" @confirm="confirm"></u-modal>
 		</view>
+		<u-modal v-model="closeModel" title="取消原因" :title-style="titleStyle">
+			<view class="slot-content close_info">
+				<view class="close_cause">
+					<view class="close_key">取消原因：</view>
+					<view class="close_value">
+						{{ colseTarget.cancel_reason }}
+					</view>
+				</view>
+				<view class="colose_time">
+					<view class="close_key">取消时间：</view>
+					<view class="close_value">
+						{{ gtCommon.formateTime(colseTarget.create_time, 'YYYY-MM-DD HH:mm:ss') }}
+					</view>
+				</view>
+			</view>
+		</u-modal>
 	</view>
 </template>
 
 <script>
+import { size } from 'lodash';
 	export default {
 		data() {
 			return {
@@ -464,7 +473,13 @@
 				dataList: [],
 				break: false,
 				showModel: false,
-				cancelId: ''
+				cancelId: '',
+				closeModel: false,
+				colseTarget: {},
+				titleStyle: {
+					fontSize: '36rpx',
+					fontWeight: 700
+				}
 			}
 		},
 		onLoad() {
@@ -787,7 +802,6 @@
 				});
 			},
 			loadMore() {
-				console.log('loadMore');
 				let gt = this;
 				gt.getOrderList();
 			},
@@ -858,6 +872,11 @@
 				let gt = this
 				gt.showModel = true
 				gt.cancelId = item.deliver_sn
+			},
+			coloseCause(record) {
+				let gt = this
+				gt.closeModel = true
+				gt.colseTarget = record.cancel_info
 			},
 			confirm() {
 				let gt = this
@@ -1468,6 +1487,15 @@
 							border-radius: 0 16rpx 16rpx 0;
 						}
 					}
+				}
+			}
+		
+			.close_info {
+				padding: 30rpx;
+				.colose_time,
+				.close_cause {
+					display: flex;
+					margin-top: 20rpx;
 				}
 			}
 		}
