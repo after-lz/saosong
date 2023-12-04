@@ -124,6 +124,13 @@
 				let gt = this
 				if(gt.flag) return
 				gt.flag = true
+				if (gt.feeType1 === '') {
+					gt.flag = false
+					return gt.$refs.uToast.show({
+						title: '费用类型不能为空',
+						type: 'error'
+					})
+				}
 				if (!gt.$u.test.amount(gt.money)) {
 					gt.flag = false
 					return gt.$refs.uToast.show({
