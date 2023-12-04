@@ -271,7 +271,7 @@
 				let url = ''
 				switch (type) {
 					case 0:
-						url = './revenue'
+						url = '/subUser/pages/user/revenue'
 						break;
 					case 1:
 						url = '/subUser/pages/user/moneyList'
@@ -280,7 +280,7 @@
 						url = '/pages/login/companyAuth?flag=true'
 						break;
 					case 3:
-						url = './empty'
+						
 						break;
 					default:
 						break;

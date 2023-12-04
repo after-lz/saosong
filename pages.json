@@ -61,24 +61,12 @@
 			}
 		},
 		{
-			"path": "pages/user/revenue",
-			"style": {
-				"navigationBarTitleText": "我的营收",
-				"enablePullDownRefresh": false
-			}
-		},
-		{
-			"path": "pages/index/historyList",
-			"style": {
-				"navigationBarTitleText": "历史记录",
-				"enablePullDownRefresh": false
-			}
-		},
-		{
 			"path": "pages/order/orderInfo",
 			"style": {
-				"navigationBarTitleText": "订单详情",
-				"enablePullDownRefresh": false
+				// "navigationBarTitleText": "订单详情",
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false,
+				"navigationStyle": "custom"
 			}
 		},
 		{
@@ -104,23 +92,9 @@
 			}
 		},
 		{
-			"path": "pages/index/billDetail",
-			"style": {
-				"navigationBarTitleText": "费用明细",
-				"enablePullDownRefresh": false
-			}
-		},
-		{
 			"path": "pages/login/mobileLogin",
 			"style": {
 				"navigationBarTitleText": "",
-				"enablePullDownRefresh": false
-			}
-		},
-		{
-			"path": "pages/sansong/empty",
-			"style": {
-				"navigationBarTitleText": "暂无数据",
 				"enablePullDownRefresh": false
 			}
 		},
@@ -135,27 +109,6 @@
 			"path": "pages/login/licenceview",
 			"style": {
 				"navigationBarTitleText": "",
-				"enablePullDownRefresh": false
-			}
-		},
-		{
-			"path": "pages/order/billDetail",
-			"style": {
-				"navigationBarTitleText": "费用明细",
-				"enablePullDownRefresh": false
-			}
-		},
-		{
-			"path": "pages/user/empty",
-			"style": {
-				"navigationBarTitleText": "暂无数据",
-				"enablePullDownRefresh": false
-			}
-		},
-		{
-			"path": "pages/order/search",
-			"style": {
-				"navigationBarTitleText": "订单",
 				"enablePullDownRefresh": false
 			}
 		}
@@ -675,6 +628,14 @@
 					}
 				},
 				{
+					"path": "pages/user/viewImg",
+					"style": {
+						"navigationBarTitleText": "",
+						"enablePullDownRefresh": false,
+						"disableScroll": true
+					}
+				},
+				{
 					"path": "pages/user/privacyAndProtocol",
 					"style": {
 						"navigationBarTitleText": "隐私和用户协议",
@@ -759,6 +720,13 @@
 						"navigationBarTitleText": "绑定收款账户",
 						"enablePullDownRefresh": false
 					}
+				},
+				{
+					"path": "pages/user/revenue",
+					"style": {
+						"navigationBarTitleText": "我的营收",
+						"enablePullDownRefresh": false
+					}
 				}
 			]
 		},
@@ -839,6 +807,27 @@
 						// "navigationBarTitleText": "详情",
 						"enablePullDownRefresh": false,
 						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "pages/message/search",
+					"style": {
+						"navigationBarTitleText": "订单",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "pages/message/billDetail",
+					"style": {
+						"navigationBarTitleText": "费用明细",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "pages/message/historyList",
+					"style": {
+						"navigationBarTitleText": "历史记录",
+						"enablePullDownRefresh": false
 					}
 				}
 			]

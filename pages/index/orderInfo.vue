@@ -14,29 +14,18 @@
 				<view class="con_line"></view>
 				<view class="con_pay_price">
 					<view class="con_pay">
-						<text v-if="dataInfo.pay_status == 2">已支付</text>
-						<text v-else>未支付</text>
+						<text>待支付</text>
 					</view>
 					<view class="con_price">
-						<!-- <text>8888.88元</text> -->
+						<text>{{dataInfo.pay_to_logistics_money}}元</text>
 					</view>
 				</view>
-				<view class="con_payMethod" v-if="dataInfo.pay_status == 2">
-					<text style="margin-right: 10rpx;">付款方式</text>
-					<u-icon name="arrow-down"></u-icon>
+				<view class="con_fee" v-for="(item, index) in feeDetail" :key="index">
+					<view class="fee_name">{{ item.fee_notice }}</view>
+					<view class="fee_value">{{ item.money }}元</view>
 				</view>
-				<view class="con_wechatPay" v-if="dataInfo.pay_status == 2">
-					<view class="con_text">
-						<text v-if="dataInfo.fee_pay_type == 1">线下支付</text>
-						<text v-if="dataInfo.fee_pay_type == 2">余额支付</text>
-						<text v-if="dataInfo.fee_pay_type == 3">支付宝支付</text>
-						<text v-if="dataInfo.fee_pay_type == 4">微信支付</text>
-					</view>
-					<view class="con_payPrice">
-						<text>{{dataInfo.last_price}}元</text>
-					</view>
-				</view>
-				<view class="con_line" v-if="dataInfo.pay_status == 2"></view>
+				<view class="con_payMet">{{ dataInfo.pay_method == 1 ? "发货人支付" : "收货人支付" }}</view>
+				<view class="con_line"></view>
 			</view>
 			<view class="con_userInfo_contact">
 				<view class="con_userInfo">
@@ -44,9 +33,13 @@
 						<u-avatar :src="cargoInfo.headerpic"></u-avatar>
 						<!-- <image :src="cargoInfo.headerpic" mode="widthFix"></image> -->
 					</view>
-					<view class="con_phone">
-						<!-- <text>尾号{{gtCommon.endMobile(cargoInfo.mobile)}}</text> -->
-						<text>{{cargoInfo.nickname}}</text>
+					<view class="con_info">
+						<view class="con_name">
+							<text>{{cargoInfo.nickname}}</text>
+						</view>
+						<view class="con_phone">
+							<text>{{gtCommon.hiddenMobile4to7(cargoInfo.mobile)}}</text>
+						</view>
 					</view>
 				</view>
 				<view class="con_contact" v-if="dataInfo.deliver_type == 3">
@@ -264,7 +257,7 @@
 							<text v-if="dataInfo.peisong_type == 2">自提</text>
 						</view>
 					</view>
-					<view class="con_key_val" v-if="dataInfo.peisong_type == 2">
+					<!-- <view class="con_key_val" v-if="dataInfo.peisong_type == 2">
 						<view class="con_key">
 							<text>自提网点</text>
 						</view>
@@ -284,7 +277,7 @@
 									@click="gtCommon.callMobile(dataInfo.outlets_mobile)">{{dataInfo.outlets_mobile}}</text>
 							</view>
 						</view>
-					</view>
+					</view> -->
 					<view class="con_key_val">
 						<view class="con_key">
 							<text>是否异性件</text>
@@ -294,7 +287,7 @@
 							<text v-if="dataInfo.pack_is_special == 0">否</text>
 						</view>
 					</view>
-					<view class="con_key_val">
+					<view class="con_key_val" v-if="parseFloat(dataInfo.goods_value_price) > 0">
 						<view class="con_key">
 							<text>声明价值</text>
 						</view>
@@ -322,8 +315,7 @@
 				<view class="con_line"></view>
 				<view class="con_pay_price">
 					<view class="con_pay">
-						<text v-if="dataInfo.pay_status == 2">已支付</text>
-						<text v-else>未支付</text>
+						<text>已支付</text>
 					</view>
 					<view class="con_price">
 						<!-- <text>8888.88元</text> -->
@@ -525,6 +517,7 @@
 				orderSn: '',
 				dataInfo: {},
 				cargoInfo: {},
+				feeDetail: {},
 				timer: 0,
 				openStatus1: false,
 				openStatus2: false,
@@ -630,11 +623,11 @@
 									url: '/pages/index/index'
 								});
 							} else {
-								gt.$refs.uToast.show({
-									title: '抢单成功',
-									type: 'success',
-									url: 'pages/order/orderInfo?orderSn=' + orderInfo.deliver_sn
-								});
+								// gt.$refs.uToast.show({
+								// 	title: '抢单成功',
+								// 	type: 'success',
+								// 	url: 'pages/order/orderInfo?isOdi=true&&orderSn=' + orderInfo.deliver_sn
+								// });
 							}
 							return false;
 						} else {
@@ -730,6 +723,7 @@
 						res.order_info.pack_imgs = res.order_info.pack_imgs.split('||');
 					}
 					gt.dataInfo = res.order_info;
+					gt.feeDetail = res.fee_detail;
 				});
 			},
 			callUser() {
@@ -741,7 +735,8 @@
 			goBillDetail() {
 				let gt = this;
 				uni.navigateTo({
-					url: '../order/billDetail?orderSn=' + gt.orderSn
+					// url: '../order/billDetail?orderSn=' + gt.orderSn
+					url: '../../subMsg/pages/message/billDetail?orderSn=' + gt.orderSn
 				});
 				return false;
 			},
@@ -981,20 +976,24 @@
 
 				.con_userInfo {
 					display: flex;
-
+					align-items: center;
 					.con_headImg {
 						width: 80rpx;
 						height: 80rpx;
 						margin: 32rpx 0 32rpx 24rpx;
 					}
-
-					.con_phone {
+					.con_info {
+						margin-left: 30rpx;
+					}
+					.con_name {
 						font-size: 32rpx;
 						font-family: PingFangSC-Medium, PingFang SC;
 						font-weight: 500;
 						color: #000000;
-						line-height: 80rpx;
-						margin: 32rpx 0 32rpx 20rpx;
+					}
+					.con_phone {
+						font-family: PingFangSC-Medium, PingFang SC;
+						color: #909399;
 					}
 				}
 
@@ -1398,9 +1397,21 @@
 						line-height: 40rpx;
 						margin-right: 26rpx;
 					}
-
+				}
+				
+				.con_fee {
+					display: flex;
+					justify-content: space-between;
+					margin: 0 26rpx 0 24rpx;
+					color: #909399;
+					margin-top: 24rpx;
 				}
 
+				.con_payMet {
+					margin: 24rpx 0 0 24rpx;
+					color: #909399;
+				}
+				
 				.con_payMethod {
 					font-size: 28rpx;
 					font-family: PingFangSC-Regular, PingFang SC;

@@ -3,6 +3,10 @@
 		<view class="con_toast">
 			<u-toast ref="uToast" />
 		</view>
+		<view v-if="showPage">
+			<page-container :show="showPage" :duration="false" :overlay="false" @beforeleave="beforeleave('showPage')"></page-container>
+		</view>
+		<u-navbar :is-back="true" back-text=" " title-color="#000" title="订单详情" :custom-back='customBack'></u-navbar>
 		<!-- #ifdef MP-WEIXIN -->
 		<!-- <view class="con_map">
 			<map id="myMap" style="width:750rpx;height:100vh;" :markers="covers" :polyline="polyline"
@@ -10,8 +14,7 @@
 				<cover-view slot="callout">
 					<cover-view class="con_cover" :marker-id="item.id" v-for="(item,index) in covers" :key="index">
 						<cover-view class="con_item">
-							<cover-image class="con_img" :src="item.img" @load="scoverImgLoad"
-								@error="scoverImgFail"></cover-image>
+							<cover-image class="con_img" :src="item.img"></cover-image>
 						</cover-view>
 						<cover-view class="con_item" style="margin-left: -20rpx;padding-left: 20rpx;z-index:-99"
 							v-if="item.text">
@@ -79,33 +82,6 @@
 					<view class="con_line">
 						<u-line color="#F2F2F2" length="670rpx" margin="24rpx 0"></u-line>
 					</view>
-					<!-- <view class="con_pay_price">
-							<view class="con_pay">
-								<text v-if="dataInfo.pay_status == 2">已支付</text>
-								<text v-else>未支付</text>
-							</view>
-							<view class="con_price">
-								<text>8888.88元</text>
-							</view>
-						</view>
-						<view class="con_payMethod" v-if="dataInfo.pay_status == 2">
-							<text style="margin-right: 10rpx;">付款方式</text>
-							<u-icon name="arrow-down"></u-icon>
-						</view>
-						<view class="con_wechatPay" v-if="dataInfo.pay_status == 2">
-							<view class="con_text">
-								<text v-if="dataInfo.fee_pay_type == 1">线下支付</text>
-								<text v-if="dataInfo.fee_pay_type == 2">余额支付</text>
-								<text v-if="dataInfo.fee_pay_type == 3">支付宝支付</text>
-								<text v-if="dataInfo.fee_pay_type == 4">微信支付</text>
-							</view>
-							<view class="con_payPrice">
-								<text>{{dataInfo.last_price}}元</text>
-							</view>
-						</view>
-						<view class="con_line">
-							<u-line color="#F2F2F2" length="670rpx" margin="24rpx 0"></u-line>
-						</view> -->
 					<view class="con_billList">
 						<view class="con_billItem">
 							<view class="con_unPayList">
@@ -552,33 +528,6 @@
 					<view class="con_line">
 						<u-line color="#F2F2F2" length="670rpx" margin="24rpx 0"></u-line>
 					</view>
-					<!-- <view class="con_pay_price">
-						<view class="con_pay">
-							<text v-if="dataInfo.pay_status == 2">已支付</text>
-							<text v-else>未支付</text>
-						</view>
-						<view class="con_price">
-							<text>8888.88元</text>
-						</view>
-					</view>
-					<view class="con_payMethod" v-if="dataInfo.pay_status == 2">
-						<text style="margin-right: 10rpx;">付款方式</text>
-						<u-icon name="arrow-down"></u-icon>
-					</view>
-					<view class="con_wechatPay" v-if="dataInfo.pay_status == 2">
-						<view class="con_text">
-							<text v-if="dataInfo.fee_pay_type == 1">线下支付</text>
-							<text v-if="dataInfo.fee_pay_type == 2">余额支付</text>
-							<text v-if="dataInfo.fee_pay_type == 3">支付宝支付</text>
-							<text v-if="dataInfo.fee_pay_type == 4">微信支付</text>
-						</view>
-						<view class="con_payPrice">
-							<text>{{dataInfo.last_price}}元</text>
-						</view>
-					</view>
-					<view class="con_line">
-						<u-line color="#F2F2F2" length="670rpx" margin="24rpx 0"></u-line>
-					</view> -->
 					<view class="con_billList">
 						<view class="con_billItem" v-if="unPayTotalMoney > 0">
 							<view class="con_unPayList">
@@ -819,6 +768,11 @@
 							<text>取消订单</text>
 						</view>
 					</view> -->
+					<view class="con_item" @click="clickBtn('offlineCollection')" v-if="dataInfo.no_pay_total > 0">
+						<view class="con_text">
+							<text>我已现金收款</text>
+						</view>
+					</view>
 					<view class="con_item" @click="clickBtn('addMoney')" v-if="dataInfo.pay_status != 0 || dataInfo.pay_method == 2">
 						<view class="con_text">
 							<text>增加费用</text>
@@ -827,11 +781,6 @@
 					<view class="con_item" @click="clickBtn('confirmCollect')">
 						<view class="con_text">
 							<text>确认揽收</text>
-						</view>
-					</view>
-					<view class="con_item" @click="clickBtn('offlineCollection')" v-if="dataInfo.no_pay_total > 0">
-						<view class="con_text">
-							<text>我已现金收款</text>
 						</view>
 					</view>
 				</view>
@@ -853,11 +802,6 @@
 					</view>
 				</view>
 				<view class="con_list" v-if="dataInfo.status == 9">
-					<view class="con_item" @click="clickBtn('goSendInfo')">
-						<view class="con_text">
-							<text>查看运单</text>
-						</view>
-					</view>
 					<view class="con_item" @click="clickBtn('addMoney')" v-if="dataInfo.pay_status != 0 || dataInfo.pay_method == 2">
 						<view class="con_text">
 							<text>增加费用</text>
@@ -866,6 +810,11 @@
 					<view class="con_item" @click="clickBtn('offlineCollection')" v-if="dataInfo.no_pay_total > 0">
 						<view class="con_text">
 							<text>我已现金收款</text>
+						</view>
+					</view>
+					<view class="con_item" @click="clickBtn('goSendInfo')">
+						<view class="con_text">
+							<text>查看运单</text>
 						</view>
 					</view>
 					<!-- 2023年06月17日，应后台要求，单订单到达停用 -->
@@ -888,7 +837,7 @@
 					</view>
 					<view class="con_item" @click="clickBtn('confirmSign')">
 						<view class="con_text">
-							<text>签收</text>
+							<text>确认签收</text>
 						</view>
 					</view>
 				</view>
@@ -1062,11 +1011,14 @@
 				fee_detail: [],
 				msg: '',
 				yunshu_xieyi_url:'https://saasdemo.sansongkeji.com/adminsite/#/agreement/transportation',
-				call_show: false
+				call_show: false,
+				showPage: false,
+				isIndex: ''
 			}
 		},
 		onLoad(options) {
 			let gt = this;
+			gt.isIndex = options.isIndex
 			gt.orderSn = options.orderSn;
 			// if(options.intoFrom){
 			// 	gt.intoFrom = options.intoFrom;
@@ -1113,18 +1065,6 @@
 				uni.setClipboardData({
 					data: gt.msg
 				})
-			},
-			scoverImgLoad(res) {
-				console.log('scoverImgLoad:', res);
-			},
-			scoverImgFail(res) {
-				console.log('scoverImgFail:', res);
-			},
-			ecoverImgLoad(res) {
-				console.log('ecoverImgLoad:', res);
-			},
-			ecoverImgFail(res) {
-				console.log('ecoverImgFail:', res);
 			},
 			writeLine() {
 				let gt = this;
@@ -1723,7 +1663,8 @@
 			goBillDetail() {
 				let gt = this;
 				uni.navigateTo({
-					url: './billDetail?orderSn=' + gt.orderSn,
+					// url: './billDetail?orderSn=' + gt.orderSn,
+					url: '../../subMsg/pages/message/billDetail?orderSn=' + gt.orderSn
 				});
 				return false;
 			},
@@ -1828,6 +1769,22 @@
 					});
 					return false;
 				}
+			},
+			/* 自定义头部返回方法 */
+			customBack() {
+				let gt = this
+				if(gt.isIndex) {
+					uni.switchTab({
+						url: '/pages/index/index'
+					})
+				} else {
+					uni.navigateBack()
+				}
+			},
+			beforeleave() {
+				let gt = this
+				gt.showPage = false  //这个很重要，一定要先把弹框删除掉
+				gt.customBack()
 			}
 		}
 	}
@@ -2403,63 +2360,6 @@
 											}
 										}
 									}
-
-									// .con_pay_price {
-									// 	display: flex;
-									// 	justify-content: space-between;
-
-									// 	.con_pay {
-									// 		font-size: 28rpx;
-									// 		font-family: PingFangSC-Medium, PingFang SC;
-									// 		font-weight: 500;
-									// 		color: #000000;
-									// 		line-height: 40rpx;
-									// 		margin-left: 24rpx;
-									// 	}
-
-									// 	.con_price {
-									// 		font-size: 28rpx;
-									// 		font-family: PingFangSC-Medium, PingFang SC;
-									// 		font-weight: 500;
-									// 		color: #000000;
-									// 		line-height: 40rpx;
-									// 		margin-right: 26rpx;
-									// 	}
-
-									// }
-
-									// .con_payMethod {
-									// 	font-size: 28rpx;
-									// 	font-family: PingFangSC-Regular, PingFang SC;
-									// 	font-weight: 400;
-									// 	color: #909399;
-									// 	line-height: 40rpx;
-									// 	margin: 24rpx 0 0 32rpx;
-									// }
-
-									// .con_wechatPay {
-									// 	display: flex;
-									// 	justify-content: space-between;
-
-									// 	.con_text {
-									// 		font-size: 28rpx;
-									// 		font-family: PingFangSC-Regular, PingFang SC;
-									// 		font-weight: 400;
-									// 		color: #909399;
-									// 		line-height: 40rpx;
-									// 		margin: 24rpx 0 0 24rpx;
-									// 	}
-
-									// 	.con_payPrice {
-									// 		font-size: 28rpx;
-									// 		font-family: PingFangSC-Regular, PingFang SC;
-									// 		font-weight: 400;
-									// 		color: #909399;
-									// 		line-height: 40rpx;
-									// 		margin: 24rpx 26rpx 0 0;
-									// 	}
-									// }
-
 								}
 
 								.con_sendInfo {

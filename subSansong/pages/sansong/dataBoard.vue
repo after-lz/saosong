@@ -216,7 +216,8 @@ export default {
 				})
 			} else if(index === 4) {
 				uni.navigateTo({
-					url: '../../../pages/index/historyList?active=1'
+					// url: '../../../pages/index/historyList?active=1'
+					url: "../../../subMsg/pages/message/historyList?active=1"
 				})
 			} else if(index === 5) {
 				uni.setStorageSync('orderSearchStatus', 8)

@@ -9,15 +9,15 @@
 		</view>
 		<view class="con_list">
 			<!-- #ifdef APP-PLUS -->
-			<!-- <view class="con_item" @click="checkVersion">
+			<view class="con_item" @click="checkVersion">
 				<view class="con_text">
 					<text>检测新版本</text>
 				</view>
 				<view class="con_icon">
-					<view v-if="version">V{{ version }}</view>
+					<view v-if="newVersion">V{{ newVersion }}</view>
 					<u-icon name="arrow-right" color="#000"></u-icon>
 				</view>
-			</view> -->
+			</view>
 			<!-- #endif -->
 			<view class="con_line">
 				<u-line length="718rpx" color="#f2f2f2" margin="0 16rpx"></u-line>
@@ -45,6 +45,28 @@
 			<view class="con_line">
 				<u-line length="718rpx" color="#f2f2f2" margin="0 16rpx"></u-line>
 			</view>
+			<view class="con_item" @click="viewBusiness">
+				<view class="con_text">
+					<text>营业执照</text>
+				</view>
+				<view class="con_icon">
+					<u-icon name="arrow-right" color="#000"></u-icon>
+				</view>
+			</view>
+			<view class="con_line">
+				<u-line length="718rpx" color="#f2f2f2" margin="0 16rpx"></u-line>
+			</view>
+			<view class="con_item" @click="viewCertification">
+				<view class="con_text">
+					<text>平台资质</text>
+				</view>
+				<view class="con_icon">
+					<u-icon name="arrow-right" color="#000"></u-icon>
+				</view>
+			</view>
+			<view class="con_line">
+				<u-line length="718rpx" color="#f2f2f2" margin="0 16rpx"></u-line>
+			</view>
 		</view>
 		<view class="con_footer">
 			<text>苏ICP备18045543号-4A</text>
@@ -58,38 +80,85 @@
 			return {
 				src: 'https://baohusan-uisource.oss-cn-shanghai.aliyuncs.com/unicargo/image/ssLogo.png',
 				version: '',
+				newVersion: '',
 				mobile: '4008899050'
 			}
 		},
 		onLoad() {
 			let gt = this
 			let res = uni.getSystemInfoSync()
+			// #ifdef MP-WEIXIN
 			gt.version = res.appVersion
+			// #endif
+			// #ifdef APP-PLUS
+			gt.version = res.appWgtVersion
+			// #endif
+			gt.getNewVersion()
 		},
 		methods: {
-			checkVersion() {
-				const updateManager = uni.getUpdateManager()
-				updateManager.onCheckForUpdate(function(res) {
-					// 请求完新版本信息的回调
-					if (res.hasUpdate == false) {
-						uni.showModal({
-							title: '已经是最新版了',
-							showCancel: false
-						})
+			getNewVersion() {
+				let gt = this
+				uni.request({
+					url: "https://itunes.apple.com/cn/lookup?bundleId=com.baohusan.transport",
+					// data: data,
+					method: 'GET',
+					success: function(res) {
+						gt.newVersion = res.data.results[0].version
+					},
+					fail: function(err) {
+						console.log(err)
 					}
 				})
-				updateManager.onUpdateReady(function(res) {
+			},
+			checkVersion() {
+				let gt = this
+				// const updateManager = uni.getUpdateManager()
+				// updateManager.onCheckForUpdate(function(res) {
+				// 	// 请求完新版本信息的回调
+				// 	if (res.hasUpdate == false) {
+				// 		uni.showModal({
+				// 			title: '已经是最新版了',
+				// 			showCancel: false
+				// 		})
+				// 	}
+				// })
+				// updateManager.onUpdateReady(function(res) {
+				// 	uni.showModal({
+				// 		title: '更新提示',
+				// 		content: '新版本已经准备好，是否重启应用？',
+				// 		success(res) {
+				// 			if (res.confirm) {
+				// 				// 新的版本已经下载好，调用 applyUpdate 应用新版本并重启
+				// 				updateManager.applyUpdate()
+				// 			}
+				// 		}
+				// 	})
+				// })
+				
+				//在App Store Connect中的App Store下的app信息，可找到appleId
+				if(gt.version === gt.newVersion) {
 					uni.showModal({
-						title: '更新提示',
-						content: '新版本已经准备好，是否重启应用？',
-						success(res) {
-							if (res.confirm) {
-								// 新的版本已经下载好，调用 applyUpdate 应用新版本并重启
-								updateManager.applyUpdate()
-							}
-						}
+						title: '已经是最新版了',
+						showCancel: false
 					})
-				})
+				} else {
+					uni.showModal({
+					    title: "版本更新",
+					    content: '有新的版本发布，是否立即进行新版本下载？',
+					    confirmText: '立即更新',
+					    cancelText: '稍后进行',
+					    success: (res) => {
+					        if (res.confirm) {
+					            let appleId = 6450411192
+					            plus.runtime.launchApplication({
+					                action: `itms-apps://itunes.apple.com/cn/app/id${appleId}?mt=8`
+					            }, function(e) {
+					                console.log('Open system default browser failed: ' + e.message)
+					            })
+							}
+					    }
+					})
+				}
 			},
 			dial() {
 				let gt = this
@@ -101,7 +170,18 @@
 				uni.navigateTo({
 					url: './privacyAndProtocol'
 				})
-			}
+			},
+			viewBusiness() {
+				uni.navigateTo({
+					url: './viewImg?type=1'
+				})
+			},
+			viewCertification() {
+				uni.navigateTo({
+					url: './viewImg?type=2'
+				})
+			},
+			
 		}
 	}
 </script>

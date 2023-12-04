@@ -80,7 +80,8 @@
 			<view class="con_item" v-for="(item,index) in arriveStationList" :key="index">
 				<!-- <view class="con_removeBtn" @click="removeArriveStation(index)" v-if="index != 0"> -->
 				<!-- 20230704测试要求第一个也能删除 -->
-				<view class="con_removeBtn" @click="removeArriveStation(index)" v-if="!item.flag && index != 0">
+				<!-- <view class="con_removeBtn" @click="removeArriveStation(index)" v-if="!item.flag && index != 0"> -->
+				<view class="con_removeBtn" @click="removeArriveStation(index)" v-if="!item.flag">
 					<u-icon name="close-circle-fill" color="#FF6067" size="48"></u-icon>
 				</view>
 				<view class="con_keyVal">
