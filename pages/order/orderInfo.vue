@@ -196,7 +196,7 @@
 					</view>
 				</view>
 				<view class="con_baseInfo">
-					<u-read-more :toggle="true" close-text="更多" open-text="收起" color="#909399"
+					<u-read-more :toggle="true" close-text="更多" open-text="收起" color="#909399" show-height="570"
 						text-indent="0">
 						<view class="con_title">
 							<text>订单信息</text>
@@ -241,7 +241,7 @@
 							<u-line color="#F2F2F2" length="670rpx" margin="24rpx 0"></u-line>
 						</view>
 						<view class="con_keyVal">
-							<view class="con_item">
+							<!-- <view class="con_item">
 								<view class="con_key">
 									<view class="con_text">
 										<text>运单编号</text>
@@ -257,7 +257,7 @@
 										</view>
 									</view>
 								</view>
-							</view>
+							</view> -->
 							<view class="con_item">
 								<view class="con_key">
 									<view class="con_text">

@@ -358,13 +358,13 @@
 						gt.userInfo = res.user_info
 						if(res.logistics_info) {
 							gt.logisticsInfo = res.logistics_info
-							gt.numArr1[0] = parseInt(res.logistics_info.money03)
-							gt.numArr1[1] = res.logistics_info.visitor_count
-							gt.numArr1[2] = res.logistics_info.collect_count
+							gt.numArr1[0] = parseInt(res.logistics_info.money03) || 0
+							gt.numArr1[1] = res.logistics_info.visitor_count || 0
+							gt.numArr1[2] = res.logistics_info.collect_count || 0
 							gt.numArr1[3] = gt.gtCommon.floatNum((parseFloat(res.logistics_info.grade_score) || 5) / (res.logistics_info.comment_num+1 || 1), 1)
 							gt.numArr2[0] = res.onway_money
-							gt.numArr2[1] = res.logistics_info.money01
-							gt.numArr2[2] = res.logistics_info.money02
+							gt.numArr2[1] = res.logistics_info.money01 || 0
+							gt.numArr2[2] = res.logistics_info.money02 || 0
 							gt.numArr2[3] = res.bank_count
 						}
 						gt.loginStatus = true

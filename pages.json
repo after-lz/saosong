@@ -9,7 +9,7 @@
 			"style": {
 				"navigationBarTitleText": "专线货源",
 				"enablePullDownRefresh": true
-				// "navigationStyle": "custom",
+				// "navigationStyle": "custom"
 				// "navigationBarTextStyle": "black"
 			}
 		},
@@ -88,7 +88,8 @@
 			"path": "pages/index/orderInfo",
 			"style": {
 				"navigationBarTitleText": "",
-				"enablePullDownRefresh": false
+				"enablePullDownRefresh": false,
+				"navigationStyle": "custom"
 			}
 		},
 		{

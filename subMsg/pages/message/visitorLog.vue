@@ -108,7 +108,8 @@
 		async onLoad(options) {
 			let gt = this
 			// #ifdef MP-WEIXIN
-			if(options.flag) await tools.publicLogin()
+			let flag = decodeURIComponent(options.flag)
+			if(flag) await tools.publicLogin()
 			// #endif
 			if(options.active) {
 				gt.current = options.active

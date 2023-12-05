@@ -857,7 +857,8 @@
 		async onLoad(option) {
 			let gt = this;
 			// #ifdef MP-WEIXIN
-			if(option.flag) await tools.publicLogin()
+			let flag = decodeURIComponent(option.flag)
+			if(flag) await tools.publicLogin()
 			// #endif
 			if(option.logistics_id) {
 				gt.logistics_id = option.logistics_id
