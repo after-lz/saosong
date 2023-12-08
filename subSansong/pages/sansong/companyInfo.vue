@@ -1,5 +1,10 @@
 <template>
 	<view class="gt_content">
+		<!-- <view v-if="showPage">
+			<page-container :show="showPage" :duration="false" :overlay="false" @beforeleave="beforeleave('showPage')"></page-container>
+		</view>
+		<u-navbar :is-back="true" back-text=" " title-color="#000" title="公司详情" :custom-back='customBack'
+			title-width="400"></u-navbar> -->
 		<view class="con_tabs">
 			<u-tabs-swiper ref="uTabs" :list="tabList" :current="currentTab" @change="tabsChange" :is-scroll="false"
 				swiperWidth="750" height="88"></u-tabs-swiper>
@@ -813,7 +818,9 @@
 				lines: [],
 				isShowVideo: false,
 				currentNum: 1,
-				totalNum: 0
+				totalNum: 0,
+				showPage: false,
+				flag1: ''
 			}
 		},
 		onNavigationBarButtonTap(e) {
@@ -856,11 +863,21 @@
 		},
 		async onLoad(option) {
 			let gt = this;
+			let id = decodeURIComponent(option.logistics_id)
 			// #ifdef MP-WEIXIN
-			if(option.flag) await tools.publicLogin()
+			gt.flag1 = decodeURIComponent(option.flag)
+			let tokenStr = 'token_d'
+			let environment = uni.getStorageSync('environment')
+			if (environment == 'prod') {
+				tokenStr = 'token'
+			}
+			let token = uni.getStorageSync(tokenStr)
+			if(!token) {
+				if(gt.flag1 && gt.flag1 !== "undefined") await tools.publicLogin()
+			}
 			// #endif
-			if(option.logistics_id) {
-				gt.logistics_id = option.logistics_id
+			if(id && id !== "undefined") {
+				gt.logistics_id = id
 				if(gt.logistics_id != uni.getStorageSync("companyInfo").logistics_id) {
 					gt.flag = true
 					gt.other = 66
@@ -1309,6 +1326,22 @@
 					gt.showType = false
 					uni.hideLoading()
 				})	
+			},
+			/* 自定义头部返回方法 */
+			customBack() {
+				let gt = this
+				if(gt.flag1 && gt.flag1 !== "undefined") {
+					uni.switchTab({
+						url: "/subSansong/pages/sansong/companyManage"
+					})
+				} else {
+					uni.navigateBack()
+				}
+			},
+			beforeleave() {
+				let gt = this
+				gt.showPage = false  //这个很重要，一定要先把弹框删除掉
+				gt.customBack()
 			}
 		}
 	}

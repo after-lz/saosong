@@ -1,5 +1,10 @@
 <template>
 	<view class="gt_content">
+		<view v-if="showPage">
+			<page-container :show="showPage" :duration="false" :overlay="false" @beforeleave="beforeleave('showPage')"></page-container>
+		</view>
+		<u-navbar :is-back="true" back-text=" " title-color="#000" :title="title" :custom-back='customBack'
+			title-width="400"></u-navbar>
 		<view class="content">
 			<view class="con_headBackground" :class="'order_yuyueStatus_' + dataInfo.is_yuyue"></view>
 			<view class="con_billInfo" v-if="dataInfo.pay_status != 2">
@@ -160,6 +165,21 @@
 							<text v-if="dataInfo.receipt_type == 1">无需</text>
 							<text v-if="dataInfo.receipt_type == 2">回单</text>
 							<text v-if="dataInfo.receipt_type == 3">收条</text>
+						</view>
+					</view>
+					<view class="con_item">
+						<view class="con_key">
+							<view class="con_text">
+								<text>付款方式</text>
+							</view>
+						</view>
+						<view class="con_val">
+							<view class="con_text_btn">
+								<view class="con_text">
+									<text v-if="dataInfo.pay_method == 1">现付</text>
+									<text v-if="dataInfo.pay_method == 2">到付</text>
+								</view>
+							</view>
 						</view>
 					</view>
 					<view class="con_key_val">
@@ -518,7 +538,7 @@
 				dataInfo: {},
 				cargoInfo: {},
 				feeDetail: {},
-				timer: 0,
+				timer: null,
 				openStatus1: false,
 				openStatus2: false,
 				orderSn: '',
@@ -564,24 +584,33 @@
 				lng: '',
 				lat: '',
 				logistics_id: 0,
-				flag: false
+				flag: false,
+				showPage: false,
+				title: '指派详情',
+				background: {}
 			}
 		},
 		onLoad(options) {
 			let gt = this;
-			gt.flag = options.flag
-			gt.orderSn = options.orderSn;
-			var lng = uni.getStorageSync('lng');
-			var lat = uni.getStorageSync('lat');
-			gt.lng = lng;
-			gt.lat = lat;
+			gt.flag = decodeURIComponent(options.flag)
+			gt.orderSn = decodeURIComponent(options.orderSn)
+			gt.lng = uni.getStorageSync('lng');
+			gt.lat = uni.getStorageSync('lat');
 			var companyInfo = uni.getStorageSync('companyInfo');
 			gt.logistics_id = companyInfo.logistics_id;
 		},
 		async onShow() {
 			let gt = this;
 			// #ifdef MP-WEIXIN
-			if(gt.flag) await tools.publicLogin()
+			let tokenStr = 'token_d'
+			let environment = uni.getStorageSync('environment')
+			if (environment == 'prod') {
+				tokenStr = 'token'
+			}
+			let token = uni.getStorageSync(tokenStr)
+			if(!token) {
+				if(gt.flag && gt.flag !== "undefined") await tools.publicLogin()
+			}
 			// #endif
 			// clearInterval(gt.t);
 			gt.getDataInfo();
@@ -589,17 +618,9 @@
 			gt.gtWSS.setWsUrl(ws_url);
 			gt.onMessage();
 		},
-		onUnload() {
+		beforeDestroy() {
 			let gt = this;
-			// if (gt.t) {
 			clearInterval(gt.timer);
-			// }
-		},
-		onHide() {
-			let gt = this;
-			// if (gt.t) {
-			clearInterval(gt.timer);
-			// }
 		},
 		methods: {
 			onMessage() {
@@ -653,8 +674,8 @@
 			},
 			setNavTitle() {
 				let gt = this;
-				gt.timer = setInterval(function() {
-					var title = '';
+				gt.timer = setInterval(()=> {
+					let title = '';
 					if (gt.dataInfo.order_type == 1) {
 						title += '指派';
 					}
@@ -662,12 +683,12 @@
 						title += '极速';
 					}
 					title += '详情';
-					var nowTime = parseInt((new Date().getTime()) / 1000);
+					let nowTime = parseInt((new Date().getTime()) / 1000);
 					// console.log(nowTime);
-					var time = 1800 + gt.dataInfo.create_time - nowTime;
+					let time = 1800 + gt.dataInfo.create_time - nowTime;
 					if (time > 0 && time < 1800) {
-						var minute = parseInt(time / 60);
-						var seconds = parseInt(time % 60);
+						let minute = parseInt(time / 60);
+						let seconds = parseInt(time % 60);
 
 						minute = minute > 9 ? minute : '0' + minute;
 						seconds = seconds > 9 ? seconds : '0' + seconds;
@@ -676,9 +697,10 @@
 						clearInterval(gt.timer);
 					}
 					// console.log(title);
-					uni.setNavigationBarTitle({
-						title: title,
-					});
+					gt.title = title
+					// uni.setNavigationBarTitle({
+					// 	title: title,
+					// });
 				}, 1000);
 			},
 			getDataInfo() {
@@ -690,7 +712,6 @@
 				gt.gtRequest.post(url, data).then(res => {
 					// 不知道为什么会返回
 					// if (res.order_info.logistics_id) {
-						console.log('relaunch');
 						// uni.redirectTo({
 						// 	url:'../index/index'
 						// });
@@ -700,23 +721,25 @@
 					// gt.dataInfo = res.order_info;
 					gt.cargoInfo = res.cargo_info;
 					if (res.order_info.is_yuyue) {
-						uni.setNavigationBarColor({
-							frontColor: '#ffffff',
-							backgroundColor: '#485EF4',
-							animation: {
-								duration: 400,
-								timingFunc: 'easeIn'
-							}
-						})
+						// uni.setNavigationBarColor({
+						// 	frontColor: '#ffffff',
+						// 	backgroundColor: '#485EF4',
+						// 	animation: {
+						// 		duration: 400,
+						// 		timingFunc: 'easeIn'
+						// 	}
+						// })
+						// gt.background = {background: '#485EF4'}
 					} else {
-						uni.setNavigationBarColor({
-							frontColor: '#ffffff',
-							backgroundColor: '#FF6067',
-							animation: {
-								duration: 400,
-								timingFunc: 'easeIn'
-							}
-						})
+						// uni.setNavigationBarColor({
+						// 	frontColor: '#ffffff',
+						// 	backgroundColor: '#FF6067',
+						// 	animation: {
+						// 		duration: 400,
+						// 		timingFunc: 'easeIn'
+						// 	}
+						// })
+						// gt.background = {background: '#FF6067'}
 					}
 					gt.setNavTitle();
 					if (res.order_info.pack_imgs) {
@@ -830,6 +853,7 @@
 				gt.gtRequest.post(url, data).then(res => {
 					gt.refuseShow = false;
 					gt.getDataInfo();
+					clearInterval(gt.timer)
 					gt.$refs.uToast.show({
 						title: '拒绝成功',
 						type: 'success',
@@ -932,6 +956,22 @@
 					});
 				}
 			},
+			/* 自定义头部返回方法 */
+			customBack() {
+				let gt = this
+				if(gt.flag && gt.flag !== "undefined") {
+					uni.switchTab({
+						url: "/pages/index/index"
+					})
+				} else {
+					uni.navigateBack()
+				}
+			},
+			beforeleave() {
+				let gt = this
+				gt.showPage = false  //这个很重要，一定要先把弹框删除掉
+				gt.customBack()
+			}
 		}
 	}
 </script>
@@ -944,7 +984,7 @@
 			width: 750rpx;
 			overflow: hidden;
 			.content {
-				height: calc(100vh - 160rpx);
+				height: calc(100vh - 300rpx);
 				overflow: auto;
 				padding-bottom: 20rpx;
 			}

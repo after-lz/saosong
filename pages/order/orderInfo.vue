@@ -196,7 +196,7 @@
 					</view>
 				</view>
 				<view class="con_baseInfo">
-					<u-read-more :toggle="true" close-text="更多" open-text="收起" color="#909399"
+					<u-read-more :toggle="true" close-text="更多" open-text="收起" color="#909399" show-height="570"
 						text-indent="0">
 						<view class="con_title">
 							<text>订单信息</text>
@@ -241,7 +241,7 @@
 							<u-line color="#F2F2F2" length="670rpx" margin="24rpx 0"></u-line>
 						</view>
 						<view class="con_keyVal">
-							<view class="con_item">
+							<!-- <view class="con_item">
 								<view class="con_key">
 									<view class="con_text">
 										<text>运单编号</text>
@@ -257,7 +257,7 @@
 										</view>
 									</view>
 								</view>
-							</view>
+							</view> -->
 							<view class="con_item">
 								<view class="con_key">
 									<view class="con_text">
@@ -355,6 +355,21 @@
 							<view class="con_item">
 								<view class="con_key">
 									<view class="con_text">
+										<text>付款方式</text>
+									</view>
+								</view>
+								<view class="con_val">
+									<view class="con_text_btn">
+										<view class="con_text">
+											<text v-if="dataInfo.pay_method == 1">现付</text>
+											<text v-if="dataInfo.pay_method == 2">到付</text>
+										</view>
+									</view>
+								</view>
+							</view>
+							<view class="con_item">
+								<view class="con_key">
+									<view class="con_text">
 										<text>备注</text>
 									</view>
 								</view>
@@ -371,7 +386,7 @@
 					</u-read-more>
 				</view>
 				<view class="con_goodsInfo">
-					<u-read-more :toggle="true" close-text="更多" open-text="收起" color="#909399" text-indent="0">
+					<u-read-more :toggle="true" close-text="更多" open-text="收起" color="#909399" text-indent="0" show-height="430">
 						<view class="con_title">
 							<text>货物信息</text>
 						</view>
@@ -616,7 +631,7 @@
 						</view>
 					</view>
 				</view>
-				<view class="con_sendInfo" v-if="sendInfo.length">
+				<view class="con_sendInfo" v-if="JSON.stringify(sendInfo) !== '{}'">
 					<view class="con_title">
 						<text>配载信息</text>
 					</view>
@@ -706,7 +721,7 @@
 							</view>
 							<view class="con_val">
 								<view class="con_text">
-									<text>{{sendInfo.create_time}}</text>
+									<text>{{gtCommon.formateTime(sendInfo.create_time, 'YYYY-MM-DD HH:mm:ss')}}</text>
 								</view>
 							</view>
 						</view>
@@ -825,7 +840,7 @@
 					</view> -->
 				</view>
 				<view class="con_list" v-if="dataInfo.status == 11">
-					<view class="con_item" @click="clickBtn('addMoney')">
+					<view class="con_item" @click="clickBtn('addMoney')" v-if="dataInfo.pay_status != 0 || dataInfo.pay_method == 2">
 						<view class="con_text">
 							<text>增加费用</text>
 						</view>
@@ -2390,6 +2405,7 @@
 													font-weight: 400;
 													color: #909399;
 													line-height: 40rpx;
+													white-space: nowrap;
 												}
 											}
 

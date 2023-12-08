@@ -2,11 +2,15 @@
 	<view class="gt_content">
 		<scroll-view scroll-y @scrolltolower="loadingMore" class="content">
 			<template v-if="list.length">
-				<view class="card" v-for="item in list" :key="item.id">
+				<view class="card" v-for="item in list" :key="item.id" @click="goDetail(item)">
 					<view class="card_time">{{ formatDate(item.create_time) }}</view>
 					<view class="card_content">
 						<view class="card_title">{{ item.title }}</view>
 						<view class="card_info">{{ item.content }}</view>
+						<view class="card_footer" v-if="item.about_table == 'order' || item.about_table == 'deliver_waybill'">
+							<view class="card_view">立即查看</view>
+							<u-icon name="arrow-right" color="#909399" size="28"></u-icon>
+						</view>
 					</view>
 				</view>
 				<u-loadmore :status="status" />
@@ -74,6 +78,18 @@
 				day = day > 9 ? day : '0' + day
 				return year + "年" + month + "月" + day + '日' + ' ' + hourse + ':' + minu
 			},
+			goDetail(record) {
+				if(record.about_table == 'order') {
+					uni.navigateTo({
+						url: "/pages/order/orderInfo?orderSn=" + record.deliver_sn
+					})
+				}
+				if(record.about_table == 'deliver_waybill') {
+					uni.navigateTo({
+						url: "/subSansong/pages/sansong/sendInfo?orderSn=" + record.deliver_sn
+					})
+				}
+			}
 		}
 	}
 </script>
@@ -114,6 +130,15 @@
 					}
 					.card_info {
 						color: #909399;
+					}
+					.card_footer {
+						display: flex;
+						justify-content: space-between;
+						align-items: center;
+						color: #909399;
+						margin-top: 20rpx;
+						padding-top: 18rpx;
+						border-top: 2rpx solid #f2f2f2;
 					}
 				}
 			}

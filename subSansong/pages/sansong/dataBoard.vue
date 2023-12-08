@@ -212,7 +212,7 @@ export default {
 		goNext(index) {
 			if(index === 0) {
 				uni.navigateTo({
-					url: '../../../pages/user/revenue'
+					url: "../../../subUser/pages/user/revenue"
 				})
 			} else if(index === 4) {
 				uni.navigateTo({

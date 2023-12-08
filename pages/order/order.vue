@@ -193,7 +193,8 @@
 											<text>电子面单</text>
 										</view>
 										<view class="con_btnItem" @click.stop="addMoney(item)"
-											v-if="item.status == 5 || item.status == 7 || item.status == 9 || item.status == 11">
+											v-if="(item.status == 5 || item.status == 7 || item.status == 9 || item.status == 11)
+											 && (item.pay_status != 0 || item.pay_method == 2)">
 											<text>增加费用</text>
 										</view>
 										<view class="con_btnItem" @click.stop="goSendInfo(item)"

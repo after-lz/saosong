@@ -102,17 +102,28 @@
 				list1: {},
 				list2: {},
 				status1: 'loading',
-				status2: 'loading'
+				status2: 'loading',
+				flag: ''
 			}
 		},
 		async onLoad(options) {
 			let gt = this
+			let active = decodeURIComponent(options.active)
 			// #ifdef MP-WEIXIN
-			if(options.flag) await tools.publicLogin()
+			gt.flag = decodeURIComponent(options.flag)
+			let tokenStr = 'token_d'
+			let environment = uni.getStorageSync('environment')
+			if (environment == 'prod') {
+				tokenStr = 'token'
+			}
+			let token = uni.getStorageSync(tokenStr)
+			if(!token) {
+				if(gt.flag && gt.flag !== "undefined") await tools.publicLogin()
+			}
 			// #endif
-			if(options.active) {
-				gt.current = options.active
-				gt.swiperCurrent = options.active
+			if(active && active !== "undefined") {
+				gt.current = active
+				gt.swiperCurrent = active
 			}
 			gt.params1 = {
 				page: 1,
@@ -172,9 +183,14 @@
 				return year + "/" + month + "/" + day
 			},
 			goBack() {
-				uni.navigateBack({
-					delta: 1
-				})
+				let gt = this
+				if(gt.flag && gt.flag !== "undefined") {
+					uni.switchTab({
+						url: "/pages/index/index"
+					})
+				} else {
+					uni.navigateBack()
+				}
 			}
 		}
 	}
