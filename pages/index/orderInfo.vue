@@ -578,18 +578,24 @@
 		onLoad(options) {
 			let gt = this;
 			gt.flag = decodeURIComponent(options.flag)
-			gt.orderSn = options.orderSn;
-			var lng = uni.getStorageSync('lng');
-			var lat = uni.getStorageSync('lat');
-			gt.lng = lng;
-			gt.lat = lat;
+			gt.orderSn = decodeURIComponent(options.orderSn)
+			gt.lng = uni.getStorageSync('lng');
+			gt.lat = uni.getStorageSync('lat');
 			var companyInfo = uni.getStorageSync('companyInfo');
 			gt.logistics_id = companyInfo.logistics_id;
 		},
 		async onShow() {
 			let gt = this;
 			// #ifdef MP-WEIXIN
-			if(gt.flag) await tools.publicLogin()
+			let tokenStr = 'token_d'
+			let environment = uni.getStorageSync('environment')
+			if (environment == 'prod') {
+				tokenStr = 'token'
+			}
+			let token = uni.getStorageSync(tokenStr)
+			if(!token) {
+				if(gt.flag && gt.flag !== "undefined") await tools.publicLogin()
+			}
 			// #endif
 			// clearInterval(gt.t);
 			gt.getDataInfo();
@@ -937,7 +943,14 @@
 			},
 			/* 自定义头部返回方法 */
 			customBack() {
-				uni.navigateBack()
+				let gt = this
+				if(gt.flag && gt.flag !== "undefined") {
+					uni.switchTab({
+						url: "/pages/index/index"
+					})
+				} else {
+					uni.navigateBack()
+				}
 			},
 			beforeleave() {
 				let gt = this
@@ -956,7 +969,7 @@
 			width: 750rpx;
 			overflow: hidden;
 			.content {
-				height: calc(100vh - 160rpx);
+				height: calc(100vh - 300rpx);
 				overflow: auto;
 				padding-bottom: 20rpx;
 			}

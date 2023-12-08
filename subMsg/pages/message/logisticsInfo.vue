@@ -7,7 +7,7 @@
 					<view class="card_content">
 						<view class="card_title">{{ item.title }}</view>
 						<view class="card_info">{{ item.content }}</view>
-						<view class="card_footer" v-if="item.about_table == 'order'">
+						<view class="card_footer" v-if="item.about_table == 'order' || item.about_table == 'deliver_waybill'">
 							<view class="card_view">立即查看</view>
 							<u-icon name="arrow-right" color="#909399" size="28"></u-icon>
 						</view>
@@ -81,7 +81,12 @@
 			goDetail(record) {
 				if(record.about_table == 'order') {
 					uni.navigateTo({
-						url: "/pages/order/orderInfo?orderSn=" + record.about_id
+						url: "/pages/order/orderInfo?orderSn=" + record.deliver_sn
+					})
+				}
+				if(record.about_table == 'deliver_waybill') {
+					uni.navigateTo({
+						url: "/subSansong/pages/sansong/sendInfo?orderSn=" + record.deliver_sn
 					})
 				}
 			}

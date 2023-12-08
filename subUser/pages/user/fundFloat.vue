@@ -1,8 +1,11 @@
 <template>
 	<view class="gt_content">
-		<scroll-view class="con_scrollView" scroll-y @scrolltolower="loadMore" style="height: 100vh;">
+		<view class="con_total">
+			<text>未结算收入：￥{{ total_price }}</text>
+		</view>
+		<scroll-view class="con_scrollView" scroll-y @scrolltolower="loadMore">
 			<template v-if="list.length">
-				<view class="con_item" v-for="(item,index) in list" :key="index">
+				<view class="con_item" v-for="(item,index) in list" :key="index" @click="goDetail(item)">
 					<view class="con_typeSn_status">
 						<view class="con_typeSn">
 							<view class="con_type orderType1" v-if="item.order_type == 1">
@@ -122,6 +125,7 @@
 				list: [],
 				params: {},
 				status: 'loading',
+				total_price: 0
 			}
 		},
 		onLoad() {
@@ -136,6 +140,7 @@
 			getList() {
 				let gt = this
 				gt.gtRequest.post('/logistics/User/onway_money_list', gt.params).then(res => {
+					gt.total_price = res.total_price
 					gt.list = [...gt.list, ...res.list]
 					gt.status = gt.params.page >= res.total_page ? 'nomore' : 'loading'
 				})
@@ -170,6 +175,11 @@
 					default:
 						return "(异常或取消)";
 				}
+			},
+			goDetail(record) {
+				uni.navigateTo({
+					url: "/pages/order/orderInfo?orderSn=" + record.deliver_sn
+				})
 			}
 		}
 	}
@@ -178,9 +188,18 @@
 <style lang="scss">
 	page {
 		background: $gtBackgroundColor;
-		// .gt_content {
-		// 	height: 100vh;
-		// }
+	}
+	.con_total {
+		padding: 0 36rpx;
+		height: 60rpx;
+		line-height: 60rpx;
+		background-color: #fff;
+		font-weight: 700;
+		color: #000;
+		font-family: PingFangSC-Regular, PingFang SC;
+	}
+	.con_scrollView {
+		height: calc(100vh - 60rpx);
 	}
 	.con_item {
 		width: 718rpx;
