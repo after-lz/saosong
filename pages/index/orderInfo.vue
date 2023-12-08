@@ -167,6 +167,21 @@
 							<text v-if="dataInfo.receipt_type == 3">收条</text>
 						</view>
 					</view>
+					<view class="con_item">
+						<view class="con_key">
+							<view class="con_text">
+								<text>付款方式</text>
+							</view>
+						</view>
+						<view class="con_val">
+							<view class="con_text_btn">
+								<view class="con_text">
+									<text v-if="dataInfo.pay_method == 1">现付</text>
+									<text v-if="dataInfo.pay_method == 2">到付</text>
+								</view>
+							</view>
+						</view>
+					</view>
 					<view class="con_key_val">
 						<view class="con_key">
 							<text>备注</text>
